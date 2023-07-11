@@ -1,4 +1,19 @@
 @extends('../layout/layout')
+<<<<<<< Updated upstream
+=======
+
+@push('sites-leftside-menu')
+@foreach ($sites as $site)
+<li class="submenu-item ">
+    <a href="{{ route('attendance.showlog.persite', ['siteId' => $site->id]) }}">{{
+        $site->site_name }}</a>
+</li>
+@endforeach
+@endpush
+
+
+@section('page-content')
+>>>>>>> Stashed changes
 
 @section('page-heading')
 <h1>Add Employee</h1>

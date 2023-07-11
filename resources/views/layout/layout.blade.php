@@ -38,19 +38,19 @@
 					<ul class="menu">
 						<li class="sidebar-title">Menu</li>
 
-						<li class="sidebar-item active ">
-							<a href="" class='sidebar-link'>
+						<li class="sidebar-item active {{ (request()->is('')) ? 'active' : ''}}">
+							<a href="{{ route('dashboard') }}" class='sidebar-link'>
 								<i class="bi bi-grid-fill"></i>
 								<span>Dashboard</span>
 							</a>
 						</li>
 
-						<li class="sidebar-item  has-sub">
+						<li class="sidebar-item  has-sub {{ (request()->is('employees*')) ? 'active' : ''}}">
 							<a href="#" class='sidebar-link'>
 								<i class="bi bi-stack"></i>
 								<span>Manage Employees</span>
 							</a>
-							<ul class="submenu ">
+							<ul class="submenu {{ (request()->is('employees*')) ? 'active' : ''}}">
 								<li class="submenu-item ">
 									<a href="{{ route('employees.list') }}">Employees</a>
 								</li>
@@ -60,14 +60,14 @@
 							</ul>
 						</li>
 
-						<li class="sidebar-item  has-sub">
+						<li class="sidebar-item  has-sub {{ (request()->is('attendance*')) ? 'active' : ''}}">
 							<a href="#" class='sidebar-link'>
 								<i class="bi bi-collection-fill"></i>
 								<span>Attendance Log</span>
 							</a>
-							<ul class="submenu ">
+							<ul class="submenu {{ (request()->is('attendance*')) ? 'active' : ''}}">
 								<li class="submenu-item ">
-									<a href="">All</a>
+									<a href="{{ route('attendance.log.index') }}">All</a>
 									@stack('sites-leftside-menu')
 								</li>
 							</ul>
@@ -114,7 +114,9 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$('.submenu a').click(function(e) {
+				e.stopPropagation();
+			});
 			@stack('jq-code')
 		});
 	</script>

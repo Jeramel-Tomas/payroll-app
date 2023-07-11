@@ -31,7 +31,9 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        return view('employee-management.createEmployee');
+        $sites = WorkingSite::all();
+
+        return view('employee-management.createEmployee', compact('sites'));
     }
 
     /**
@@ -79,9 +81,9 @@ class EmployeeController extends Controller
     {
         // dd($id);
         $employee = EmployeeInformation::find($id);
-        // dd($employee->first_name);
-        //dd($employee::attributes('first_name'));
-        return view('employee-management.showEmployee', compact('employee'));
+        $sites = WorkingSite::all();
+
+        return view('employee-management.showEmployee', compact('employee', 'sites'));
     }
 
     /**
@@ -91,9 +93,9 @@ class EmployeeController extends Controller
     {
         // dd($id);
         $employee = EmployeeInformation::find($id);
-        // dd($employee->first_name);
-        //dd($employee::attributes('first_name'));
-        return view('employee-management.editEmployeeInformation', compact('employee'));
+        $sites = WorkingSite::all();
+
+        return view('employee-management.editEmployeeInformation', compact('employee', 'sites'));
     }
 
     /**
@@ -140,12 +142,12 @@ class EmployeeController extends Controller
             'working_site' => 'required',
         ]);
         $getEmployee = EmployeeInformation::join('employee_working_sites as ews', 'employee_information.id', '=', 'ews.employee_information_id')
-        ->where('ews.employee_information_id', $validatedData['empID'])
-        ->first();
+            ->where('ews.employee_information_id', $validatedData['empID'])
+            ->first();
         //dd($getEmployee);
         $duplicateSite = EmployeeWorkingSite::where('employee_information_id', $validatedData['empID'])->first();
         if ($duplicateSite) {
-            return redirect()->back()->with('error', $getEmployee->first_name. ' ' .$getEmployee->last_name . ' ' .' is already asssigned to a Site!'); 
+            return redirect()->back()->with('error', $getEmployee->first_name . ' ' . $getEmployee->last_name . ' ' . ' is already asssigned to a Site!');
         }
         $empSite = new EmployeeWorkingSite();
         $empSite->employee_information_id = $validatedData['empID'];

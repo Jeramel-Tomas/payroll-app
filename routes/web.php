@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\addEmployeeController;
-use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\MenuController;
-
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\AttendanceLogController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,26 +22,9 @@ use App\Http\Controllers\MenuController;
 })->name('add.employee');
 Route::get('/index', function () {
     return view('index');
-});
+});*/
 
-
-
-Route::post('/employees', [AddEmployeeController::class, 'store'])->name('employees.store');
-
-//Route::get('/getEmployeeData', [Employee::class, 'getEmployeeData'])->name('employees.getEmployeeData');
-Route::get('/employeeList', [EmployeeController::class, 'index'])->name('employee.list');
-Route::get('/employees/{id}/edit', [AddEmployeeController::class, 'editEmployeeInformation'])->name('employees.editEmployeeInformation');
-
-Route::post('/employees/{id}', [AddEmployeeController::class, 'update'])->name('employees.update'); */
-
-Route::get('/homepage', [MenuController::class, 'homePage'])->name('home.page');
-Route::get('/login/page', [MenuController::class, 'loginPage'])->name('login.page');
-Route::get('/attendance', [MenuController::class, 'attendance'])->name('attendance.page');
-
-Route::get('/', function () {
-    return view('theme-layout.index');
-});
-
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::prefix('employees')->group(function () {
     Route::get('/', [EmployeeController::class, 'index'])->name('employees.list');
@@ -53,4 +36,11 @@ Route::prefix('employees')->group(function () {
     Route::post('/store', [EmployeeController::class, 'store'])->name('employees.store');
     //Changes: new Route for adding site
     Route::post('/addSite', [EmployeeController::class, 'addSite'])->name('employees.addSite');
+});
+
+Route::prefix('/attendance')->group(function () {
+    Route::get('/', [AttendanceLogController::class, 'index'])->name('attendance.log.index');
+    Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
+    Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
+    Route::get('/save-attendance', [AttendanceLogController::class, 'saveAttendanceAjax'])->name('attendance.saveAttendanceAjax');
 });
