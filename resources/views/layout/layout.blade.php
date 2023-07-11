@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/bootstrap.css')}}">
 
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/iconly/bold.css')}}">
+	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/fontawesome/all.min.css')}}">
 
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/perfect-scrollbar/perfect-scrollbar.css')}}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/bootstrap-icons/bootstrap-icons.css')}}">
@@ -84,7 +85,9 @@
 			</header>
 
 			<div class="page-heading">
-				@yield('page-heading')
+				<section class="row">
+					@yield('page-heading')
+				</section>
 			</div>
 
 			<div class="page-content">

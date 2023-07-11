@@ -43,14 +43,14 @@ class EmployeeController extends Controller
         // Validate the form data
         //dd($request->all());
         $validatedData = $request->validate([
-            'firstName' => 'required',
+            'firstName' => 'required|min:2|max:24',
             'middleName' => 'nullable',
-            'lastName' => 'required',
+            'lastName' => 'required|min:2|max:24',
             'gender' => 'required',
-            'jobTitle' => 'required',
-            'dailyRate' => 'required',
+            'jobTitle' => 'required|min:2|max:100',
+            'dailyRate' => 'required|numeric|min:2|max:6',
             'address' => 'required',
-            'contactNumber' => 'required',
+            'contactNumber' => 'required|min:11|max:11',
         ]);
         //dd($validatedData);
         // Create a new Employee instance with the validated data
@@ -64,12 +64,12 @@ class EmployeeController extends Controller
         $employee->daily_rate = $validatedData['dailyRate'];
         $employee->address = $validatedData['address'];
         $employee->contact_number = $validatedData['contactNumber'];
-
+        
         // Save the employee to the "users" table
         $employee->save();
 
         // Redirect the user back to the form page or to a success page
-        return redirect()->back()->with('success', 'Employee added successfully!');
+        return redirect()->back()->with('success','Employee added successfully!');
     }
 
     /**
