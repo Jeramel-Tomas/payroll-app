@@ -38,23 +38,19 @@ Route::get('/homepage', [MenuController::class, 'homePage'])->name('home.page');
 Route::get('/login/page', [MenuController::class, 'loginPage'])->name('login.page');
 Route::get('/attendance', [MenuController::class, 'attendance'])->name('attendance.page');
 
-Route::prefix('employees')->group(function() {
+Route::get('/', function () {
+    return view('theme-layout.index');
+});
+
+
+Route::prefix('employees')->group(function () {
     Route::get('/', [EmployeeController::class, 'index'])->name('employees.list');
     Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
     Route::get('/{empid}/show', [EmployeeController::class, 'show'])->name('employees.show');
-    
+
     Route::patch('/{empid}/update', [EmployeeController::class, 'update'])->name('employees.update');
     Route::get('/{empid}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::post('/store', [EmployeeController::class, 'store'])->name('employees.store');
     //Changes: new Route for adding site
     Route::post('/addSite', [EmployeeController::class, 'addSite'])->name('employees.addSite');
-
 });
-
-
-
-
-
-
-
-

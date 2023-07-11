@@ -21,7 +21,9 @@
 
 	<!--google material icon-->
 	<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
-	{{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" rel="stylesheet"> --}}
+	{{--
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" rel="stylesheet">
+	--}}
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 </head>
@@ -264,14 +266,14 @@
 
 
 
-			
-			
-			
-			
+
+
+
+
 		</div>
-		
+
 	</div>
-	
+
 	<!----footer-design------------->
 
 	{{-- <footer class="footer">
