@@ -22,6 +22,7 @@ class AttendanceLogController extends Controller
     public function showAttendanceLogPerSite(string $siteId)
     {
         $sites = WorkingSite::all();
+        $specificSite = WorkingSite::find($siteId);
 
         $employeesWorkingSite = DB::table('employee_working_sites')
             ->join('employee_information', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
@@ -29,13 +30,13 @@ class AttendanceLogController extends Controller
             ->where('working_site_id', '=', $siteId)
             ->paginate(5);
         // dd($employeesWorkingSite);
-        return view('attendance-log-management.attendanceLogPerSite', compact('employeesWorkingSite', 'sites'));
+        return view('attendance-log-management.attendanceLogPerSite', compact('employeesWorkingSite', 'sites', 'specificSite'));
     }
 
     public function saveAttendanceAjax(Request $request)
     {
         if ($request->ajax()) {
-            // dd($request->get('daysOfWork'));
+            dd($request->get('daysOfWork'));
             $daysOfWork = $request->get('daysOfWork');
         }
         // dd('false');
