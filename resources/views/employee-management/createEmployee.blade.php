@@ -1,6 +1,4 @@
 @extends('../layout/layout')
-<<<<<<< Updated upstream
-=======
 
 @push('sites-leftside-menu')
 @foreach ($sites as $site)
@@ -10,10 +8,6 @@
 </li>
 @endforeach
 @endpush
-
-
-@section('page-content')
->>>>>>> Stashed changes
 
 @section('page-heading')
 <h1>Add Employee</h1>

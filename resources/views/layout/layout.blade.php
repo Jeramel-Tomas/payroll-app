@@ -38,7 +38,7 @@
 					<ul class="menu">
 						<li class="sidebar-title">Menu</li>
 
-						<li class="sidebar-item active {{ (request()->is('')) ? 'active' : ''}}">
+						<li class="sidebar-item {{ (request()->is('/')) ? 'active' : ''}}">
 							<a href="{{ route('dashboard') }}" class='sidebar-link'>
 								<i class="bi bi-grid-fill"></i>
 								<span>Dashboard</span>
@@ -97,7 +97,7 @@
 			<footer>
 				<div class="footer clearfix mb-0 text-muted">
 					<div class="float-start">
-						<p>2021 &copy; jeramel</p>
+						<p>2021 &copy; </p>
 					</div>
 				</div>
 			</footer>

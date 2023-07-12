@@ -18,12 +18,27 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = EmployeeInformation::paginate(5);
+        //$employees = EmployeeInformation::paginate(5);
         $sites = WorkingSite::all();
+        //$findSite = WorkingSite::find($employeeSite->working_site_id);
+        $getEmployee = DB::table('employee_information AS ei')
+        ->join('employee_working_sites AS ews', 'ews.employee_information_id', '=', 'ei.id')
+        ->join('working_sites AS ws', 'ws.id', '=', 'ews.working_site_id')
+        ->select('ei.*', 'ews.*', 'ws.*')
+        ->get();
+
+        //dd($getEmployee);
+
+
+
+        //dd($getEmployee);
+        // $employeeSite = EmployeeWorkingSite::find($id);
+        // $findSite = WorkingSite::find($employeeSite->working_site_id);
+        // dd($findSite);
         // $employees = Employee::paginate(15)->withQueryString();
         // $employees = DB::table('employee_info')->simplePaginate(1);
         //dd($site);
-        return view('employee-management.employees', ['employees' => $employees, 'sites' => $sites]);
+        return view('employee-management.employees', ['getEmployee' => $getEmployee, 'sites' => $sites]);
     }
 
     /**
@@ -82,8 +97,10 @@ class EmployeeController extends Controller
         // dd($id);
         $employee = EmployeeInformation::find($id);
         $sites = WorkingSite::all();
+        $findSite = WorkingSite::find($id);
+        
 
-        return view('employee-management.showEmployee', compact('employee', 'sites'));
+        return view('employee-management.viewEmployee', compact('employee', 'sites', 'findSite'));
     }
 
     /**
@@ -91,11 +108,17 @@ class EmployeeController extends Controller
      */
     public function edit(string $id)
     {
-        // dd($id);
+        //dd($id);
         $employee = EmployeeInformation::find($id);
+        //dd($employee->id);
         $sites = WorkingSite::all();
-
-        return view('employee-management.editEmployeeInformation', compact('employee', 'sites'));
+        //$employeeSite = EmployeeWorkingSite::find($id);
+        //dd($employeeSite->id);
+        $findSite = WorkingSite::find($id);
+        //$findSiteExcept = WorkingSite :: whereNotIn('site_name', [$findSite->site_name]);
+        // dump($employee);
+        //dd($findSite);
+        return view('employee-management.editEmployeeInformation', compact('employee', 'sites', 'findSite'));
     }
 
     /**
@@ -104,11 +127,18 @@ class EmployeeController extends Controller
     public function update($id, Request $request)
     {
         $employee = EmployeeInformation::findorfail($id);
+        $employeeSite = EmployeeWorkingSite::find($id);
         // Validate the form data
         $validatedData = $request->validate([
-            'firstName' => 'required',
-            'middleName' => 'nullable',
-            'lastName' => 'required',
+            'firstName' => 'required|min:2|max:24',
+            'middleName' => 'required',
+            'lastName' => 'required|min:2|max:24',
+            'gender' => 'required',
+            'working_site'=>'required',
+            'jobTitle' => 'required|min:2|max:100',
+            'dailyRate' => 'required|numeric|min:2',
+            'address' => 'required',
+            'contactNumber' => 'required|min:11|max:11',
             // Add validation rules for other fields
         ]);
         //dd($request);
@@ -116,10 +146,18 @@ class EmployeeController extends Controller
         $employee->first_name = $validatedData['firstName'];
         $employee->middle_name = $validatedData['middleName'];
         $employee->last_name = $validatedData['lastName'];
+        $employee->gender = $validatedData['gender'];
+        $employeeSite->working_site_id = $validatedData['working_site'];
+        $employee->job_title = $validatedData['jobTitle'];
+        $employee->daily_rate = $validatedData['dailyRate'];
+        $employee->address = $validatedData['address'];
+        $employee->contact_number = $validatedData['contactNumber'];
         // Update other fields with the validated form data
 
         // Save the updated employee record
-        //dd($employee);
+        // dump($employeeSite);
+        // dd($employee);
+        $employeeSite->save();
         $employee->save();
 
         //Redirect the user back to the employee list or show a success message

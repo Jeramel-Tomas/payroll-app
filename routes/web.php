@@ -31,7 +31,8 @@ Route::prefix('employees')->group(function () {
     Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
     Route::get('/{empid}/show', [EmployeeController::class, 'show'])->name('employees.show');
 
-    Route::patch('/{empid}/update', [EmployeeController::class, 'update'])->name('employees.update');
+
+    Route::get('/{empid}/update', [EmployeeController::class, 'update'])->name('employees.update');
     Route::get('/{empid}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::post('/store', [EmployeeController::class, 'store'])->name('employees.store');
     //Changes: new Route for adding site
