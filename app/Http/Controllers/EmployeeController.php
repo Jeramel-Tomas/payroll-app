@@ -18,14 +18,20 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        //$employees = EmployeeInformation::paginate(5);
+        $employees = EmployeeInformation::all();
         $sites = WorkingSite::all();
         //$findSite = WorkingSite::find($employeeSite->working_site_id);
-        $getEmployee = DB::table('employee_information AS ei')
-        ->join('employee_working_sites AS ews', 'ews.employee_information_id', '=', 'ei.id')
-        ->join('working_sites AS ws', 'ws.id', '=', 'ews.working_site_id')
-        ->select('ei.*', 'ews.*', 'ws.*')
-        ->get();
+        // $getEmployee = DB::table('employee_information AS ei')
+        // ->join('employee_working_sites AS ews', 'ews.employee_information_id', '=', 'ei.id')
+        // ->join('working_sites AS ws', 'ws.id', '=', 'ews.working_site_id')
+        // ->select('ei.*', 'ews.*', 'ws.*')
+        // ->get();
+        $getEmployee = DB::table('employee_information')
+            ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
+            ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
+            ->select('employee_information.id AS employee_id', 'employee_information.*', 'employee_working_sites.*', 'working_sites.*')
+            ->get();
+
 
         //dd($getEmployee);
 
@@ -38,7 +44,7 @@ class EmployeeController extends Controller
         // $employees = Employee::paginate(15)->withQueryString();
         // $employees = DB::table('employee_info')->simplePaginate(1);
         //dd($site);
-        return view('employee-management.employees', ['getEmployee' => $getEmployee, 'sites' => $sites]);
+        return view('employee-management.employees', ['getEmployee' => $getEmployee, 'sites' => $sites, 'employees' => $employees]);
     }
 
     /**
@@ -65,7 +71,7 @@ class EmployeeController extends Controller
             'lastName' => 'required|min:2|max:24',
             'gender' => 'required',
             'jobTitle' => 'required|min:2|max:100',
-            'dailyRate' => 'required|numeric|min:2|max:6',
+            'dailyRate' => 'required|min:2|max:6',
             'address' => 'required',
             'contactNumber' => 'required|min:11|max:11',
         ]);
@@ -81,12 +87,12 @@ class EmployeeController extends Controller
         $employee->daily_rate = $validatedData['dailyRate'];
         $employee->address = $validatedData['address'];
         $employee->contact_number = $validatedData['contactNumber'];
-        
+
         // Save the employee to the "users" table
         $employee->save();
 
         // Redirect the user back to the form page or to a success page
-        return redirect()->back()->with('success','Employee added successfully!');
+        return redirect()->back()->with('success', 'Employee added successfully!');
     }
 
     /**
@@ -98,9 +104,20 @@ class EmployeeController extends Controller
         $employee = EmployeeInformation::find($id);
         $sites = WorkingSite::all();
         $findSite = WorkingSite::find($id);
-        
+        // $getEmployee = DB::table('employee_information')
+        // ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
+        // ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
+        // ->select('employee_information.id AS employee_id', 'employee_information.*', 'employee_working_sites.*', 'working_sites.*')
+        // ->get();
+        $getEmployee = EmployeeInformation::join('employee_working_sites AS ews', 'employee_information.id', '=', 'ews.employee_information_id')
+            ->join('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
+            ->join('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
+            ->where('ews.employee_information_id', $id)
+            ->select('*')
+            ->get();
+        //dd($getEmployee);
 
-        return view('employee-management.viewEmployee', compact('employee', 'sites', 'findSite'));
+        return view('employee-management.viewEmployee', compact('getEmployee', 'sites'));
     }
 
     /**
@@ -126,43 +143,38 @@ class EmployeeController extends Controller
      */
     public function update($id, Request $request)
     {
-        $employee = EmployeeInformation::findorfail($id);
-        $employeeSite = EmployeeWorkingSite::find($id);
         // Validate the form data
         $validatedData = $request->validate([
             'firstName' => 'required|min:2|max:24',
             'middleName' => 'required',
             'lastName' => 'required|min:2|max:24',
             'gender' => 'required',
-            'working_site'=>'required',
+            'working_site' => 'required',
             'jobTitle' => 'required|min:2|max:100',
             'dailyRate' => 'required|numeric|min:2',
             'address' => 'required',
             'contactNumber' => 'required|min:11|max:11',
-            // Add validation rules for other fields
         ]);
-        //dd($request);
-        // Update the employee data with the validated form data
-        $employee->first_name = $validatedData['firstName'];
-        $employee->middle_name = $validatedData['middleName'];
-        $employee->last_name = $validatedData['lastName'];
-        $employee->gender = $validatedData['gender'];
-        $employeeSite->working_site_id = $validatedData['working_site'];
-        $employee->job_title = $validatedData['jobTitle'];
-        $employee->daily_rate = $validatedData['dailyRate'];
-        $employee->address = $validatedData['address'];
-        $employee->contact_number = $validatedData['contactNumber'];
-        // Update other fields with the validated form data
+        DB::table('employee_information')
+            ->where('id', $id)
+            ->update([
+                'first_name' => $validatedData['firstName'],
+                'middle_name' => $validatedData['middleName'],
+                'last_name' => $validatedData['lastName'],
+                'gender' => $validatedData['gender'],
+                'job_title' => $validatedData['jobTitle'],
+                'daily_rate' => $validatedData['dailyRate'],
+                'address' => $validatedData['address'],
+                'contact_number' => $validatedData['contactNumber'],
+            ]);
 
-        // Save the updated employee record
-        // dump($employeeSite);
-        // dd($employee);
-        $employeeSite->save();
-        $employee->save();
+        DB::table('employee_working_sites')
+            ->where('employee_information_id', $id)
+            ->update(['working_site_id' => $validatedData['working_site']]);
 
-        //Redirect the user back to the employee list or show a success message
-        return redirect()->route('employees.list')->with('success', $employee->first_name . ' ' . $employee->last_name . ' information updated successfully!');
+        return redirect()->route('employees.list')->with('success', 'Employee information updated successfully!');
     }
+
 
 
     /**
@@ -179,13 +191,13 @@ class EmployeeController extends Controller
             'empID' => 'required',
             'working_site' => 'required',
         ]);
-        $getEmployee = EmployeeInformation::join('employee_working_sites as ews', 'employee_information.id', '=', 'ews.employee_information_id')
+        $getEmployee = EmployeeInformation::join('employee_working_sites AS ews', 'employee_information.id', '=', 'ews.employee_information_id')
             ->where('ews.employee_information_id', $validatedData['empID'])
-            ->first();
-        //dd($getEmployee);
+            ->get();
+        //dd($getEmployee->first()->first_name);
         $duplicateSite = EmployeeWorkingSite::where('employee_information_id', $validatedData['empID'])->first();
         if ($duplicateSite) {
-            return redirect()->back()->with('error', $getEmployee->first_name . ' ' . $getEmployee->last_name . ' ' . ' is already asssigned to a Site!');
+            return redirect()->back()->with('error', $getEmployee->first()->first_name . ' ' . $getEmployee->first()->last_name . ' ' . ' is already asssigned to a Site!');
         }
         $empSite = new EmployeeWorkingSite();
         $empSite->employee_information_id = $validatedData['empID'];

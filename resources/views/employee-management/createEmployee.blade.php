@@ -19,7 +19,6 @@
                 {{ session('success') }}
             </div>
 @endif
-@dump($errors->all())
 <div class="row">
     <div class="col-3"></div>
     <div class="col-md-6 col-6">

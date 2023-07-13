@@ -52,20 +52,20 @@
                     <td class="col-1 border">{{ $employee->daily_rate }}</td>
                     <td class="col-2 border">{{ $employee->address }}</td>
                     <td class="col border">{{ $employee->contact_number }}</td>
-                    <td class="col-2 border">{{ $employee->site_name }}</td>
+                    <td class="col-1 border">{{ $employee->site_name }}</td>
 
                     <td class="col-1 border">
-                        <a href="{{ route('employees.edit', ['empid' =>  $employee->id]) }}">
+                        <a href="{{ route('employees.edit', ['empid' =>  $employee->employee_id]) }}">
                             <span class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></span>
                         </a>
-                        <a href="{{ route('employees.show', ['empid' =>  $employee->id]) }}">
+                        <a href="{{ route('employees.show', ['empid' =>  $employee->employee_id]) }}">
                             <span class="bi bi-eye" data-toggle="tooltip" title="View"></span>
                         </a>
                     </td>
                     <td class="col-3">
                         <form action="{{ route('employees.addSite') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="empID" value="{{ $employee->id }}">
+                            <input type="hidden" name="empID" value="{{ $employee->employee_id }}">
                             <div class="form-group row ">
                                 <div class="col-sm-12">
                                     <select class="form-control form-select" name="working_site" required>

@@ -24,7 +24,7 @@
     <div class="col-md-3 col-sm-3">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">{{ $employee->first_name.' '.$employee->last_name }} Information</h4>
+                <h4 class="card-title">{{ $getEmployee->first()->first_name.' '.$getEmployee->first()->last_name }} Information</h4>
             </div>
             <div class="card-content">
                 <div class="card-body">
@@ -36,7 +36,7 @@
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group ">
                                         <div class="position-relative">
-                                            <input type="text" class="col-md-12 col-sm-12" value="{{ $findSite->site_name }} " disabled>
+                                            <input type="text" class="col-md-12 col-sm-12" value="{{ $getEmployee->first()->site_name }} " disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -46,7 +46,7 @@
                                 <div class="col-md-12 col-sm-12 text-center">
                                     <div class="form-group ">
                                         <div class="position-relative">
-                                            <input type="text" class="col-md-12 col-sm-12" value="{{ $employee->job_title }} " disabled>
+                                            <input type="text" class="col-md-12 col-sm-12" value="{{ $getEmployee->first()->job_title }} " disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -56,7 +56,7 @@
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group ">
                                         <div class="position-relative">
-                                            <input type="text" class="col-md-12 col-sm-12" value="{{ $employee->daily_rate }} " disabled>
+                                            <input type="text" class="col-md-12 col-sm-12" value="{{ $getEmployee->first()->daily_rate }} " disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group ">
                                         <div class="position-relative">
-                                            <input type="text" class="col-md-12 col-sm-12" value="{{ $employee->address }} " disabled>
+                                            <input type="text" class="col-md-12 col-sm-12" value="{{ $getEmployee->first()->address }} " disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group ">
                                         <div class="position-relative">
-                                            <input type="text" class="col-md-12 col-sm-12" value="{{ $employee->contact_number }} " disabled>
+                                            <input type="text" class="col-md-12 col-sm-12" value="{{ $getEmployee->first()->contact_number }} " disabled>
                                         </div>
                                     </div>
                                 </div>

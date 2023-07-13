@@ -19,7 +19,7 @@
                 {{ session('success') }}
             </div>
 @endif
-@dump($errors->all())
+
 <div class="row">
     <div class="col-3"></div>
     <div class="col-md-6 col-6">
@@ -39,7 +39,7 @@
                                 <div class="col-md-8">
                                     <div class="form-group has-icon-left">
                                         <div class="position-relative">
-                                            <input type="text" name="empID" value="{{ $employee->id }}">
+                                            <input type="hidden" name="empID" value="{{ $employee->id }}">
                                             <input type="text" class="form-control @error('firstName') is-invalid @enderror" placeholder="First Name"
                                                 id="firstName" name="firstName" value="{{ $employee->first_name }}" data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="@error('firstName'){{ $message }}@enderror">
@@ -173,9 +173,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-12 d-flex justify-content-end">
-                                <a href="{{route('employees.list')}}" type="submit" class="btn btn-primary me-1 mb-1">Back to View</a>
                             </div>
                             <div class="col-12 d-flex justify-content-end">
                                 <button type="submit" class="btn btn-primary me-1 mb-1">Update</button>
