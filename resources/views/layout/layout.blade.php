@@ -90,14 +90,14 @@
 				</section>
 			</div>
 
-			<div class="page-content">
+			<div class="page-content ">
 				@yield('page-content')
 			</div>
 
 			<footer>
 				<div class="footer clearfix mb-0 text-muted">
 					<div class="float-start">
-						<p>2021 &copy; </p>
+						<p> &copy; </p>
 					</div>
 				</div>
 			</footer>
