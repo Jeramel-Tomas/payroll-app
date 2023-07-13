@@ -12,11 +12,17 @@
 
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/iconly/bold.css')}}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/fontawesome/all.min.css')}}">
+	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/dripicons/webfont.css')}}">
+	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/pages/dripicons.css')}}">
 
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/perfect-scrollbar/perfect-scrollbar.css')}}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/bootstrap-icons/bootstrap-icons.css')}}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/app.css')}}">
-	<link rel="shortcut icon" href="{{ URL::asset('new-assets/assets/images/favicon.svg')}}" type="image/x-icon">
+	
+	{{-- Custom css put all your custom css here --}}
+	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/my-custom.css')}}">
+	{{--
+	<link rel="shortcut icon" href="{{ URL::asset('new-assets/assets/images/favicon.svg')}}" type="image/x-icon"> --}}
 	@stack('css-imports')
 </head>
 
@@ -85,7 +91,7 @@
 			</header>
 
 			<div class="page-heading">
-				<section class="row">
+				<section class="row text-center">
 					@yield('page-heading')
 				</section>
 			</div>
@@ -110,15 +116,24 @@
 	<script src="{{ URL::asset('new-assets/assets/js/pages/dashboard.js')}}"></script>
 
 	<script src="{{ URL::asset('new-assets/assets/js/main.js')}}"></script>
+	<script src="{{ URL::asset('new-assets/assets/js/vendor.js')}}"></script>
+
+	<script src="{{ URL::asset('new-assets/assets/js/jquery-3.3.1.min.js') }}"></script>
 	@stack('js-imports')
+
+
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('.submenu a').click(function(e) {
-				e.stopPropagation();
+			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+			var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+				return new bootstrap.Tooltip(tooltipTriggerEl)
 			});
+
+			console.log('jquery is ready')
 			@stack('jq-code')
 		});
+		@stack('js-code')
 	</script>
 
 </body>

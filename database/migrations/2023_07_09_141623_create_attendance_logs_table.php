@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('employee_information_id');
             // absent = 0 halfday = 0.5 present = 1
-            $table->string('attendance_status');
+            $table->char('attendance_status', 3);
+            $table->char('overtime_per_day', 3)->nullable();
             $table->dateTime('attendance_date');
             $table->timestamps();
         });

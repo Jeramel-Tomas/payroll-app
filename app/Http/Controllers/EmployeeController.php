@@ -20,30 +20,13 @@ class EmployeeController extends Controller
     {
         $employees = EmployeeInformation::all();
         $sites = WorkingSite::all();
-        //$findSite = WorkingSite::find($employeeSite->working_site_id);
-        // $getEmployee = DB::table('employee_information AS ei')
-        // ->join('employee_working_sites AS ews', 'ews.employee_information_id', '=', 'ei.id')
-        // ->join('working_sites AS ws', 'ws.id', '=', 'ews.working_site_id')
-        // ->select('ei.*', 'ews.*', 'ws.*')
-        // ->get();
+      
         $getEmployee = DB::table('employee_information')
             ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
             ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
             ->select('employee_information.id AS employee_id', 'employee_information.*', 'employee_working_sites.*', 'working_sites.*')
             ->paginate(4);
 
-
-        //dd($getEmployee);
-
-
-
-        //dd($getEmployee);
-        // $employeeSite = EmployeeWorkingSite::find($id);
-        // $findSite = WorkingSite::find($employeeSite->working_site_id);
-        // dd($findSite);
-        // $employees = Employee::paginate(15)->withQueryString();
-        // $employees = DB::table('employee_info')->simplePaginate(1);
-        //dd($site);
         return view('employee-management.employees', ['getEmployee' => $getEmployee, 'sites' => $sites, 'employees' => $employees]);
     }
 
