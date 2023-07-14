@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Employee;
 use Illuminate\Support\Facades\DB;
 use App\Models\EmployeeInformation;
 use App\Models\EmployeeWorkingSite;
@@ -20,13 +19,13 @@ class EmployeeController extends Controller
     {
         $employees = EmployeeInformation::all();
         $sites = WorkingSite::all();
-      
         $getEmployee = DB::table('employee_information')
-            ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
-            ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
-            ->select('employee_information.id AS employee_id', 'employee_information.*', 'employee_working_sites.*', 'working_sites.*')
-            ->paginate(4);
-
+        ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
+        ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
+        ->select('employee_information.id AS employee_id', 'employee_information.*', 'employee_working_sites.*', 'working_sites.*')
+        ->whereNull('employee_working_sites.employee_information_id')
+        ->orWhereNotNull('employee_working_sites.employee_information_id')
+        ->paginate(4);
         return view('employee-management.employees', ['getEmployee' => $getEmployee, 'sites' => $sites, 'employees' => $employees]);
     }
 
@@ -46,8 +45,6 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $uuid = Str::uuid()->toString();
-        // Validate the form data
-        //dd($request->all());
         $validatedData = $request->validate([
             'firstName' => 'required|min:2|max:24',
             'middleName' => 'nullable',
@@ -88,12 +85,13 @@ class EmployeeController extends Controller
         $sites = WorkingSite::all();
         $findSite = WorkingSite::find($id);
         $getEmployee = EmployeeInformation::join('employee_working_sites AS ews', 'employee_information.id', '=', 'ews.employee_information_id')
-            ->join('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
-            ->join('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
+            ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
+            ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
             ->where('ews.employee_information_id', $id)
+            ->whereNull('employee_working_sites.employee_information_id')
+            ->orWhereNotNull('employee_working_sites.employee_information_id')
             ->select('*')
             ->get();
-        //dd($getEmployee);
 
         return view('employee-management.viewEmployee', compact('getEmployee', 'sites'));
     }

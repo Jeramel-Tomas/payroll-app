@@ -10,7 +10,7 @@
 @endpush
 
 @section('page-heading')
-<h1>Add Employee</h1>
+<h1>Edit Employee</h1>
 @endsection
 
 @section('page-content')

@@ -42,7 +42,7 @@
 
                         @foreach($getEmployee as $key => $employee)
                         <tr>
-                            <td class="d-none">{{ $employee->id }}</td>
+                            <td class="d-none">{{ $employee->employee_id }}</td>
                             <td class="col-2 border ">{{ $employee->first_name }} {{ $employee->middle_name }} {{
                                 $employee->last_name }}</td>
                             <td class="col-1 border">{{ $employee->gender }}</td>
@@ -89,6 +89,7 @@
                                         <span class="bi bi-pencil-square" style="font-size: 2rem; margin-right: 0.5rem;"
                                             data-toggle="tooltip" title="Edit"></span>
                                     </a>
+{{  $employee->employee_id }}
                                     <a href="{{ route('employees.show', ['empid' =>  $employee->employee_id]) }}">
                                         <span class="bi bi-eye" style="font-size: 2rem;" data-toggle="tooltip"
                                             title="View"></span>
