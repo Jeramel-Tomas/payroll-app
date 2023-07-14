@@ -87,11 +87,6 @@ class EmployeeController extends Controller
         $employee = EmployeeInformation::find($id);
         $sites = WorkingSite::all();
         $findSite = WorkingSite::find($id);
-        // $getEmployee = DB::table('employee_information')
-        // ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
-        // ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
-        // ->select('employee_information.id AS employee_id', 'employee_information.*', 'employee_working_sites.*', 'working_sites.*')
-        // ->get();
         $getEmployee = EmployeeInformation::join('employee_working_sites AS ews', 'employee_information.id', '=', 'ews.employee_information_id')
             ->join('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
             ->join('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
@@ -167,7 +162,7 @@ class EmployeeController extends Controller
     {
         //
     }
-    //Changes: New method for adding site 
+    //Changes: New method for adding site
     public function addSite(Request $request)
     {
         $validatedData = $request->validate([

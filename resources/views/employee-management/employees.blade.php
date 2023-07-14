@@ -24,7 +24,7 @@
         </div>
         @endif
         <section class="section">
-            <div class="table table-responsive col-12 table-striped" id="table1">
+            <div class=" table-responsive col-12">
                 <table class="table bordered bg-white">
                     <thead class="alig-text-center">
                         <tr>
@@ -106,11 +106,6 @@
                     {!! $getEmployee->onEachSide(4)->links('pagination::bootstrap-5') !!}
                 </div>
             </div>
-            <script>
-                // Simple Datatable
-                let table1 = document.querySelector('#table1');
-                let dataTable = new simpleDatatables.DataTable(table1);
-            </script>
     </div>
 </section>
 

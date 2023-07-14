@@ -31,13 +31,13 @@
                     <div class="card-body">
                         <form class="form form-horizontal" action="{{ route('employees.store') }}" method="POST">
                             @csrf
-                            <div class="form-body">
+                            <div class="form-body ">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label>First Name</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <div class="form-group has-icon-left">
+                                        <div class="form-group has-icon-left ">
                                             <div class="position-relative">
 
                                                 <input type="text"
