@@ -22,36 +22,40 @@
                     {{ session('success') }}
                 </div>
                 @endif
+                @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+                @endif
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">{{ $getEmployee->first()->first_name.' '.$getEmployee->first()->last_name
-                            }} Information</h4>
+                        <h4 class="card-title">{{ $getEmployee->first_name.' '.$getEmployee->last_name }} Information</h4>
                     </div>
                     <div class="card-body">
                         <div class="form-group">
                             <label for="workingSite">Working Site</label>
                             <input type="text" class="form-control" id="workingSite"
-                                value="{{ $getEmployee->first()->site_name }}" disabled>
+                                value="{{ $getEmployee->site_name }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="jobTitle">Job Title</label>
                             <input type="text" class="form-control" id="jobTitle"
-                                value="{{ $getEmployee->first()->job_title }}" disabled>
+                                value="{{ $getEmployee->job_title }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="dailyRate">Daily Rate</label>
                             <input type="text" class="form-control" id="dailyRate"
-                                value="{{ $getEmployee->first()->daily_rate }}" disabled>
+                                value="{{ $getEmployee->daily_rate }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <input type="text" class="form-control" id="address"
-                                value="{{ $getEmployee->first()->address }}" disabled>
+                            <input type="text" class="form-control" id="address" value="{{ $getEmployee->address }}"
+                                disabled>
                         </div>
                         <div class="form-group">
                             <label for="contactNumber">Contact Number</label>
                             <input type="text" class="form-control" id="contactNumber"
-                                value="{{ $getEmployee->first()->contact_number }}" disabled>
+                                value="{{ $getEmployee->contact_number }}" disabled>
                         </div>
                         <div class="text-end">
                             <a href="{{ route('employees.list') }}" class="btn btn-primary">Back to View</a>

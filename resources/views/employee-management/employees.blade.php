@@ -23,6 +23,17 @@
             {{ session('error') }}
         </div>
         @endif
+        @if(session('danger') && session('danger_expires_at'))
+        <div class="alert alert-danger">
+            {{ session('danger') }}
+        </div>
+        <script>
+            setTimeout(function() {
+            document.querySelector('.alert-danger').style.display = 'none';
+        }, {{ now()->diffInMilliseconds(session('danger_expires_at')) }});
+        </script>
+        @endif
+
         <section class="section">
             <div class=" table-responsive col-12">
                 <table class="table bordered bg-white">
@@ -54,7 +65,8 @@
                             <td class="col-1 border">{{ $employee->site_name }}</td>
                             @else
                             <td class="col-3">
-                                {{-- <p class="text-center">{{ $employee->first_name }} is not assigned to any site</p> --}}
+                                {{-- <p class="text-center">{{ $employee->first_name }} is not assigned to any site</p>
+                                --}}
                                 <form action="{{ route('employees.addSite') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="empID" value="{{ $employee->employee_id }}">
@@ -89,7 +101,7 @@
                                         <span class="bi bi-pencil-square" style="font-size: 2rem; margin-right: 0.5rem;"
                                             data-toggle="tooltip" title="Edit"></span>
                                     </a>
-{{  $employee->employee_id }}
+                                    {{ $employee->employee_id }}
                                     <a href="{{ route('employees.show', ['empid' =>  $employee->employee_id]) }}">
                                         <span class="bi bi-eye" style="font-size: 2rem;" data-toggle="tooltip"
                                             title="View"></span>

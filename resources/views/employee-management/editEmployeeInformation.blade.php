@@ -98,8 +98,9 @@
                                         <div class="form-group has-icon-left">
                                             <div class="position-relative">
                                                 <select class="form-control form-select" name="working_site">
+                                                    
                                                     @foreach ($sites as $site)
-                                                    <option value="{{ $site->id }}" {{ ($site->id === $findSite->id ?
+                                                    <option value="{{ $site->id }}" {{ ($site->id === $findSiteID->id ?
                                                         'selected' : '') }}>{{ $site->site_name }} </option>
                                                     @endforeach
                                                 </select>

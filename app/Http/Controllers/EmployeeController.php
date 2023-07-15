@@ -20,12 +20,12 @@ class EmployeeController extends Controller
         $employees = EmployeeInformation::all();
         $sites = WorkingSite::all();
         $getEmployee = DB::table('employee_information')
-        ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
-        ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
-        ->select('employee_information.id AS employee_id', 'employee_information.*', 'employee_working_sites.*', 'working_sites.*')
-        ->whereNull('employee_working_sites.employee_information_id')
-        ->orWhereNotNull('employee_working_sites.employee_information_id')
-        ->paginate(4);
+            ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
+            ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
+            ->select('employee_information.id AS employee_id', 'employee_information.*', 'employee_working_sites.*', 'working_sites.*')
+            ->whereNull('employee_working_sites.employee_information_id')
+            ->orWhereNotNull('employee_working_sites.employee_information_id')
+            ->paginate(4);
         return view('employee-management.employees', ['getEmployee' => $getEmployee, 'sites' => $sites, 'employees' => $employees]);
     }
 
@@ -80,38 +80,54 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
-        // dd($id);
-        $employee = EmployeeInformation::find($id);
         $sites = WorkingSite::all();
-        $findSite = WorkingSite::find($id);
-        $getEmployee = EmployeeInformation::join('employee_working_sites AS ews', 'employee_information.id', '=', 'ews.employee_information_id')
+        $getEmployee = DB::table('employee_information')
             ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
             ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
-            ->where('ews.employee_information_id', $id)
-            ->whereNull('employee_working_sites.employee_information_id')
-            ->orWhereNotNull('employee_working_sites.employee_information_id')
-            ->select('*')
-            ->get();
-
-        return view('employee-management.viewEmployee', compact('getEmployee', 'sites'));
+            ->where('employee_information.id', $id)
+            ->select('*', 'employee_information.id AS empID')
+            ->first();
+        if ($getEmployee->employee_information_id === null || empty($getEmployee)) {
+            return back()->with([
+                'danger' => 'You must add a site before VIEWING employee data',
+                'danger_expires_at' => now()->addSeconds(5)
+            ]);
+        } else {
+            return view('employee-management.viewEmployee', compact('getEmployee', 'sites'));
+        }
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        //dd($id);
         $employee = EmployeeInformation::find($id);
-        //dd($employee->id);
         $sites = WorkingSite::all();
-        //$employeeSite = EmployeeWorkingSite::find($id);
-        //dd($employeeSite->id);
+        $checkSite = DB::table('employee_working_sites')
+            ->leftJoin('working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id')
+            ->where('employee_working_sites.employee_information_id', $id)
+            ->select('*', 'working_site_id AS wsID')
+            ->first();
+        //dump($checkSite->wsID);
+        if (empty($checkSite->wsID) || is_null($checkSite->wsID)) {
+            return back()->with([
+                'danger' => 'You must add a site before EDITING employee data',
+                'danger_expires_at' => now()->addSeconds(5)
+            ]);
+        }
+        $findSiteID = WorkingSite::find($checkSite->id);
         $findSite = WorkingSite::find($id);
-        //$findSiteExcept = WorkingSite :: whereNotIn('site_name', [$findSite->site_name]);
-        // dump($employee);
-        //dd($findSite);
-        return view('employee-management.editEmployeeInformation', compact('employee', 'sites', 'findSite'));
+        if (($checkSite === null || $checkSite->employee_information_id === null)) {
+            return back()->with([
+                'danger' => 'You must add a site before EDITING employee data',
+                'danger_expires_at' => now()->addSeconds(5)
+            ]);
+        } else {
+            return view('employee-management.editEmployeeInformation', compact('employee', 'sites', 'findSite', 'findSiteID'));
+        }
     }
 
     /**
@@ -170,10 +186,9 @@ class EmployeeController extends Controller
         $getEmployee = EmployeeInformation::join('employee_working_sites AS ews', 'employee_information.id', '=', 'ews.employee_information_id')
             ->where('ews.employee_information_id', $validatedData['empID'])
             ->get();
-        //dd($getEmployee->first()->first_name);
         $duplicateSite = EmployeeWorkingSite::where('employee_information_id', $validatedData['empID'])->first();
         if ($duplicateSite) {
-            return redirect()->back()->with('error', $getEmployee->first()->first_name . ' ' . $getEmployee->first()->last_name . ' ' . ' is already asssigned to a Site!');
+            return redirect()->back()->with('error', $getEmployee->first()->first_name . ' ' . $getEmployee->first()->last_name . ' ' . ' is already assigned to a Site!');
         }
         $empSite = new EmployeeWorkingSite();
         $empSite->employee_information_id = $validatedData['empID'];
