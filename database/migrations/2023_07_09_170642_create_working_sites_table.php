@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('working_sites', function (Blueprint $table) {
             $table->id();
-            $table->string('site_name');
+            $table->string('site_name')->nullable();
             $table->timestamps();
         });
     }

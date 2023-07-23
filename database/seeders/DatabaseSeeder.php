@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             WorkingSite::class,
             EmployeeInformation::class,
+            EmployeeWorkingSite::class,
         ]);
     }
 }

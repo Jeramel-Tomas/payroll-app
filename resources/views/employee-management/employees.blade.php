@@ -101,7 +101,6 @@
                                         <span class="bi bi-pencil-square" style="font-size: 2rem; margin-right: 0.5rem;"
                                             data-toggle="tooltip" title="Edit"></span>
                                     </a>
-                                    {{ $employee->employee_id }}
                                     <a href="{{ route('employees.show', ['empid' =>  $employee->employee_id]) }}">
                                         <span class="bi bi-eye" style="font-size: 2rem;" data-toggle="tooltip"
                                             title="View"></span>

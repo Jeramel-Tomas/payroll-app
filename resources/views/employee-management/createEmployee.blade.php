@@ -29,7 +29,7 @@
                 </div>
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form form-horizontal" action="{{ route('employees.store') }}" method="POST">
+                        <form class="form form-horizontal" action="{{ route('employees.store', ['siteId' => $site->id]) }}" method="POST" id="employeeForm">
                             @csrf
                             <div class="form-body ">
                                 <div class="row">
@@ -177,6 +177,41 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <label>Date of Employment</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group has-icon-left">
+                                            <div class="position-relative">
+                                                <input type="date"
+                                                    class="form-control @error('DOE') is-invalid @enderror"
+                                                    placeholder="Date of Employment" name="DOE"
+                                                    value="{{ old('DOE') }}" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    title="@error('DOE'){{ $message }}@enderror">
+                                                <div class="form-control-icon">
+                                                    <i class="bi bi-phone"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Site Location</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group has-icon-left">
+                                            <div class="position-relative">
+                                                <select class="form-control form-select" name="site_loc" id="site_loc">
+                                                    @foreach ($sites as $site)
+                                                    
+                                                    <option value="{{ $site->id }}" data-site-id="{{ $site->id }}" >
+                                                        {{ $site->site_name }} 
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-12 d-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
@@ -188,5 +223,31 @@
             </div>
         </div>
     </div>
+
 </section>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        const form = document.getElementById('employeeForm');
+        const siteLocSelect = document.getElementById('site_loc');
+        const handleSiteLocChange = function () {
+            const selectedSiteId = siteLocSelect.value;
+            //console.log("Selected Site ID:", selectedSiteId);
+            const currentAction = "{{ route('employees.store', ['siteId' => ':siteId']) }}";
+            const newAction = currentAction.replace(':siteId', selectedSiteId);
+            form.action = newAction;
+
+            console.log("Form Action:", form.action);
+        };
+
+        if (siteLocSelect) {
+            siteLocSelect.addEventListener('change', handleSiteLocChange);
+        }
+    });
+    //console.log('test');
+</script>
+
+
+
+
 @endsection

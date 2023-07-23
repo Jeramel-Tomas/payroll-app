@@ -57,6 +57,11 @@
                             <input type="text" class="form-control" id="contactNumber"
                                 value="{{ $getEmployee->contact_number }}" disabled>
                         </div>
+                        <div class="form-group">
+                            <label for="contactNumber">Date of Employment</label>
+                            <input type="text" class="form-control" id="DOE"
+                                value="{{ $getEmployee->employment_date }}" disabled>
+                        </div>
                         <div class="text-end">
                             <a href="{{ route('employees.list') }}" class="btn btn-primary">Back to View</a>
                         </div>

@@ -42,7 +42,7 @@ class EmployeeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $siteId)
     {
         $uuid = Str::uuid()->toString();
         $validatedData = $request->validate([
@@ -52,12 +52,15 @@ class EmployeeController extends Controller
             'gender' => 'required',
             'jobTitle' => 'required|min:2|max:100',
             'dailyRate' => 'required|min:2|max:6',
-            'address' => 'required',
-            'contactNumber' => 'required|min:11|max:11',
+            'address' => 'nullable',
+            'contactNumber' => 'nullable|min:11|max:11',
+            'DOE' => 'nullable',
+            'site_loc' => 'nullable'
         ]);
-        //dd($validatedData);
         // Create a new Employee instance with the validated data
         $employee = new EmployeeInformation();
+        $emp_working_site = new EmployeeWorkingSite();
+        $working_site = new WorkingSite();
         $employee->employee_uuid = $uuid;
         $employee->first_name = $validatedData['firstName'];
         $employee->middle_name = $validatedData['middleName'];
@@ -67,9 +70,19 @@ class EmployeeController extends Controller
         $employee->daily_rate = $validatedData['dailyRate'];
         $employee->address = $validatedData['address'];
         $employee->contact_number = $validatedData['contactNumber'];
+        $employee->employment_date = $validatedData['DOE'];
+
+        $employee->save();
+
+        $generatedId = $employee->id;
+        $emp_working_site->employee_information_id = $generatedId;
+        $emp_working_site->working_site_id = $siteId;
+        //dump($generatedId);
+        //dd($siteId,);
+        
+        $emp_working_site->save();
 
         // Save the employee to the "users" table
-        $employee->save();
 
         // Redirect the user back to the form page or to a success page
         return redirect()->back()->with('success', 'Employee added successfully!');
@@ -111,7 +124,8 @@ class EmployeeController extends Controller
             ->where('employee_working_sites.employee_information_id', $id)
             ->select('*', 'working_site_id AS wsID')
             ->first();
-        //dump($checkSite->wsID);
+        // dump($employee);
+        // dd($checkSite);
         if (empty($checkSite->wsID) || is_null($checkSite->wsID)) {
             return back()->with([
                 'danger' => 'You must add a site before EDITING employee data',
@@ -120,6 +134,9 @@ class EmployeeController extends Controller
         }
         $findSiteID = WorkingSite::find($checkSite->id);
         $findSite = WorkingSite::find($id);
+        // dump($checkSite);
+        // dump($findSite->site_name);
+        // dd($employee);
         if (($checkSite === null || $checkSite->employee_information_id === null)) {
             return back()->with([
                 'danger' => 'You must add a site before EDITING employee data',
@@ -138,14 +155,15 @@ class EmployeeController extends Controller
         // Validate the form data
         $validatedData = $request->validate([
             'firstName' => 'required|min:2|max:24',
-            'middleName' => 'required',
+            'middleName' => 'nullable',
             'lastName' => 'required|min:2|max:24',
             'gender' => 'required',
-            'working_site' => 'required',
+            'working_site' => 'nullable',
             'jobTitle' => 'required|min:2|max:100',
             'dailyRate' => 'required|numeric|min:2',
-            'address' => 'required',
-            'contactNumber' => 'required|min:11|max:11',
+            'address' => 'nullable',
+            'contactNumber' => 'nullable|min:11|max:11',
+            'editDOE' => 'nullable',
         ]);
         DB::table('employee_information')
             ->where('id', $id)
@@ -158,13 +176,21 @@ class EmployeeController extends Controller
                 'daily_rate' => $validatedData['dailyRate'],
                 'address' => $validatedData['address'],
                 'contact_number' => $validatedData['contactNumber'],
+                'employment_date' => $validatedData['editDOE']
             ]);
 
-        DB::table('employee_working_sites')
+        $upSite = DB::table('employee_working_sites')
             ->where('employee_information_id', $id)
             ->update(['working_site_id' => $validatedData['working_site']]);
-
-        return redirect()->route('employees.list')->with('success', 'Employee information updated successfully!');
+            if($upSite >0){
+                return redirect()->route('employees.list')->with('success', 'Employee information updated successfully!');
+                //dd('Y');
+            }else{
+                return redirect()->route('employees.list')->with('error', 'Failed to update employee information. Please try again.');
+                //dd('no');
+            }
+        // dump($validatedData);
+        // dd($request);
     }
 
 

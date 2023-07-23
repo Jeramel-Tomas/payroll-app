@@ -92,7 +92,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <label>Working Site </label>
+                                        <label>Site Location </label>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group has-icon-left">
@@ -194,6 +194,24 @@
                                                     title="@error('contactNumber'){{ $message }}@enderror">
                                                 <div class="form-control-icon">
                                                     <i class="bi bi-phone"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Date of Employment</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group has-icon-left">
+                                            <div class="position-relative">
+                                                <input type="date"
+                                                    class="form-control @error('editDOE') is-invalid @enderror"
+                                                    placeholder="Contact Number" name="editDOE"
+                                                    value="{{ date('Y-m-d', strtotime($employee->employment_date)) }}" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    title="@error('editDOE'){{ $message }}@enderror">
+                                                <div class="form-control-icon">
+                                                    <i class="bi bi-calendar"></i>
                                                 </div>
                                             </div>
                                         </div>

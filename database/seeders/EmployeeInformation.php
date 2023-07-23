@@ -23,7 +23,7 @@ class EmployeeInformation extends Seeder
                 'job_title' => 'Checker',
                 'daily_rate' => '365',
                 'address' => 'LTB',
-                'contact_number' => '111111111111',
+                'contact_number' => '11111111111', 
             ],
             [
                 'employee_uuid' => Str::uuid()->toString(),
@@ -33,7 +33,7 @@ class EmployeeInformation extends Seeder
                 'job_title' => 'Driver',
                 'daily_rate' => '450',
                 'address' => 'LTB',
-                'contact_number' => '222222222222',
+                'contact_number' => '22222222222',
             ],
             [
                 'employee_uuid' => Str::uuid()->toString(),
@@ -43,7 +43,7 @@ class EmployeeInformation extends Seeder
                 'job_title' => 'Checker',
                 'daily_rate' => '365',
                 'address' => 'LTB',
-                'contact_number' => '333333333333',
+                'contact_number' => '33333333333',
             ]
         ];
         DB::table('employee_information')->insert($data);

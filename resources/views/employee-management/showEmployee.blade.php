@@ -21,7 +21,7 @@
                         <input type="text" class="form-control" disabled value="{{ $employee->job_title }}">
                     </div>
                     <div class="form-group">
-                        <label>Job title</label>
+                        <label>Daily Rate</label>
                         <input type="text" class="form-control" disabled value="{{ $employee->daily_rate }}">
                     </div>
                     <div class="form-group">
@@ -35,6 +35,10 @@
                     <div class="form-group">
                         <label>Contact Number</label>
                         <input type="text" class="form-control" disabled value="{{ $employee->contact_number }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Employment</label>
+                        <input type="text" class="form-control" disabled value="{{ $employee->employment_date }}">
                     </div>
                 </div>
                 <div class="modal-footer">

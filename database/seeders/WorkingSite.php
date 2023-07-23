@@ -15,6 +15,9 @@ class WorkingSite extends Seeder
     {
         $data = [
             [
+                'site_name' => 'No Site Assigned'
+            ],
+            [
                 'site_name' => 'Pico'
             ],
             [
@@ -29,6 +32,7 @@ class WorkingSite extends Seeder
             [
                 'site_name' => 'MT Data'
             ]
+            
         ];
 
         DB::table('working_sites')->insert($data);

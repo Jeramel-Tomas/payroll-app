@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('job_title');
             $table->string('daily_rate');
             $table->string('address')->nullable();
-            $table->string('contact_number');
+            $table->string('contact_number')->nullable();
+            $table->date('employment_date')->nullable();
             $table->timestamps();
         });
     }
