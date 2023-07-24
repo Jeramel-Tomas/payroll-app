@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MenuController;
+//use App\Http\Controllers\MenuController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceLogController;
 use App\Http\Controllers\DashboardController;
+//use App\Http\Controllers\ExcelCSVController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +31,8 @@ Route::prefix('employees')->group(function () {
     Route::get('/', [EmployeeController::class, 'index'])->name('employees.list');
     Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
     Route::get('/{empid}/show', [EmployeeController::class, 'show'])->name('employees.show');
-
+    Route::get('/export', [EmployeeController::class, 'export'])->name('export');
+    Route::post('/import', [EmployeeController::class, 'import'])->name('import');
 
     Route::get('/{empid}/update', [EmployeeController::class, 'update'])->name('employees.update');
     Route::get('/{empid}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');

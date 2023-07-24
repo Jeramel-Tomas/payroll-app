@@ -8,6 +8,10 @@ use App\Models\EmployeeInformation;
 use App\Models\EmployeeWorkingSite;
 use App\Models\WorkingSite;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\UsersImport;
+use App\Exports\UsersExport;
+
 
 
 class EmployeeController extends Controller
@@ -15,6 +19,17 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function export() 
+    {
+        return Excel::download(new UsersExport, 'users.xlsx');
+    }
+    public function import(Request $request) 
+    {
+        $request->validate(['importedUsers' => ['required']]);
+        Excel::import(new UsersImport, $request->file('importedUsers'));
+        
+        return redirect()->back()->with('success', 'Import success!');
+    }
     public function index()
     {
         $employees = EmployeeInformation::all();
@@ -202,7 +217,7 @@ class EmployeeController extends Controller
     {
         //
     }
-    //Changes: New method for adding site
+    //Scrapped function
     public function addSite(Request $request)
     {
         $validatedData = $request->validate([
