@@ -14,11 +14,38 @@
 @endsection
 
 @section('page-content')
-@if (session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
+    @if(session('success') && session('success_expires_at'))
+        <div class="alert alert-danger">
+            {{ session('success') }}
+        </div>
+        <script>
+            setTimeout(function() {
+            document.querySelector('.alert-success').style.display = 'none';
+        }, {{ now()->diffInMilliseconds(session('success_expires_at')) }});
+        </script>
+    @endif
+
+    @if(session('error') && session('error_expires_at'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        <script>
+            setTimeout(function() {
+            document.querySelector('.alert-error').style.display = 'none';
+        }, {{ now()->diffInMilliseconds(session('error_expires_at')) }});
+        </script>
+    @endif
+
+    @if(session('danger') && session('danger_expires_at'))
+        <div class="alert alert-danger">
+            {{ session('danger') }}
+        </div>
+        <script>
+            setTimeout(function() {
+            document.querySelector('.alert-danger').style.display = 'none';
+        }, {{ now()->diffInMilliseconds(session('danger_expires_at')) }});
+        </script>
+    @endif
 <section class="section">
     <div class="row">
         <div class="col-6 col-sm-6 col-md-6 col-lg-6">

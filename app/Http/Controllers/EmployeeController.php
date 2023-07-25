@@ -22,18 +22,24 @@ class EmployeeController extends Controller
     public function export() 
     {
         return Excel::download(new UsersExport, 'users.xlsx');
+        //return Excel::download(new UsersExport($this->collection()), 'users.xlsx');
     }
     public function import(Request $request) 
     {
         $request->validate(['importedUsers' => ['required']]);
         Excel::import(new UsersImport, $request->file('importedUsers'));
         
-        return redirect()->back()->with('success', 'Import success!');
+        return redirect()->back()->with(
+            [
+                'success' => 'Import success!',
+                'success_expires_at' => now()->addSeconds(5)
+            ]);
     }
     public function index()
     {
         $employees = EmployeeInformation::all();
         $sites = WorkingSite::all();
+
         $getEmployee = DB::table('employee_information')
             ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
             ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
@@ -43,7 +49,6 @@ class EmployeeController extends Controller
             ->paginate(4);
         return view('employee-management.employees', ['getEmployee' => $getEmployee, 'sites' => $sites, 'employees' => $employees]);
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -97,10 +102,11 @@ class EmployeeController extends Controller
         
         $emp_working_site->save();
 
-        // Save the employee to the "users" table
-
-        // Redirect the user back to the form page or to a success page
-        return redirect()->back()->with('success', 'Employee added successfully!');
+        return redirect()->back()->with(
+            [
+                'success' => 'Employee added successfully!',
+                'success_expires_at' => now()->addSeconds(5)
+            ]);
     }
 
     /**
@@ -139,8 +145,6 @@ class EmployeeController extends Controller
             ->where('employee_working_sites.employee_information_id', $id)
             ->select('*', 'working_site_id AS wsID')
             ->first();
-        // dump($employee);
-        // dd($checkSite);
         if (empty($checkSite->wsID) || is_null($checkSite->wsID)) {
             return back()->with([
                 'danger' => 'You must add a site before EDITING employee data',
@@ -149,9 +153,6 @@ class EmployeeController extends Controller
         }
         $findSiteID = WorkingSite::find($checkSite->id);
         $findSite = WorkingSite::find($id);
-        // dump($checkSite);
-        // dump($findSite->site_name);
-        // dd($employee);
         if (($checkSite === null || $checkSite->employee_information_id === null)) {
             return back()->with([
                 'danger' => 'You must add a site before EDITING employee data',
@@ -167,7 +168,6 @@ class EmployeeController extends Controller
      */
     public function update($id, Request $request)
     {
-        // Validate the form data
         $validatedData = $request->validate([
             'firstName' => 'required|min:2|max:24',
             'middleName' => 'nullable',
@@ -198,10 +198,18 @@ class EmployeeController extends Controller
             ->where('employee_information_id', $id)
             ->update(['working_site_id' => $validatedData['working_site']]);
             if($upSite >0){
-                return redirect()->route('employees.list')->with('success', 'Employee information updated successfully!');
+                return redirect()->route('employees.list')->with(
+                    [
+                        'success' => 'Employee information updated successfully!',
+                        'success_expires_at' => now()->addSeconds(5)
+                    ]);
                 //dd('Y');
             }else{
-                return redirect()->route('employees.list')->with('error', 'Failed to update employee information. Please try again.');
+                return redirect()->route('employees.list')->with(
+                    [
+                        'error' => 'Failed to update employee information. Please Try again!',
+                        'error_expires_at' => now()->addSeconds(5)
+                    ]);
                 //dd('no');
             }
         // dump($validatedData);

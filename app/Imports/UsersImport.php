@@ -3,6 +3,9 @@ namespace App\Imports;
 
 use Maatwebsite\Excel\Concerns\ToModel;
 use App\Models\EmployeeInformation;
+use App\Models\EmployeeWorkingSite;
+use App\Models\WorkingSite;
+use Illuminate\Support\Str;
 
 class UsersImport implements ToModel
 {
@@ -13,7 +16,9 @@ class UsersImport implements ToModel
     */
     public function model(array $row)
     {
+        $uuid = Str::uuid()->toString();
         $employee = new EmployeeInformation([
+            'employee_uuid'     => $uuid,
             'first_name'        => $row[2],
             'middle_name'       => $row[3], 
             'last_name'         => $row[4],
@@ -24,9 +29,17 @@ class UsersImport implements ToModel
             'contact_number'    => $row[9],
             'employment_date'   => $row[10],
         ]);
-
-        // Save the model to the database
+        //dd($employee);
         $employee->save();
+        $generatedId = $employee->id;
+        $ews = new EmployeeWorkingSite([
+            'employee_information_id' => $generatedId,
+            'working_site_id' => $row[11], 
+        ]);
+        $ews->save();
+        //dd($ews->working_site_id);
+//        dump($employee);
+        // Save the model to the database
 
         return $employee;
     }
