@@ -22,7 +22,6 @@ class EmployeeController extends Controller
     public function export() 
     {
         return Excel::download(new UsersExport, 'users.xlsx');
-        //return Excel::download(new UsersExport($this->collection()), 'users.xlsx');
     }
     public function import(Request $request) 
     {
@@ -64,7 +63,7 @@ class EmployeeController extends Controller
      */
     public function store(Request $request, $siteId)
     {
-        $uuid = Str::uuid()->toString();
+        $uuid = Str::uuid()->toString();//generate uuid
         $validatedData = $request->validate([
             'firstName' => 'required|min:2|max:24',
             'middleName' => 'nullable',
@@ -77,7 +76,6 @@ class EmployeeController extends Controller
             'DOE' => 'nullable',
             'site_loc' => 'nullable'
         ]);
-        // Create a new Employee instance with the validated data
         $employee = new EmployeeInformation();
         $emp_working_site = new EmployeeWorkingSite();
         $working_site = new WorkingSite();
@@ -92,13 +90,14 @@ class EmployeeController extends Controller
         $employee->contact_number = $validatedData['contactNumber'];
         $employee->employment_date = $validatedData['DOE'];
 
+        //save data to employee_information table so that we can 
+        //generate the primary key to be inserted into the next table
         $employee->save();
 
-        $generatedId = $employee->id;
+        $generatedId = $employee->id;//generated primary key
+         //saving the generated key to as a foreign key in the employee_working_sites table
         $emp_working_site->employee_information_id = $generatedId;
         $emp_working_site->working_site_id = $siteId;
-        //dump($generatedId);
-        //dd($siteId,);
         
         $emp_working_site->save();
 
@@ -153,6 +152,7 @@ class EmployeeController extends Controller
         }
         $findSiteID = WorkingSite::find($checkSite->id);
         $findSite = WorkingSite::find($id);
+        //some parts of this block unnecesary , not gonna remove it for now
         if (($checkSite === null || $checkSite->employee_information_id === null)) {
             return back()->with([
                 'danger' => 'You must add a site before EDITING employee data',
@@ -180,8 +180,8 @@ class EmployeeController extends Controller
             'contactNumber' => 'nullable|min:11|max:11',
             'editDOE' => 'nullable',
         ]);
-        DB::table('employee_information')
-            ->where('id', $id)
+        $upEmp = DB::table('employee_information')
+            ->where('id', $id)//$id = employee_information table primary key
             ->update([
                 'first_name' => $validatedData['firstName'],
                 'middle_name' => $validatedData['middleName'],
@@ -193,27 +193,23 @@ class EmployeeController extends Controller
                 'contact_number' => $validatedData['contactNumber'],
                 'employment_date' => $validatedData['editDOE']
             ]);
-
+            
         $upSite = DB::table('employee_working_sites')
-            ->where('employee_information_id', $id)
+            ->where('employee_information_id', $id)//$id = employee_information table primary key
             ->update(['working_site_id' => $validatedData['working_site']]);
-            if($upSite >0){
+            if($upSite > 0 || $upEmp > 0){ //check if there and runs the if-body if there are changes on the table rows
                 return redirect()->route('employees.list')->with(
                     [
                         'success' => 'Employee information updated successfully!',
                         'success_expires_at' => now()->addSeconds(5)
                     ]);
-                //dd('Y');
-            }else{
+            }else{//runs this instead if there are no changes, just some messages for user
                 return redirect()->route('employees.list')->with(
                     [
-                        'error' => 'Failed to update employee information. Please Try again!',
-                        'error_expires_at' => now()->addSeconds(5)
+                        'danger' => 'There were no changes in the employee information',
+                        'danger_expires_at' => now()->addSeconds(5)
                     ]);
-                //dd('no');
             }
-        // dump($validatedData);
-        // dd($request);
     }
 
 
@@ -244,7 +240,6 @@ class EmployeeController extends Controller
         $empSite->working_site_id = $validatedData['working_site'];
         $empSite->save();
 
-        // // Redirect the user back to the form page or to a success page
         return redirect()->back()->with('success', 'Employee Site Added successfully!');
     }
 }

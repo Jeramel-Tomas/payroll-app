@@ -15,7 +15,7 @@
 
 @section('page-content')
     @if(session('success') && session('success_expires_at'))
-        <div class="alert alert-danger">
+        <div class="alert alert-success">
             {{ session('success') }}
         </div>
         <script>
@@ -24,18 +24,6 @@
         }, {{ now()->diffInMilliseconds(session('success_expires_at')) }});
         </script>
     @endif
-
-    @if(session('error') && session('error_expires_at'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-        <script>
-            setTimeout(function() {
-            document.querySelector('.alert-error').style.display = 'none';
-        }, {{ now()->diffInMilliseconds(session('error_expires_at')) }});
-        </script>
-    @endif
-
     @if(session('danger') && session('danger_expires_at'))
         <div class="alert alert-danger">
             {{ session('danger') }}
@@ -272,14 +260,17 @@
     </div>
 
 </section>
+
 <script>
+    //script used to update the id that is to be passed into the form
+    //siteId will change according to the selected dropdown siteId 
     document.addEventListener('DOMContentLoaded', function () {
         
         const form = document.getElementById('employeeForm');
         const siteLocSelect = document.getElementById('site_loc');
         const handleSiteLocChange = function () {
             const selectedSiteId = siteLocSelect.value;
-            //console.log("Selected Site ID:", selectedSiteId);
+
             const currentAction = "{{ route('employees.store', ['siteId' => ':siteId']) }}";
             const newAction = currentAction.replace(':siteId', selectedSiteId);
             form.action = newAction;
@@ -291,7 +282,7 @@
             siteLocSelect.addEventListener('change', handleSiteLocChange);
         }
     });
-    //console.log('test');
+    
 </script>
 
 

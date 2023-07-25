@@ -14,38 +14,6 @@
 @endsection
 
 @section('page-content')
-    @if(session('success') && session('success_expires_at'))
-        <div class="alert alert-danger">
-            {{ session('success') }}
-        </div>
-        <script>
-            setTimeout(function() {
-            document.querySelector('.alert-success').style.display = 'none';
-        }, {{ now()->diffInMilliseconds(session('success_expires_at')) }});
-        </script>
-    @endif
-
-    @if(session('error') && session('error_expires_at'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-        <script>
-            setTimeout(function() {
-            document.querySelector('.alert-error').style.display = 'none';
-        }, {{ now()->diffInMilliseconds(session('error_expires_at')) }});
-        </script>
-    @endif
-
-    @if(session('danger') && session('danger_expires_at'))
-        <div class="alert alert-danger">
-            {{ session('danger') }}
-        </div>
-        <script>
-            setTimeout(function() {
-            document.querySelector('.alert-danger').style.display = 'none';
-        }, {{ now()->diffInMilliseconds(session('danger_expires_at')) }});
-        </script>
-    @endif
 <section class="section">
     <div class="row">
         <div class="col-3"></div>
@@ -125,7 +93,7 @@
                                         <div class="form-group has-icon-left">
                                             <div class="position-relative">
                                                 <select class="form-control form-select" name="working_site">
-                                                    
+
                                                     @foreach ($sites as $site)
                                                     <option value="{{ $site->id }}" {{ ($site->id === $findSiteID->id ?
                                                         'selected' : '') }}>{{ $site->site_name }} </option>
@@ -234,8 +202,8 @@
                                                 <input type="date"
                                                     class="form-control @error('editDOE') is-invalid @enderror"
                                                     placeholder="Contact Number" name="editDOE"
-                                                    value="{{ date('Y-m-d', strtotime($employee->employment_date)) }}" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top"
+                                                    value="{{ date('Y-m-d', strtotime($employee->employment_date)) }}"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
                                                     title="@error('editDOE'){{ $message }}@enderror">
                                                 <div class="form-control-icon">
                                                     <i class="bi bi-calendar"></i>
