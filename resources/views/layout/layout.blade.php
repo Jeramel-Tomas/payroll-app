@@ -23,7 +23,8 @@
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/my-custom.css')}}">
 	{{--
 	<link rel="shortcut icon" href="{{ URL::asset('new-assets/assets/images/favicon.svg')}}" type="image/x-icon"> --}}
-	@stack('css-imports')
+	{{-- @stack('css-imports') --}}
+	@livewireStyles
 </head>
 
 <body>
@@ -51,32 +52,32 @@
 							</a>
 						</li>
 
-						<li class="sidebar-item  has-sub {{ (request()->is('employees*')) ? 'active' : ''}}">
+						<li class="sidebar-item  has-sub {{ (request()->is('employees/*')) ? 'active' : ''}}">
 							<a href="#" class='sidebar-link'>
 								<i class="bi bi-stack"></i>
 								<span>Manage Employees</span>
 							</a>
-							<ul class="submenu {{ (request()->is('employees*')) ? 'active' : ''}}">
-								<li class="submenu-item ">
+							<ul class="submenu {{ (request()->is('employees/*')) ? 'active' : ''}}">
+								<li class="submenu-item {{ (request()->is('employees/list')) ? 'active' : ''}}">
 									<a href="{{ route('employees.list') }}">Employees</a>
 								</li>
-								<li class="submenu-item ">
+								<li class="submenu-item {{ (request()->is('employees/create')) ? 'active' : ''}}">
 									<a href="{{ route('employees.create') }}">Create</a>
 								</li>
 							</ul>
 						</li>
 
-						<li class="sidebar-item  has-sub {{ (request()->is('attendance*')) ? 'active' : ''}}">
-							<a href="#" class='sidebar-link'>
+						<li class="sidebar-item  {{ (request()->is('attendance/log')) ? 'active' : ''}}">
+							<a href="{{ route('attendance.log.index') }}" class='sidebar-link'>
 								<i class="bi bi-collection-fill"></i>
 								<span>Attendance Log</span>
 							</a>
-							<ul class="submenu {{ (request()->is('attendance*')) ? 'active' : ''}}">
-								<li class="submenu-item ">
-									<a href="{{ route('attendance.log.index') }}">All</a>
-									@stack('sites-leftside-menu')
+							{{-- <ul class="submenu {{ (request()->is('attendance/*')) ? 'active' : ''}}">
+								<li class="submenu-item {{ (request()->is('attendance/log')) ? 'active' : ''}}">
+									<a href="{{ route('attendance.log.index') }}">Show</a>
+									
 								</li>
-							</ul>
+							</ul> --}}
 						</li>
 					</ul>
 				</div>
@@ -109,6 +110,9 @@
 			</footer>
 		</div>
 	</div>
+	
+	@livewireScripts
+
 	<script src="{{ URL::asset('new-assets/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
 	<script src="{{ URL::asset('new-assets/assets/js/bootstrap.bundle.min.js')}}"></script>
 
@@ -119,10 +123,10 @@
 	<script src="{{ URL::asset('new-assets/assets/js/vendor.js')}}"></script>
 
 	<script src="{{ URL::asset('new-assets/assets/js/jquery-3.3.1.min.js') }}"></script>
-	@stack('js-imports')
+	{{-- @stack('js-imports') --}}
 
 
-
+ 	@stack('scripts')
 	<script type="text/javascript">
 		$(document).ready(function() {
 			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -135,7 +139,7 @@
 		});
 		@stack('js-code')
 	</script>
-
+	
 </body>
 
 </html>

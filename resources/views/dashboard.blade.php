@@ -1,13 +1,13 @@
 @extends('layout/layout')
 
-@push('sites-leftside-menu')
+{{-- @push('sites-leftside-menu')
 @foreach ($sites as $site)
 <li class="submenu-item ">
     <a href="{{ route('attendance.showlog.persite', ['siteId' => $site->id]) }}">{{
         $site->site_name }}</a>
 </li>
 @endforeach
-@endpush
+@endpush --}}
 
 
 @section('page-heading')
