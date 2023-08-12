@@ -14,15 +14,29 @@
 @endsection
 
 @section('page-content')
-@if (session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
+    @if(session('success') && session('success_expires_at'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        <script>
+            setTimeout(function() {
+            document.querySelector('.alert-success').style.display = 'none';
+        }, {{ now()->diffInMilliseconds(session('success_expires_at')) }});
+        </script>
+    @endif
+    @if(session('danger') && session('danger_expires_at'))
+        <div class="alert alert-danger">
+            {{ session('danger') }}
+        </div>
+        <script>
+            setTimeout(function() {
+            document.querySelector('.alert-danger').style.display = 'none';
+        }, {{ now()->diffInMilliseconds(session('danger_expires_at')) }});
+        </script>
+    @endif
 <section class="section">
     <div class="row">
-        <div class="col-3"></div>
-        <div class="col-md-6 col-6">
+        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Fill up Employee Information</h4>
@@ -222,17 +236,41 @@
                 </div>
             </div>
         </div>
+        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Upload Employee Information</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <form class="form form-horizontal" action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" name="importedUsers" class="form-control @error('importedUsers') is-invalid @enderror"
+                            value="{{ old('importedUsers') }}" data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="@error('importedUsers'){{ $message }}@enderror" >
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary mt-3">Upload</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </section>
+
 <script>
+    //script used to update the id that is to be passed into the form
+    //siteId will change according to the selected dropdown siteId 
     document.addEventListener('DOMContentLoaded', function () {
         
         const form = document.getElementById('employeeForm');
         const siteLocSelect = document.getElementById('site_loc');
         const handleSiteLocChange = function () {
             const selectedSiteId = siteLocSelect.value;
-            //console.log("Selected Site ID:", selectedSiteId);
+
             const currentAction = "{{ route('employees.store', ['siteId' => ':siteId']) }}";
             const newAction = currentAction.replace(':siteId', selectedSiteId);
             form.action = newAction;
@@ -244,7 +282,7 @@
             siteLocSelect.addEventListener('change', handleSiteLocChange);
         }
     });
-    //console.log('test');
+    
 </script>
 
 

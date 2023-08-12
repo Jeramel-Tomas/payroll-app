@@ -13,15 +13,26 @@
 <section class="section">
     <div class="container">
         <h1>Employee Data</h1>
-        @if (session('success'))
+        {{-- Session Message handlers start --}}
+        @if(session('success') && session('success_expires_at'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
+        <script>
+            setTimeout(function() {
+            document.querySelector('.alert-success').style.display = 'none';
+        }, {{ now()->diffInMilliseconds(session('success_expires_at')) }});
+        </script>
         @endif
-        @if (session('error'))
+        @if(session('error') && session('error_expires_at'))
         <div class="alert alert-danger">
             {{ session('error') }}
         </div>
+        <script>
+            setTimeout(function() {
+            document.querySelector('.alert-error').style.display = 'none';
+        }, {{ now()->diffInMilliseconds(session('error_expires_at')) }});
+        </script>
         @endif
         @if(session('danger') && session('danger_expires_at'))
         <div class="alert alert-danger">
@@ -33,9 +44,11 @@
         }, {{ now()->diffInMilliseconds(session('danger_expires_at')) }});
         </script>
         @endif
+        {{-- Export Testing end --}}
 
         <section class="section">
             <div class=" table-responsive col-12">
+                {{-- Table start --}}
                 <table class="table bordered bg-white">
                     <thead class="alig-text-center">
                         <tr>
@@ -111,7 +124,26 @@
                         @endforeach
                     </tbody>
                 </table>
+                {{-- Table end --}}
 
+                {{-- Export Testing start hidden--}}
+                <div class="col-6 col-sm-6 col-md-6 col-lg-6 d-none">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Export Employee Information</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-body">
+                                <form class="form form-horizontal" action="{{ route('export') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <a href="{{ route('export') }}" class="btn btn-primary">Export</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Export Testing end --}}
+                </div>
             </div>
             <div class="row mt-1">
                 <div class="col">
