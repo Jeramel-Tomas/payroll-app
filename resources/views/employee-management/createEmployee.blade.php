@@ -217,7 +217,6 @@
                                             <div class="position-relative">
                                                 <select class="form-control form-select" name="site_loc" id="site_loc">
                                                     @foreach ($sites as $site)
-                                                    
                                                     <option value="{{ $site->id }}" data-site-id="{{ $site->id }}" >
                                                         {{ $site->site_name }} 
                                                     </option>
@@ -262,12 +261,13 @@
 </section>
 
 <script>
-    //script used to update the id that is to be passed into the form
-    //siteId will change according to the selected dropdown siteId 
+    // Script used to update the id that is to be passed into the form
+    // siteId will change according to the selected dropdown siteId
     document.addEventListener('DOMContentLoaded', function () {
         
         const form = document.getElementById('employeeForm');
         const siteLocSelect = document.getElementById('site_loc');
+        
         const handleSiteLocChange = function () {
             const selectedSiteId = siteLocSelect.value;
 
@@ -279,11 +279,13 @@
         };
 
         if (siteLocSelect) {
+            siteLocSelect.value = 1;
             siteLocSelect.addEventListener('change', handleSiteLocChange);
+            siteLocSelect.dispatchEvent(new Event('change'));
         }
     });
-    
 </script>
+
 
 
 

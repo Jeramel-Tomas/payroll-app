@@ -98,7 +98,6 @@ class EmployeeController extends Controller
          //saving the generated key to as a foreign key in the employee_working_sites table
         $emp_working_site->employee_information_id = $generatedId;
         $emp_working_site->working_site_id = $siteId;
-        
         $emp_working_site->save();
 
         return redirect()->back()->with(
