@@ -27,7 +27,7 @@ Route::get('/index', function () {
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::prefix('employees')->group(function () {
-    Route::get('/', [EmployeeController::class, 'index'])->name('employees.list');
+    Route::get('/list', [EmployeeController::class, 'index'])->name('employees.list');
     Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
     Route::get('/{empid}/show', [EmployeeController::class, 'show'])->name('employees.show');
 
@@ -40,8 +40,8 @@ Route::prefix('employees')->group(function () {
 });
 
 Route::prefix('/attendance')->group(function () {
-    Route::get('/', [AttendanceLogController::class, 'index'])->name('attendance.log.index');
+    Route::get('/log', [AttendanceLogController::class, 'index'])->name('attendance.log.index');
+   /*  Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
     Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
-    Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
-    Route::get('/save-attendance', [AttendanceLogController::class, 'saveAttendanceAjax'])->name('attendance.saveAttendanceAjax');
+    Route::get('/save-attendance', [AttendanceLogController::class, 'saveAttendanceAjax'])->name('attendance.saveAttendanceAjax'); */
 });
