@@ -16,7 +16,7 @@
                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                     <div class="input-group">
                                         <select class="choices form-select" wire:model="workingSite">
-                                            <option value="">Filter by site...</option>
+                                            <option value="0">Filter by site...</option>
                                             @foreach ($sites as $site)
                                             <option value="{{$site->id}}">{{ $site->site_name }}</option>
                                             @endforeach

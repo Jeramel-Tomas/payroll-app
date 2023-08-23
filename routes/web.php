@@ -43,7 +43,7 @@ Route::prefix('employees')->group(function () {
 
 Route::prefix('/attendance')->group(function () {
     Route::get('/log', [AttendanceLogController::class, 'index'])->name('attendance.log.index');
-   /*  Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
+    /*  Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
     Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
     Route::get('/save-attendance', [AttendanceLogController::class, 'saveAttendanceAjax'])->name('attendance.saveAttendanceAjax'); */
 });

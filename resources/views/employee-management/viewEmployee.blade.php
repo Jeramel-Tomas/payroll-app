@@ -27,39 +27,39 @@
                     {{ session('error') }}
                 </div>
                 @endif
-                <div class="card">
+                <div class="card text-center">
                     <div class="card-header">
-                        <h4 class="card-title">{{ $getEmployee->first_name.' '.$getEmployee->last_name }} Information</h4>
+                        <h4 class="card-title">{{ Str::ucfirst(Str::lower($getEmployee->first_name)).' '.Str::ucfirst(Str::lower($getEmployee->last_name)) }} Information</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body ">
                         <div class="form-group">
-                            <label for="workingSite">Working Site</label>
-                            <input type="text" class="form-control" id="workingSite"
-                                value="{{ $getEmployee->site_name }}" disabled>
+                            <label for="workingSite" class="font-weight-bold ">Working Site</label>
+                            <input type="text" class="form-control " id="workingSite"
+                                value="{{ Str::ucfirst(Str::lower($getEmployee->site_name)) }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="jobTitle">Job Title</label>
-                            <input type="text" class="form-control" id="jobTitle"
-                                value="{{ $getEmployee->job_title }}" disabled>
+                            <input type="text" class="form-control " id="jobTitle"
+                                value="{{ Str::ucfirst(Str::lower($getEmployee->job_title)) }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="dailyRate">Daily Rate</label>
-                            <input type="text" class="form-control" id="dailyRate"
+                            <input type="text" class="form-control " id="dailyRate"
                                 value="{{ $getEmployee->daily_rate }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <input type="text" class="form-control" id="address" value="{{ $getEmployee->address }}"
+                            <input type="text" class="form-control " id="address" value="{{ Str::ucfirst(Str::lower($getEmployee->address)) }}"
                                 disabled>
                         </div>
                         <div class="form-group">
                             <label for="contactNumber">Contact Number</label>
-                            <input type="text" class="form-control" id="contactNumber"
+                            <input type="text" class="form-control " id="contactNumber"
                                 value="{{ $getEmployee->contact_number }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="contactNumber">Date of Employment</label>
-                            <input type="text" class="form-control" id="DOE"
+                            <input type="text" class="form-control " id="DOE"
                                 value="{{ $getEmployee->employment_date }}" disabled>
                         </div>
                         <div class="text-end">
@@ -71,4 +71,10 @@
         </div>
     </div>
 </section>
+<script>
+    const inputs = document.querySelectorAll(' input');
+    inputs.forEach(input => {
+        input.classList.add('text-center' , 'font-weight-bold');
+    });
+</script>
 @endsection

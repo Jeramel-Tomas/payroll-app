@@ -3,8 +3,8 @@
 @push('sites-leftside-menu')
 @foreach ($sites as $site)
 <li class="submenu-item ">
-    <a href="{{ route('attendance.showlog.persite', ['siteId' => $site->id]) }}">{{
-        $site->site_name }}</a>
+    {{-- <a href="{{ route('employees.store', ['siteId' => $site->id]) }}">{{
+        $site->site_name }}</a> --}}
 </li>
 @endforeach
 @endpush
@@ -14,28 +14,29 @@
 @endsection
 
 @section('page-content')
-    @if(session('success') && session('success_expires_at'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-        <script>
-            setTimeout(function() {
+@if(session('success') && session('success_expires_at'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+<script>
+    setTimeout(function() {
             document.querySelector('.alert-success').style.display = 'none';
         }, {{ now()->diffInMilliseconds(session('success_expires_at')) }});
-        </script>
-    @endif
-    @if(session('danger') && session('danger_expires_at'))
-        <div class="alert alert-danger">
-            {{ session('danger') }}
-        </div>
-        <script>
-            setTimeout(function() {
+</script>
+@endif
+@if(session('danger') && session('danger_expires_at'))
+<div class="alert alert-danger">
+    {{ session('danger') }}
+</div>
+<script>
+    setTimeout(function() {
             document.querySelector('.alert-danger').style.display = 'none';
         }, {{ now()->diffInMilliseconds(session('danger_expires_at')) }});
-        </script>
-    @endif
+</script>
+@endif
 <section class="section">
     <div class="row">
+        <div class="col col-3"></div>
         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
             <div class="card">
                 <div class="card-header">
@@ -43,7 +44,9 @@
                 </div>
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form form-horizontal" action="{{ route('employees.store', ['siteId' => $site->id]) }}" method="POST" id="employeeForm">
+                        <form class="form form-horizontal"
+                            action="{{ route('employees.store', ['siteId' => $site->id]) }}" method="POST"
+                            id="employeeForm">
                             @csrf
                             <div class="form-body ">
                                 <div class="row">
@@ -182,8 +185,8 @@
                                                 <input type="text"
                                                     class="form-control @error('contactNumber') is-invalid @enderror"
                                                     placeholder="Contact Number" name="contactNumber"
-                                                    value="{{ old('contactNumber') }}" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top"
+                                                    value="{{ is_null(old('contactNumber')) ? '+639' : old('contactNumber') }}"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
                                                     title="@error('contactNumber'){{ $message }}@enderror">
                                                 <div class="form-control-icon">
                                                     <i class="bi bi-phone"></i>
@@ -199,9 +202,8 @@
                                             <div class="position-relative">
                                                 <input type="date"
                                                     class="form-control @error('DOE') is-invalid @enderror"
-                                                    placeholder="Date of Employment" name="DOE"
-                                                    value="{{ old('DOE') }}" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top"
+                                                    placeholder="Date of Employment" name="DOE" value="{{ old('DOE') ?: date('Y-m-d') }}"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
                                                     title="@error('DOE'){{ $message }}@enderror">
                                                 <div class="form-control-icon">
                                                     <i class="bi bi-phone"></i>
@@ -217,8 +219,8 @@
                                             <div class="position-relative">
                                                 <select class="form-control form-select" name="site_loc" id="site_loc">
                                                     @foreach ($sites as $site)
-                                                    <option value="{{ $site->id }}" data-site-id="{{ $site->id }}" >
-                                                        {{ $site->site_name }} 
+                                                    <option value="{{ $site->id }}" data-site-id="{{ $site->id }}">
+                                                        {{ $site->site_name }}
                                                     </option>
                                                     @endforeach
                                                 </select>
@@ -235,26 +237,27 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-            <div class="card">
+        <div class="col-3 col-sm-3 col-md-3 col-lg-3">
+            {{-- <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Upload Employee Information</h4>
                 </div>
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form form-horizontal" action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
+                        <form class="form form-horizontal" action="{{ route('import') }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
-                            <input type="file" name="importedUsers" class="form-control @error('importedUsers') is-invalid @enderror"
-                            value="{{ old('importedUsers') }}" data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="@error('importedUsers'){{ $message }}@enderror" >
+                            <input type="file" name="importedUsers"
+                                class="form-control @error('importedUsers') is-invalid @enderror"
+                                value="{{ old('importedUsers') }}" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="@error('importedUsers'){{ $message }}@enderror">
                             <div class="col-12 d-flex justify-content-end">
                                 <button type="submit" class="btn btn-primary mt-3">Upload</button>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 

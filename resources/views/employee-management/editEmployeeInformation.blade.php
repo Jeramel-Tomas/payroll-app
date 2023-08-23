@@ -3,8 +3,8 @@
 @push('sites-leftside-menu')
 @foreach ($sites as $site)
 <li class="submenu-item ">
-    <a href="{{ route('attendance.showlog.persite', ['siteId' => $site->id]) }}">{{
-        $site->site_name }}</a>
+    {{-- <a href="{{ route('attendance.showlog.persite', ['siteId' => $site->id]) }}">{{
+        $site->site_name }}</a> --}}
 </li>
 @endforeach
 @endpush
@@ -39,7 +39,7 @@
                                                 <input type="text"
                                                     class="form-control @error('firstName') is-invalid @enderror"
                                                     placeholder="First Name" id="firstName" name="firstName"
-                                                    value="{{ $employee->first_name }}" data-bs-toggle="tooltip"
+                                                    value="{{ Str::ucfirst(Str::lower($employee->first_name)) }}" data-bs-toggle="tooltip"
                                                     data-bs-placement="top"
                                                     title="@error('firstName'){{ $message }}@enderror">
                                                 <div class="form-control-icon">
@@ -58,7 +58,7 @@
                                                 <input type="text"
                                                     class="form-control @error('middleName') is-invalid @enderror"
                                                     placeholder="Middle Name" id="middleName" name="middleName"
-                                                    value="{{ $employee->middle_name }}" data-bs-toggle="tooltip"
+                                                    value="{{ Str::ucfirst(Str::lower($employee->middle_name)) }}" data-bs-toggle="tooltip"
                                                     data-bs-placement="top"
                                                     title="@error('middleName'){{ $message }}@enderror">
                                                 <div class="form-control-icon">
@@ -77,7 +77,7 @@
                                                 <input type="text"
                                                     class="form-control @error('lastName') is-invalid @enderror"
                                                     placeholder="Last Name" id="lastName" name="lastName"
-                                                    value="{{ $employee->last_name }}" data-bs-toggle="tooltip"
+                                                    value="{{ Str::ucfirst(Str::lower($employee->last_name)) }}" data-bs-toggle="tooltip"
                                                     data-bs-placement="top"
                                                     title="@error('lastName'){{ $message }}@enderror">
                                                 <div class="form-control-icon">
@@ -113,7 +113,7 @@
                                             <div class="position-relative">
                                                 <fieldset class="form-group">
                                                     <select class="form-select @error('gender') is-invalid @enderror"
-                                                        value="{{ $employee->gender }}" id="gender" name="gender">
+                                                        value="{{ Str::ucfirst(Str::lower($employee->gender)) }}" id="gender" name="gender">
                                                         <option value='male'>Male</option>
                                                         <option value='female'>Female</option>
                                                     </select>
@@ -129,7 +129,7 @@
                                             <div class="position-relative">
                                                 <input type="text"
                                                     class="form-control @error('jobTitle') is-invalid @enderror"
-                                                    value="{{ $employee->job_title }}" placeholder="Job Title"
+                                                    value="{{ Str::ucfirst(Str::lower($employee->job_title)) }}" placeholder="Job Title"
                                                     name="jobTitle" value="{{ old('jobTitle') }}"
                                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                                     title="@error('jobTitle'){{ $message }}@enderror">
@@ -166,7 +166,7 @@
                                                 <input type="text"
                                                     class="form-control @error('address') is-invalid @enderror"
                                                     placeholder="Address" name="address"
-                                                    value="{{ $employee->address }}" data-bs-toggle="tooltip"
+                                                    value="{{ Str::ucfirst(Str::lower($employee->address)) }}" data-bs-toggle="tooltip"
                                                     data-bs-placement="top"
                                                     title="@error('address'){{ $message }}@enderror">
                                                 <div class="form-control-icon">

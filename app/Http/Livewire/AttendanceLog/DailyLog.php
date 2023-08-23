@@ -26,7 +26,7 @@ class DailyLog extends Component
     public function clearFilter()
     {
         $this->workingSite = null;
-         $this->workingSiteName = "";
+        $this->workingSiteName = "";
     }
 
     public function render()

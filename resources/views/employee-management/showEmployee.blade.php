@@ -10,7 +10,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"> {{ $employee->first_name }} {{ $employee->last_name }} Information</h5>
+                    <h5 class="modal-title"> {{ Str::ucfirst(Str::lower($employee->first_name)) }} {{ Str::ucfirst(Str::lower($employee->last_name)) }} Information</h5>
                     <a href="{{ route('employees.list') }}" class="close">
                         <span aria-hidden="true">&times;</span>
                     </a>
@@ -18,19 +18,19 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Job title</label>
-                        <input type="text" class="form-control" disabled value="{{ $employee->job_title }}">
+                        <input type="text" class="form-control" disabled value="{{ Str::ucfirst(Str::lower($employee->job_title)) }}">
                     </div>
                     <div class="form-group">
-                        <label>Daily Rate</label>
+                        <label class="font-weight-bold text-align-center">Daily Rate</label>
                         <input type="text" class="form-control" disabled value="{{ $employee->daily_rate }}">
                     </div>
                     <div class="form-group">
                         <label>Gender</label>
-                        <input type="text" class="form-control" disabled value="{{ $employee->gender }}">
+                        <input type="text" class="form-control" disabled value="{{ Str::ucfirst(Str::lower($employee->gender)) }}">
                     </div>
                     <div class="form-group">
                         <label>Address</label>
-                        <input type="text" class="form-control" disabled value="{{ $employee->address }}"></textarea>
+                        <input type="text" class="form-control" disabled value="{{ Str::ucfirst(Str::lower($employee->address)) }}"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Contact Number</label>
