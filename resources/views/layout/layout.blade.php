@@ -126,7 +126,7 @@
 	{{-- @stack('js-imports') --}}
 
 
- 	@stack('scripts')
+@stack('scripts')
 	<script type="text/javascript">
 		$(document).ready(function() {
 			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -138,6 +138,7 @@
 			@stack('jq-code')
 		});
 		@stack('js-code')
+
 	</script>
 	
 </body>

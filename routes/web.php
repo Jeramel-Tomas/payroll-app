@@ -18,12 +18,6 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-/* Route::get('/addEmployee', function () {
-    return view('add_employee');
-})->name('add.employee');
-Route::get('/index', function () {
-    return view('index');
-});*/
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -38,6 +32,7 @@ Route::prefix('employees')->group(function () {
     Route::get('/{empid}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::post('/store/{siteId}', [EmployeeController::class, 'store'])->name('employees.store');
 
+    Route::get('/download-template', [ExportController::class, 'downloadTemplate'])->name('download.template');;
     Route::post('/addSite', [EmployeeController::class, 'addSite'])->name('employees.addSite');
 });
 
@@ -47,3 +42,4 @@ Route::prefix('/attendance')->group(function () {
     Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
     Route::get('/save-attendance', [AttendanceLogController::class, 'saveAttendanceAjax'])->name('attendance.saveAttendanceAjax'); */
 });
+

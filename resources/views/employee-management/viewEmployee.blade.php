@@ -71,10 +71,13 @@
         </div>
     </div>
 </section>
-<script>
+@push('js-code')
+
     const inputs = document.querySelectorAll(' input');
     inputs.forEach(input => {
         input.classList.add('text-center' , 'font-weight-bold');
     });
-</script>
+    
+@endpush
+
 @endsection

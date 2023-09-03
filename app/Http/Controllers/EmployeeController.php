@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
 use App\Exports\UsersExport;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 
 
@@ -19,21 +21,48 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function export() 
+    public function downloadTemplate()
     {
-        return Excel::download(new UsersExport, 'users.xlsx');
+        $filePath = 'downloads/EmployeeUploadTemplate.xlsx';
+        $fileName = 'EmployeeUploadTemplate.xlsx';
+        $mimeType = Storage::mimeType($filePath);
+        $headers = [['Content-Type' => $mimeType]];
+        return Storage::download($filePath, $fileName, $headers);
     }
-    public function import(Request $request) 
+
+    public function export()
     {
-        $request->validate(['importedUsers' => ['required']]);
+        return Excel::download(new UsersExport, 'EmployeeUploadTemplate.xlsx');
+    }
+    public function import(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'importedUsers' => [
+                'required',
+                'file',
+                'mimetypes:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'regex:/^EmployeeUploadTemplate\.xlsx$/i', // Validates the filename
+            ],
+        ], [
+            'importedUsers.mimetypes' => 'The uploaded file must be an Excel spreadsheet (XLSX).',
+            'importedUsers.regex' => 'The uploaded file must be named "EmployeeUploadTemplate.xlsx".',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
         Excel::import(new UsersImport, $request->file('importedUsers'));
-        
-        return redirect()->back()->with(
-            [
-                'success' => 'Import success!',
-                'success_expires_at' => now()->addSeconds(5)
-            ]);
+
+        return redirect()->back()->with([
+            'success' => 'Import success!',
+            'success_expires_at' => now()->addSeconds(5)
+        ]);
     }
+
+
     public function index()
     {
         $employees = EmployeeInformation::all();
@@ -63,7 +92,7 @@ class EmployeeController extends Controller
      */
     public function store(Request $request, $siteId)
     {
-        $uuid = Str::uuid()->toString();//generate uuid
+        $uuid = Str::uuid()->toString(); //generate uuid
         $validatedData = $request->validate([
             'firstName' => 'required|min:2|max:24',
             'middleName' => 'nullable',
@@ -94,8 +123,8 @@ class EmployeeController extends Controller
         //generate the primary key to be inserted into the next table
         $employee->save();
 
-        $generatedId = $employee->id;//generated primary key
-         //saving the generated key to as a foreign key in the employee_working_sites table
+        $generatedId = $employee->id; //generated primary key
+        //saving the generated key to as a foreign key in the employee_working_sites table
         $emp_working_site->employee_information_id = $generatedId;
         $emp_working_site->working_site_id = $siteId;
         $emp_working_site->save();
@@ -104,7 +133,8 @@ class EmployeeController extends Controller
             [
                 'success' => 'Employee added successfully!',
                 'success_expires_at' => now()->addSeconds(5)
-            ]);
+            ]
+        );
     }
 
     /**
@@ -180,7 +210,7 @@ class EmployeeController extends Controller
             'editDOE' => 'nullable',
         ]);
         $upEmp = DB::table('employee_information')
-            ->where('id', $id)//$id = employee_information table primary key
+            ->where('id', $id) //$id = employee_information table primary key
             ->update([
                 'first_name' => $validatedData['firstName'],
                 'middle_name' => $validatedData['middleName'],
@@ -192,23 +222,25 @@ class EmployeeController extends Controller
                 'contact_number' => $validatedData['contactNumber'],
                 'employment_date' => $validatedData['editDOE']
             ]);
-            
+
         $upSite = DB::table('employee_working_sites')
-            ->where('employee_information_id', $id)//$id = employee_information table primary key
+            ->where('employee_information_id', $id) //$id = employee_information table primary key
             ->update(['working_site_id' => $validatedData['working_site']]);
-            if($upSite > 0 || $upEmp > 0){ //check if there and runs the if-body if there are changes on the table rows
-                return redirect()->route('employees.list')->with(
-                    [
-                        'success' => 'Employee information updated successfully!',
-                        'success_expires_at' => now()->addSeconds(5)
-                    ]);
-            }else{//runs this instead if there are no changes, just some messages for user
-                return redirect()->route('employees.list')->with(
-                    [
-                        'danger' => 'There were no changes in the employee information',
-                        'danger_expires_at' => now()->addSeconds(5)
-                    ]);
-            }
+        if ($upSite > 0 || $upEmp > 0) { //check if there and runs the if-body if there are changes on the table rows
+            return redirect()->route('employees.list')->with(
+                [
+                    'success' => 'Employee information updated successfully!',
+                    'success_expires_at' => now()->addSeconds(5)
+                ]
+            );
+        } else { //runs this instead if there are no changes, just some messages for user
+            return redirect()->route('employees.list')->with(
+                [
+                    'danger' => 'There were no changes in the employee information',
+                    'danger_expires_at' => now()->addSeconds(5)
+                ]
+            );
+        }
     }
 
 

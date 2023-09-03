@@ -263,7 +263,7 @@
 
 </section>
 
-<script>
+@push('js-code')
     // Script used to update the id that is to be passed into the form
     // siteId will change according to the selected dropdown siteId
     document.addEventListener('DOMContentLoaded', function () {
@@ -287,7 +287,7 @@
             siteLocSelect.dispatchEvent(new Event('change'));
         }
     });
-</script>
+@endpush
 
 
 

@@ -10,7 +10,7 @@
 @endpush
 
 @section('page-content')
-    @livewire('single-components.search-bar')
+    @livewire('employee-management.employee-list');
 @endsection
 
 
@@ -24,6 +24,7 @@
     setTimeout(function() {
         $('.alert-danger').fadeOut(5000);
     }, 5000);
+        
 @endpush
 
 @push('js-code')
