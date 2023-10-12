@@ -57,7 +57,7 @@ class UsersImport implements ToModel, WithHeadingRow, WithChunkReading
         $generatedId = $employee->id;
         $ews = new EmployeeWorkingSite([
             'employee_information_id' => $generatedId,
-            'working_site_id' => intval($row['Site Id']),  
+            'working_site_id' => intval($row['PASTE']),  
         ]);
         $ews->save();
 

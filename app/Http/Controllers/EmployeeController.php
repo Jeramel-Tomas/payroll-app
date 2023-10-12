@@ -41,7 +41,7 @@ class EmployeeController extends Controller
                 'required',
                 'file',
                 'mimetypes:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'regex:/^EmployeeUploadTemplate\.xlsx$/i', // Validates the filename
+                // 'regex:/^EmployeeUploadTemplate\.xlsx$/i'
             ],
         ], [
             'importedUsers.mimetypes' => 'The uploaded file must be an Excel spreadsheet (XLSX).',
