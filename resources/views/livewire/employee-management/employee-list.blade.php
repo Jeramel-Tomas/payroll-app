@@ -146,6 +146,7 @@
                             <th class="border text-center">Address</th>
                             <th class="border text-center">Contact Number</th>
                             <th class="border text-center">Site Location</th>
+                            <th class="border text-center">Employment Status</th>
                             <th class="border text-center">Action</th>
                         </tr>
                     </thead>
@@ -197,9 +198,9 @@
 
                                     </form>
                                 </td>
-
+                                
                                 @endif
-
+                                <td class="col border">{{ $employee->employment_date === null || $employee->employment_date === ""? "unemployed": $employee->employment_date  }}</td>
                                 <td class="col-1 border">
                                     <div class="d-flex justify-content-center align-items-center" style="height: 100%">
                                         <a href="{{ route('employees.edit', ['empid' =>  $employee->employee_id]) }}">
@@ -212,6 +213,7 @@
                                         </a>
                                     </div>
                                 </td>
+                                
                             </tr>
                             @endforeach
                         @endif
