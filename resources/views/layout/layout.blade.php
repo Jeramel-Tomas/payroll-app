@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,6 +16,7 @@
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/dripicons/webfont.css')}}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/pages/dripicons.css')}}">
 
+	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/toastify/toastify.css') }}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/perfect-scrollbar/perfect-scrollbar.css')}}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/bootstrap-icons/bootstrap-icons.css')}}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/app.css')}}">
@@ -23,7 +25,9 @@
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/my-custom.css')}}">
 	{{--
 	<link rel="shortcut icon" href="{{ URL::asset('new-assets/assets/images/favicon.svg')}}" type="image/x-icon"> --}}
-	{{-- @stack('css-imports') --}}
+	<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	
+	@stack('css-imports')
 	@livewireStyles
 </head>
 
@@ -67,17 +71,21 @@
 							</ul>
 						</li>
 
-						<li class="sidebar-item  {{ (request()->is('attendance/log')) ? 'active' : ''}}">
-							<a href="{{ route('attendance.log.index') }}" class='sidebar-link'>
+						<li class="sidebar-item has-sub {{ (request()->is('attendance/*')) ? 'active' : ''}}">
+							{{-- <a href="{{ route('attendance.log.index') }}" class='sidebar-link'> --}}
+							<a href="#" class='sidebar-link'>
 								<i class="bi bi-collection-fill"></i>
-								<span>Attendance Log</span>
+								<span>Manage Time Record</span>
 							</a>
-							{{-- <ul class="submenu {{ (request()->is('attendance/*')) ? 'active' : ''}}">
+							<ul class="submenu {{ (request()->is('attendance/log')) ? 'active' : ''}}">
 								<li class="submenu-item {{ (request()->is('attendance/log')) ? 'active' : ''}}">
-									<a href="{{ route('attendance.log.index') }}">Show</a>
-									
+									<a href="{{ route('attendance.log.index') }}">Daily Time Record</a>
 								</li>
-							</ul> --}}
+								{{-- <li class="submenu-item {{ (request()->is('attendance/log')) ? 'active' : ''}}"> --}}
+								<li class="submenu-item">
+									<a href="#">Attendance sheet</a>
+								</li>
+							</ul>
 						</li>
 					</ul>
 				</div>
@@ -118,6 +126,9 @@
 
 	<script src="{{ URL::asset('new-assets/assets/vendors/apexcharts/apexcharts.js')}}"></script>
 	<script src="{{ URL::asset('new-assets/assets/js/pages/dashboard.js')}}"></script>
+
+	<script src="{{ URL::asset('new-assets/assets/vendors/toastify/toastify.js') }}"></script>
+	<script src="{{ URL::asset('new-assets/assets/js/extensions/toastify.js') }}"></script>
 
 	<script src="{{ URL::asset('new-assets/assets/js/main.js')}}"></script>
 	<script src="{{ URL::asset('new-assets/assets/js/vendor.js')}}"></script>

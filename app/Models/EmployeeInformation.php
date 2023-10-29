@@ -20,4 +20,5 @@ class EmployeeInformation extends Model
         'contact_number',
         'employment_date',
     ];
+    public $table = 'employee_information';
 }
