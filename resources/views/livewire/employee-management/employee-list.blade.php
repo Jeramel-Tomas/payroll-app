@@ -136,7 +136,7 @@
 
             <div class=" table-responsive col-12 font-bold">
                 {{-- Table start --}}
-                <table class="table bordered bg-white table-hover table-sm">
+                <table class="table bordered bg-white table-hover">
                     <thead class="align-text-center">
                         <tr>
                             <th class="border text-center">Name </th>
@@ -200,15 +200,15 @@
                                 </td>
                                 
                                 @endif
-                                <td class="col border">{{ $employee->employment_date === null || $employee->employment_date === ""? "unemployed": $employee->employment_date  }}</td>
+                                <td class="col border">{{ isset($employee->employment_date) && $employee->employment_date === null || $employee->employment_date === ""? "unemployed": $employee->employment_date  }}</td>
                                 <td class="col-1 border">
                                     <div class="d-flex justify-content-center align-items-center" style="height: 100%">
                                         <a href="{{ route('employees.edit', ['empid' =>  $employee->employee_id]) }}">
-                                            <span class="bi bi-pencil-square" style="font-size: 2rem; margin-right: 0.5rem;"
+                                            <span class="bi bi-pencil-square" style="margin-right: 0.5rem;"
                                                 data-toggle="tooltip" title="Edit"></span>
                                         </a>
                                         <a href="{{ route('employees.show', ['empid' =>  $employee->employee_id]) }}">
-                                            <span class="bi bi-eye" style="font-size: 2rem;" data-toggle="tooltip"
+                                            <span class="bi bi-eye-fill" data-toggle="tooltip"
                                                 title="View"></span>
                                         </a>
                                     </div>

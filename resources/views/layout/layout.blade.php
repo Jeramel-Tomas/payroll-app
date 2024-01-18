@@ -25,7 +25,7 @@
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/my-custom.css')}}">
 	{{--
 	<link rel="shortcut icon" href="{{ URL::asset('new-assets/assets/images/favicon.svg')}}" type="image/x-icon"> --}}
-	<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	{{-- <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
 	
 	@stack('css-imports')
 	@livewireStyles
@@ -38,7 +38,7 @@
 				<div class="sidebar-header">
 					<div class="d-flex justify-content-between">
 						<div class="logo">
-							Company Name
+							MGS
 						</div>
 						<div class="toggler">
 							<a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -87,6 +87,24 @@
 								</li>
 							</ul>
 						</li>
+
+						<li class="sidebar-item has-sub {{ (request()->is('payroll/*')) ? 'active' : ''}}">
+								<a href="#" class='sidebar-link'>
+									<i class="bi bi-collection-fill"></i>
+									<span>Manage Payroll</span>
+								</a>
+								<ul class="submenu {{ (request()->is('payroll/*')) ? 'active' : ''}}">
+									<li class="submenu-item {{ (request()->is('payroll/employees')) ? 'active' : ''}}">
+										<a href="{{ route('manage.payroll.index') }}">Employees</a>
+									</li>
+									<li class="submenu-item {{ (request()->is('payroll/cash-advanced')) ? 'active' : ''}}">
+										<a href="{{ route('cash.advanced.index')}}">Cash advances</a>
+									</li>
+									<li class="submenu-item {{ (request()->is('payroll/generate')) ? 'active' : ''}}">
+										<a href="{{ route('generate.payslip')}}">Generate Payslip</a>
+									</li>
+								</ul>
+						</li>
 					</ul>
 				</div>
 				<button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
@@ -109,13 +127,13 @@
 				@yield('page-content')
 			</div>
 
-			<footer>
+			{{-- <footer>
 				<div class="footer clearfix mb-0 text-muted">
 					<div class="float-start">
 						<p> &copy; </p>
 					</div>
 				</div>
-			</footer>
+			</footer> --}}
 		</div>
 	</div>
 	
@@ -149,7 +167,7 @@
 			@stack('jq-code')
 		});
 		@stack('js-code')
-
+		@stack('js-code-1')
 	</script>
 	
 </body>

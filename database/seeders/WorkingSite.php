@@ -15,6 +15,9 @@ class WorkingSite extends Seeder
     {
         $data = [
             [
+                'site_name' => 'Office based'
+            ],
+            [
                 'site_name' => 'No Site Assigned'
             ],
             [

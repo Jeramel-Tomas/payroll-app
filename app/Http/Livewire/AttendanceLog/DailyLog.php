@@ -9,10 +9,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\EmployeeInformation;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\UsersImport;
-use App\Models\Employee;
+// use App\Imports\UsersImport;
+// use App\Models\Employee;
 use App\Models\EmployeeTimeLog;
-use Illuminate\Database\Query\JoinClause;
+// use Illuminate\Database\Query\JoinClause;
 use Livewire\WithFileUploads;
 // use Illuminate\Support\Facades\Request;
 
@@ -32,6 +32,7 @@ class DailyLog extends Component
     public $filterDate = "";
     public $fullName = "";
     public $empInformationId = "";
+    public $showExport = false;
 
     /* protected $rules = [
         'morningIn' => 'regex:/^(0?[1-9]|1[0-2]):[0-5][0-9]$/|min:3'
@@ -45,16 +46,14 @@ class DailyLog extends Component
         'overtimeOut.regex' => 'Invalid input. Follow this format hh:mm.',
     ];
 
+    protected $listeners = [
+        'clearExportModalComponents' => 'clearExportModalComponents',
+    ];
+
     public function updated()
     {
         $this->resetPage();
     }
-
-    /* public function getMorningIn($amin)
-    {
-        $this->morningIn = $amin;
-        print_r('getMorningIn = ', $amin);
-    } */
 
     public function clearFilter()
     {
@@ -63,10 +62,10 @@ class DailyLog extends Component
         $this->filterDate = "";
     }
 
-    /* public function resetVariables()
+    public function clearExportModalComponents()
     {
-        
-    } */
+        $this->emit('clearChildComponentProperties');
+    }
 
     public function importDailyLog()
     {

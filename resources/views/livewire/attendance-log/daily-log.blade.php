@@ -58,14 +58,25 @@
                                         </span>
                                     </div>
                                 </div>
+                                {{-- <div class="col d-flex justify-content-end">
+                                    <button type="button" wire:click.prevent="showExportModal(true)" class="btn btn-info" data-toggle="modal" data-target="#myModal">Export Format</button>
+                                </div> --}}
+                                {{-- <button type="button" class="btn btn-primary" wire:click.prevent="showExportModal(true)" data-bs-target="#myModal">
+                                    Launch demo modal
+                                </button> --}}
+                                {{-- <div class="col d-flex justify-content-end">
+                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal">
+                                        Export Format
+                                    </button>
+                                </div>
                                 <div class="col d-flex justify-content-end">
                                     <button class="btn btn-info">Upload Time Record</button>
-                                </div>
+                                </div> --}}
                             </div>
     
                             <div class="table-responsive">
                                 {{-- @dd($this->employees) --}}
-                                <table class="table table-hover table-lg">
+                                <table class="table table-hover table">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
@@ -128,7 +139,7 @@
                                                             maxlength="5">
                                                         @error('afternoonIn') <span class="text-danger in-out-error">{{ $message }}</span> @enderror
                                                     @else
-                                                        <p class=" mb-0">{{$employee->afternoonIn ? \Carbon\Carbon::parse($mployee->afternoonIn)->format('h:i') : '-'}}</p>
+                                                        <p class=" mb-0">{{$employee->afternoonIn ? \Carbon\Carbon::parse($employee->afternoonIn)->format('h:i') : '-'}}</p>
                                                     @endif
                                                 </div>
                                             </td>
@@ -142,7 +153,7 @@
                                                             maxlength="5">
                                                         @error('afternoonOut') <span class="text-danger in-out-error">{{ $message }}</span> @enderror
                                                     @else
-                                                        <p class=" mb-0">{{$employee->afternoonOut ? \Carbon\Carbon::parse($mployee->afternoonOut)->format('h:i') : '-'}}</p>
+                                                        <p class=" mb-0">{{$employee->afternoonOut ? \Carbon\Carbon::parse($employee->afternoonOut)->format('h:i') : '-'}}</p>
                                                     @endif
                                                 </div>
                                             </td>
@@ -217,8 +228,13 @@
             </div>
         </div>
     </section>
-</div>
 
+    {{-- show export modal --}}
+    {{-- @if ($showExport) --}}
+    @livewire('attendance-log.show-export')
+    {{-- @endif --}}
+
+</div>
 {{-- <script>
     $this->dispatchBrowserEvent('testing',['success' => 'Your message has been sent successfully!']);
     
@@ -232,6 +248,7 @@
 
 
 @push('js-code')
+
 {{-- var ed = document.getElementsByClassName('.edit-button');
 
 ed.addEventListener('click', function() {
@@ -240,10 +257,10 @@ ed.addEventListener('click', function() {
 }); --}}
 
 
-$('.edit-button').click( function(e) {
+{{-- $('.edit-button').click( function(e) {
     console.log('edit-button clicked');
     console.log($('.am-in').html());
-});
+}); --}}
 
 Livewire.on('success', success => {
     Toastify({
@@ -267,6 +284,11 @@ Livewire.on('warning', warning => {
     }).showToast();
 });
 
+{{-- window.addEventListener('showMyModal', event => {
+alert('show modal ' + event);
+}); --}}
+
+
 {{-- document.getElementById('top-center').addEventListener('click', () => {
 Toastify({
 text: "This is toast in top center",
@@ -277,5 +299,16 @@ position: "center",
 backgroundColor: "#5cb85c",
 }).showToast();
 }) --}}
+
+$('#closeExportModal').on('click', function() {
+    console.log($(this).text() + ' closing export modal');
+    Livewire.emit("clearExportModalComponents");
+});
+{{-- $("#datepicker").datepicker({
+format: "mm-yyyy",
+startView: "months",
+minViewMode: "months"
+}); --}}
+{{-- @stack('exportModal-js') --}}
 
 @endpush

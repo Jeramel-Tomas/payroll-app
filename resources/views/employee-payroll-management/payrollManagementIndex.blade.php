@@ -10,19 +10,19 @@
 @endpush --}}
 
 @section('page-heading')
-    <h4>Manage Time Records</h4>
+    <h4>Payroll Management</h4>
 @endsection
 
 @section('page-content')
-    @livewire('attendance-log.daily-log')
+    @livewire('payroll-management.employee-payroll-info')
 @endsection
 
 
 
 @push('css-imports')
-<style>
+{{-- <style>
     .in-out-error {
         font-size: 0.875em;
     }
-</style>
+</style> --}}
 @endpush

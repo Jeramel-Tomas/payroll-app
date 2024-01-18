@@ -13,19 +13,20 @@ class AttendanceLogController extends Controller
 {
     public function index()
     {
-        $employees = EmployeeInformation::select(
+        /* $employees = EmployeeInformation::select(
             'id', 
             'employee_uuid', 
             'first_name',
             'last_name',
             )
             ->paginate(5);
-        $sites = WorkingSite::all();
+        $sites = WorkingSite::all(); */
         
         // $employees = Employee::paginate(15)->withQueryString();
         // $employees = DB::table('employee_info')->simplePaginate(1);
         //dd($employees);
-        return view('attendance-log-management.attendanceLogIndex', ['employees' => $employees, 'sites' => $sites]);
+        // return view('attendance-log-management.attendanceLogIndex', ['employees' => $employees, 'sites' => $sites]);
+        return view('attendance-log-management.attendanceLogIndex');
     }
 
     public function showAttendanceLogPerSite(string $siteId)

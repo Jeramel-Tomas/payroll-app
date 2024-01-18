@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceLogController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmployeePayrollInfo;
+use App\Http\Controllers\EmployeePayrollInfoController;
+
 //use App\Http\Controllers\ExcelCSVController;
 
 /*
@@ -42,4 +45,11 @@ Route::prefix('/attendance')->group(function () {
     Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
     Route::get('/save-attendance', [AttendanceLogController::class, 'saveAttendanceAjax'])->name('attendance.saveAttendanceAjax'); */
 });
+
+Route::prefix('/payroll')->group(function () {
+    Route::get('/employees', [EmployeePayrollInfoController::class, 'index'])->name('manage.payroll.index');
+    Route::get('/generate', [EmployeePayrollInfoController::class, 'generatePayslip'])->name('generate.payslip');
+    Route::get('/cash-advanced', [EmployeePayrollInfoController::class, 'cashAdvancedIndex'])->name('cash.advanced.index');
+});
+
 

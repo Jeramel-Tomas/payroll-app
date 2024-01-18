@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('employee_information_id');
             $table->date('attendance_date');
-            $table->time('morning_in')->nullable();
-            $table->time('morning_out')->nullable();
-            $table->time('afternoon_in')->nullable();
-            $table->time('afternoon_out')->nullable();
-            $table->time('overtime_in')->nullable();
-            $table->time('overtime_out')->nullable();
+            $table->char('morning_in', 6)->nullable();
+            $table->char('morning_out', 6)->nullable();
+            $table->char('afternoon_in', 6)->nullable();
+            $table->char('afternoon_out', 6)->nullable();
+            $table->char('overtime_in', 6)->nullable();
+            $table->char('overtime_out', 6)->nullable();
             //SETTING THE PRIMARY KEYS
             // $table->primary(['employee_information_id', 'attendance_date']);
             $table->timestamps();

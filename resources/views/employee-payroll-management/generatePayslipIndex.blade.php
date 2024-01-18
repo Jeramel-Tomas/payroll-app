@@ -10,19 +10,19 @@
 @endpush --}}
 
 @section('page-heading')
-    <h4>Manage Time Records</h4>
+<h4>Generate Payslip</h4>
 @endsection
 
-@section('page-content')
-    @livewire('attendance-log.daily-log')
-@endsection
+{{-- @section('page-content')
+@livewire('attendance-log.daily-log')
+@endsection --}}
 
 
 
 @push('css-imports')
-<style>
+{{-- <style>
     .in-out-error {
         font-size: 0.875em;
     }
-</style>
+</style> --}}
 @endpush
