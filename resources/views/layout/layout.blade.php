@@ -95,7 +95,7 @@
 								</a>
 								<ul class="submenu {{ (request()->is('payroll/*')) ? 'active' : ''}}">
 									<li class="submenu-item {{ (request()->is('payroll/employees')) ? 'active' : ''}}">
-										<a href="{{ route('manage.payroll.index') }}">Employees</a>
+										<a href="{{ route('manage.payroll.index') }}">Payroll Settings</a>
 									</li>
 									<li class="submenu-item {{ (request()->is('payroll/cash-advanced')) ? 'active' : ''}}">
 										<a href="{{ route('cash.advanced.index')}}">Cash advances</a>
@@ -162,8 +162,7 @@
 			var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 				return new bootstrap.Tooltip(tooltipTriggerEl)
 			});
-
-			console.log('jquery is ready')
+			// console.log('jquery is ready')		
 			@stack('jq-code')
 		});
 		@stack('js-code')

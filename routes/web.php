@@ -50,6 +50,16 @@ Route::prefix('/payroll')->group(function () {
     Route::get('/employees', [EmployeePayrollInfoController::class, 'index'])->name('manage.payroll.index');
     Route::get('/generate', [EmployeePayrollInfoController::class, 'generatePayslip'])->name('generate.payslip');
     Route::get('/cash-advanced', [EmployeePayrollInfoController::class, 'cashAdvancedIndex'])->name('cash.advanced.index');
+    Route::get('/cash-advanced/{id}/view', [EmployeePayrollInfoController::class, 'cashAdvancedView'])->name('view.employee.cash.advances');
+    Route::get('/cash-advanced/{id}/view/{ecaid}', [EmployeePayrollInfoController::class, 'downLoadPdf'])->name('dl.pdf');
+    Route::get('/cash-advanced/{id}/view/date-filter', [EmployeePayrollInfoController::class, 'cashAdvancedView'])->name('date.filter.cashadvance');
+    Route::get('/cash-advanced/{id}/view/date-filter/{ecaid}', [EmployeePayrollInfoController::class, 'downLoadPdfFiltered'])->name('dl.filter.pdf');
+    // view.employee.cash.advances
 });
+
+Route::get('/pdfdl', function() {
+    return view('employee-payroll-management.download-cash-advances.cashAdvancedDl');
+});
+
 
 

@@ -5,9 +5,9 @@
 <h4>Cash Advance Management</h4>
 @endsection
 
-{{-- @section('page-content')
-@livewire('payroll-management.employee-payroll-info')
-@endsection --}}
+@section('page-content')
+    @livewire('payroll-management.cash-advances-index')
+@endsection
 
 {{-- show the list of employees --}}
 {{-- table columns [name, total, action] --}}
