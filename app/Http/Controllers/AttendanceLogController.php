@@ -29,6 +29,11 @@ class AttendanceLogController extends Controller
         return view('attendance-log-management.attendanceLogIndex');
     }
 
+    public function attendanceSheetIndex()
+    {
+        return view('attendance-log-management.attendanceSheetIndex');
+    }
+
     public function showAttendanceLogPerSite(string $siteId)
     {
         $sites = WorkingSite::all();

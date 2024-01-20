@@ -78,19 +78,8 @@ class EmployeePayrollInfoController extends Controller
 
         $pdf = PDF::loadView('employee-payroll-management.download-cash-advances.cashAdvancedDl', $data);
         // $pdf->save(public_path('test.pdf'));
-        $fileName = $empInfo->last_name.$empInfo->first_name.Carbon::now().'pdf';
+        $fileName = $empInfo->last_name.$empInfo->first_name.Carbon::now().'.pdf';
         return $pdf->download($fileName);
-        /* $users = User::get();
-
-        $data = [
-            'title' => 'Welcome to ItSolutionStuff.com',
-            'date' => date('m/d/Y'),
-            'users' => $users
-        ];
-
-        $pdf = PDF::loadView('myPDF', $data);
-
-        return $pdf->download('itsolutionstuff.pdf'); */
     }
 
     public function downLoadPdfFiltered(Request $request)
@@ -106,8 +95,8 @@ class EmployeePayrollInfoController extends Controller
         ];
 
         $pdf = PDF::loadView('employee-payroll-management.download-cash-advances.cashAdvancedDl', $data);
-        // $pdf->save(public_path('test.pdf'));
-        return $pdf->download('test.pdf');
+        $fileName = $empInfo->last_name . $empInfo->first_name . Carbon::now() . '.pdf';
+        return $pdf->download($fileName);
     }
 
 }

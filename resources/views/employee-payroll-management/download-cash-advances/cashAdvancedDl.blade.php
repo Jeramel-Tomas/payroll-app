@@ -16,10 +16,10 @@
                 <p class="text-center">Office Copy</p>
                 <div class="border-top py-2 px-4">
                     <p><strong>Date today:</strong> <span class="border-bottom">{{ Carbon\Carbon::now()->format('F j, Y') }}</span></p>
-                    <p><strong>Date requested:</strong> <span class="border-bottom">{{ Carbon\Carbon::parse($cashAdvances->cash_advanced_date)->format('F j, Y') }}</span></p>
-                    <p><strong>Name:</strong> <span class="border-bottom">{{$employee->first_name}} {{$employee->first_name}}</span></p>
-                    <p><strong>Amount of Cash Advance:</strong> <span class="border-bottom"> {{ number_format($cashAdvances->amount, 2) }} Php</span></p>
-                    <p><strong>Purpose of Cash Advance:</strong> <span class="border-bottom">{{ $cashAdvances->purpose}}</span></p>
+                    <p><strong>Date requested:</strong> <span class="border-bottom">{{ $cashAdvances && $cashAdvances->cash_advanced_date ? Carbon\Carbon::parse($cashAdvances->cash_advanced_date)->format('F j, Y') : '' }}</span></p>
+                    <p><strong>Name:</strong> <span class="border-bottom">{{$employee->first_name ?? ''}} {{$employee->first_name ?? ''}}</span></p>
+                    <p><strong>Amount of Cash Advance:</strong> <span class="border-bottom"> {{ $cashAdvances && $cashAdvances->amount ? number_format($cashAdvances->amount, 2) : '' }} Php</span></p>
+                    <p><strong>Purpose of Cash Advance:</strong> <span class="border-bottom">{{ $cashAdvances && $cashAdvances->purpose ? $cashAdvances->purpose : ''}}</span></p>
                 </div>
                 <table class="table">
                     <tr>
@@ -42,12 +42,11 @@
                 <p class="text-center fw-bold">Cash Advance Form</p>
                 <p class="text-center">Employees' copy</p>
                 <div class="border-top py-2 px-4">
-                   <p><strong>Date today:</strong> <span class="border-bottom">{{ Carbon\Carbon::now()->format('F j, Y') }}</span></p>
-                <p><strong>Date requested:</strong> <span class="border-bottom">{{
-                        Carbon\Carbon::parse($cashAdvances->cash_advanced_date)->format('F j, Y') }}</span></p>
-                <p><strong>Name:</strong> <span class="border-bottom">{{$employee->first_name}} {{$employee->first_name}}</span></p>
-                <p><strong>Amount of Cash Advance:</strong> <span class="border-bottom"> {{ number_format($cashAdvances->amount, 2) }} Php</span></p>
-                <p><strong>Purpose of Cash Advance:</strong> <span class="border-bottom">{{ $cashAdvances->purpose}}</span></p>
+                    <p><strong>Date today:</strong> <span class="border-bottom">{{ Carbon\Carbon::now()->format('F j, Y') }}</span></p>
+                    <p><strong>Date requested:</strong> <span class="border-bottom">{{ $cashAdvances && $cashAdvances->cash_advanced_date ? Carbon\Carbon::parse($cashAdvances->cash_advanced_date)->format('F j, Y') : '' }}</span></p>
+                    <p><strong>Name:</strong> <span class="border-bottom">{{$employee->first_name ?? ''}} {{$employee->first_name ?? ''}}</span></p>
+                    <p><strong>Amount of Cash Advance:</strong> <span class="border-bottom"> {{ $cashAdvances && $cashAdvances->amount ? number_format($cashAdvances->amount, 2) : '' }} Php</span></p>
+                    <p><strong>Purpose of Cash Advance:</strong> <span class="border-bottom">{{ $cashAdvances && $cashAdvances->purpose ? $cashAdvances->purpose : ''}}</span></p>
                 </div>
                 <table class="table">
                     <tr>

@@ -82,9 +82,9 @@
 									<a href="{{ route('attendance.log.index') }}">Daily Time Record</a>
 								</li>
 								{{-- <li class="submenu-item {{ (request()->is('attendance/log')) ? 'active' : ''}}"> --}}
-								<li class="submenu-item">
-									<a href="#">Attendance sheet</a>
-								</li>
+								{{-- <li class="submenu-item">
+									<a href="{{ route('attendance.sheet.index') }}">Attendance sheet</a>
+								</li> --}}
 							</ul>
 						</li>
 
