@@ -13,9 +13,9 @@
 <h4>Generate Payslip</h4>
 @endsection
 
-{{-- @section('page-content')
-@livewire('attendance-log.daily-log')
-@endsection --}}
+@section('page-content')
+    @livewire('payroll-management.generate-payslip')
+@endsection
 
 
 

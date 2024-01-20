@@ -35,7 +35,7 @@ Route::prefix('employees')->group(function () {
     Route::get('/{empid}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::post('/store/{siteId}', [EmployeeController::class, 'store'])->name('employees.store');
 
-    Route::get('/download-template', [ExportController::class, 'downloadTemplate'])->name('download.template');;
+    // Route::get('/download-template', [ExportController::class, 'downloadTemplate'])->name('download.template');;
     Route::post('/addSite', [EmployeeController::class, 'addSite'])->name('employees.addSite');
 });
 
