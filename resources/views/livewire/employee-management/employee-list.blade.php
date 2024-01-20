@@ -101,10 +101,10 @@
             <hr class="p-0 m-0">
             <div class="card-content row  p-2 ">
                 <div class="col-12 col-md-6 p-2 d-flex justify-content-start">
-                    <a href="{{ route('download.template') }}" type=" submit" class="btn btn-secondary"
+                    {{-- <a href="{{ route('download.template') }}" type=" submit" class="btn btn-secondary"
                         id="template" data-bs-toggle="tooltip" data-bs-placement="top"
                         title="Download template for mass employee upload">Generate Template
-                    </a>
+                    </a> --}}
                 </div>
                 <div class="col-12 col-md-6 d-flex justify-content-md-end align-items-center ml-md-2" id="addForm">
                     <a href="{{ route('employees.create') }}" class="btn btn-primary">
