@@ -7,6 +7,7 @@ use App\Http\Controllers\AttendanceLogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeePayrollInfo;
 use App\Http\Controllers\EmployeePayrollInfoController;
+use App\Http\Controllers\WorkingSitesController;
 
 //use App\Http\Controllers\ExcelCSVController;
 
@@ -57,6 +58,12 @@ Route::prefix('/payroll')->group(function () {
     // Route::get('/cash-advanced/{id}/view/date-filter/{ecaid}', [EmployeePayrollInfoController::class, 'downLoadPdfFiltered'])->name('dl.filter.pdf');
     // view.employee.cash.advances
 });
+
+Route::prefix('/working-sites')->group(function () {
+    Route::get('/working-sites-index', [WorkingSitesController::class, 'index'])->name('working.sites.index');
+    Route::get('/show-employees/{siteId}', [WorkingSitesController::class, 'showEmployees'])->name('working.site.assigned.employees');
+});
+
 
 /* Route::get('/pdfdl', function() {
     return view('employee-payroll-management.download-cash-advances.cashAdvancedDl');

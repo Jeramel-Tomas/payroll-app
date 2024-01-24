@@ -32,6 +32,11 @@ class CashAdvancesIndex extends Component
         $this->reset();
     }
 
+    public function clearFilter()
+    {
+        $this->reset();
+    }
+
     public function createCashAdvance($empId, $fname, $lname)
     {
         $this->fullName = $fname . ' ' . $lname;

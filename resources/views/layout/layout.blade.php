@@ -105,6 +105,25 @@
 									</li>
 								</ul>
 						</li>
+						{{-- Working sites management --}}
+						<li class="sidebar-item has-sub {{ (request()->is('working-sites/*')) ? 'active' : ''}}">
+							{{-- <a href="{{ route('attendance.log.index') }}" class='sidebar-link'> --}}
+								<a href="#" class='sidebar-link'>
+									<i class="bi bi-collection-fill"></i>
+									<span>Manage Working Sites</span>
+								</a>
+								<ul class="submenu {{ (request()->is('working-sites/working-sites-index')) ? 'active' : ''}}">
+									<li class="submenu-item {{ (request()->is('working-sites/working-sites-index')) ? 'active' : ''}}">
+										<a href="{{ route('working.sites.index') }}">Site List</a>
+									</li>
+									{{-- <li class="submenu-item {{ (request()->is('attendance/log')) ? 'active' : ''}}"> --}}
+										{{--
+									<li class="submenu-item">
+										<a href="{{ route('attendance.sheet.index') }}">Attendance sheet</a>
+									</li> --}}
+								</ul>
+						</li>
+
 					</ul>
 				</div>
 				<button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
@@ -163,6 +182,7 @@
 				return new bootstrap.Tooltip(tooltipTriggerEl)
 			});
 			// console.log('jquery is ready')		
+			$('[data-toggle="tooltip"]').tooltip();
 			@stack('jq-code')
 		});
 		@stack('js-code')
