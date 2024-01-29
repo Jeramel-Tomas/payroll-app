@@ -55,6 +55,8 @@ Route::prefix('/payroll')->group(function () {
     Route::get('/cash-advanced/{id}/view', [EmployeePayrollInfoController::class, 'cashAdvancedView'])->name('view.employee.cash.advances');
     Route::get('/cash-advanced/{id}/view/date-filter', [EmployeePayrollInfoController::class, 'cashAdvancedView'])->name('date.filter.cashadvance');
     Route::get('/cash-advanced/{id}/view/{ecaid}', [EmployeePayrollInfoController::class, 'downLoadPdf'])->name('dl.pdf');
+    Route::get('/download-all-payslip', [EmployeePayrollInfoController::class, 'generatePayslipDownload'])->name('download.payslip');
+    Route::get('/download-single-payslip/{id}', [EmployeePayrollInfoController::class, 'generateSinglePayslipDownload'])->name('single.download.payslip');
     // Route::get('/cash-advanced/{id}/view/date-filter/{ecaid}', [EmployeePayrollInfoController::class, 'downLoadPdfFiltered'])->name('dl.filter.pdf');
     // view.employee.cash.advances
 });

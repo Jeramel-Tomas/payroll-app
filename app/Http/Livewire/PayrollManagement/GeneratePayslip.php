@@ -22,11 +22,13 @@ class GeneratePayslip extends Component
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
-    
+
     public $workingSite;
     public $workingSiteName = '', $searchString = '';
-    public $dateFrom = '', 
+    public $dateFrom = '',
         $dateTo = '';
+    public $dateFromPayslip = '',
+        $dateToPayslip = '';
     public $days = 0,
         $dailyRate = 0,
         $grossTotal = 0;
@@ -34,12 +36,17 @@ class GeneratePayslip extends Component
     {
         $this->resetPage();
     }
-    
+
     public function clearFilter()
     {
         $this->workingSite = null;
         $this->workingSiteName = "";
+        $this->dateFrom = "";
+        $this->dateTo = "";
+
+
     }
+    
     public function render()
     {
         $employees = EmployeeInformation::all();
@@ -52,19 +59,19 @@ class GeneratePayslip extends Component
             ->whereNull('employee_working_sites.employee_information_id')
             ->orWhereNotNull('employee_working_sites.employee_information_id')
             ->paginate(5);
-            //cash advance
-            foreach($getEmployeePayslip as $value){
-                $empCashAdvance = DB::table('employee_cash_advances')
-                    ->where('employee_information_id', $value->employee_id)
-                    ->where('cash_advanced_date', '<=', Carbon::now()->endOfMonth()->toDateString());
-                if ($this->dateFrom && $this->dateTo) {
-                    $empCashAdvance->where('cash_advanced_date', '>=', $this->dateFrom);
-                    $empCashAdvance->where('cash_advanced_date', '<=', $this->dateTo);
-                }
-                $getCashAdvance[] = $empCashAdvance->get();
+        //cash advance
+        foreach ($getEmployeePayslip as $value) {
+            $empCashAdvance = DB::table('employee_cash_advances')
+                ->where('employee_information_id', $value->employee_id)
+                ->where('cash_advanced_date', '<=', Carbon::now()->endOfMonth()->toDateString());
+            if ($this->dateFrom && $this->dateTo) {
+                $empCashAdvance->where('cash_advanced_date', '>=', $this->dateFrom);
+                $empCashAdvance->where('cash_advanced_date', '<=', $this->dateTo);
             }
-            //timelog
-        foreach($getEmployeePayslip as $value){
+            $getCashAdvance[] = $empCashAdvance->get();
+        }
+        //timelog
+        foreach ($getEmployeePayslip as $value) {
             // dump($value->employee_id);
             $empTimeLogs = DB::table('employee_time_logs')
                 ->where('employee_information_id', $value->employee_id)
@@ -77,10 +84,9 @@ class GeneratePayslip extends Component
             // where(attendance_date >= from)
             // where(attendance_date <= to)
             $getTimeLogs[] = $empTimeLogs->get();
-            
         }
         // dump($getTimeLogs);
-            // dump($getTimeLogs);
+        // dump($getTimeLogs);
         // 2024-1-12 (YY-MM-DD)
         // 2024-1-31
         // dump(Carbon::now()->endOfMonth()->toDateString());
@@ -92,23 +98,22 @@ class GeneratePayslip extends Component
         $empTotalCashAdvance = [];
         // $empCashAdvance = [];
         $cashAdvanceWithKey = [];
-        
-        foreach($getCashAdvance as $key => $value){
+
+        foreach ($getCashAdvance as $key => $value) {
             if (count($value) > 0) {
                 foreach ($value as $v2) {
                     $cashAdvanceWithKey[$v2->employee_information_id][] = $v2->amount;
-                    
                 }
             }
         }
-        foreach($getTimeLogs as $key => $value) {
+        foreach ($getTimeLogs as $key => $value) {
             if (count($value) > 0) {
                 foreach ($value as $v2) {
                     if ($v2->morning_in && $v2->morning_out && $v2->afternoon_in && $v2->afternoon_out) {
                         $empNumberOfDays[$v2->employee_information_id][] = 1;
-                    }elseif($v2->morning_in && $v2->morning_out) {
+                    } elseif ($v2->morning_in && $v2->morning_out) {
                         $empNumberOfDays[$v2->employee_information_id][] = 0.5;
-                    }elseif($v2->afternoon_in && $v2->afternoon_out) {
+                    } elseif ($v2->afternoon_in && $v2->afternoon_out) {
                         $empNumberOfDays[$v2->employee_information_id][] = 0.5;
                     }
                     //OT
@@ -121,37 +126,33 @@ class GeneratePayslip extends Component
                         $seconds = $timeDifference->s;
 
                         $decTimeDifferenceIntial = ($hours * 60) + $minutes + ($seconds / 60);
-                        $decTimeDifference = $decTimeDifferenceIntial /60;
+                        $decTimeDifference = $decTimeDifferenceIntial / 60;
                         $overTimeWithKey[$v2->employee_information_id][] = $decTimeDifference;
-                       
                     }
-                    
-
                 }
             }
-            
         }
         //cash advance
-        foreach($cashAdvanceWithKey as $key => $value){
+        foreach ($cashAdvanceWithKey as $key => $value) {
             if (count($value) > 1) {
                 $sumCA = 0;
                 foreach ($value as $val) {
                     $sumCA += $val;
                 }
                 $empTotalCashAdvance[$key] = $sumCA;
-            }else{
+            } else {
                 $empTotalCashAdvance[$key] = $value[0];
             }
         }
         //OT
-        foreach($overTimeWithKey as $key => $value){
+        foreach ($overTimeWithKey as $key => $value) {
             if (count($value) > 1) {
                 $sumOT = 0;
                 foreach ($value as $val) {
                     $sumOT += $val;
                 }
                 $empTotalOverTime[$key] = $sumOT;
-            }else{
+            } else {
                 $empTotalOverTime[$key] = $value[0];
             }
         }
@@ -161,33 +162,22 @@ class GeneratePayslip extends Component
                 foreach ($value as $val) {
                     $empTotalDays[$key] = $val + $val;
                 }
-            }else{
+            } else {
                 $empTotalDays[$key] = $value[0];
             }
         }
-        
-        
-        return view('livewire.payroll-management.generate-payslip', 
-                    ['getEmployee' => $getEmployeePayslip, 
-                    'sites' => $sites, 
-                    'employees' => $employees,
-                    'totalDays' => $empTotalDays,
-                    'totalOvertime' => $empTotalOverTime,
-                    'totalCashAdvance'=> $empTotalCashAdvance,
-                    ]);
-    }
-    //function to get days per employee
-    public function getAttendanceDays($employeeId)
-    {
 
-    }
-    //function that will calculate the gross total based on the Days and rate
-    public function getGrossTotal($days,$rate)
-    {
-    }
-    //function that will calculate the net total
-    public function getNetTotal($deductions,$grossTotal)
-    {
 
+        return view(
+            'livewire.payroll-management.generate-payslip',
+            [
+                'getEmployee' => $getEmployeePayslip,
+                'sites' => $sites,
+                'employees' => $employees,
+                'totalDays' => $empTotalDays,
+                'totalOvertime' => $empTotalOverTime,
+                'totalCashAdvance' => $empTotalCashAdvance,
+            ]
+        );
     }
 }
