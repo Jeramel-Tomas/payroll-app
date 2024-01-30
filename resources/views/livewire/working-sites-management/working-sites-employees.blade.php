@@ -33,6 +33,7 @@
                                     <tr>
                                         <th>Name</th>
                                         <th>Job title</th>
+                                        <th>Daily Rate</th>
                                         <th data-bs-toggle="tooltip"
                                             title="Unassign employee">Action</th>
                                     </tr>
@@ -67,6 +68,24 @@
                                                 
                                                 @else
                                                     {{$employee->job_title ?? '-'}}
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="col-auto">
+                                            <div
+                                                wire:click.stop="editJobTitleRateBySite({{$employee->employee_information_id}}, '{{$employee->working_site_id}}', 'jobTitleRate')"
+                                                role="button"
+                                            >
+                                                @if (
+                                                    !empty($jobTitleRateColumn) && 
+                                                    $jobTitleRateColumn === $jobTitleRateColumnConstant && 
+                                                    $employee->employee_information_id === $employeeId
+                                                )
+                                                <input type="text" wire:keydown.escape="cancelEditing()" wire:keydown.enter="saveJobTitleRate($event.target.value)"
+                                                    value="{{$employee->job_title_rate ?? ''}}" class="form-control" />
+                                                
+                                                @else
+                                                {{$employee->job_title_rate ?? '-'}}
                                                 @endif
                                             </div>
                                         </td>

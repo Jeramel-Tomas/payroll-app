@@ -231,7 +231,6 @@
                         <div class="alert alert-success d-flex  justify-content-between" role="alert">
                             <i class="bi bi-check-circle-fill"></i>
                             <div class="text-center">
-                                success
                                 {{ session('message') }}
                             </div>
                             <i role="button" data-bs-dismiss="alert" class="bi bi-x"></i>

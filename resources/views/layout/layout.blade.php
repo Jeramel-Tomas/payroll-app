@@ -77,10 +77,13 @@
 								<i class="bi bi-collection-fill"></i>
 								<span>Manage Time Record</span>
 							</a>
-							<ul class="submenu {{ (request()->is('attendance/log')) ? 'active' : ''}}">
-								<li class="submenu-item {{ (request()->is('attendance/log')) ? 'active' : ''}}">
-									<a href="{{ route('attendance.log.index') }}">Daily Time Record</a>
+							<ul class="submenu {{ (request()->is('attendance/manage')) ? 'active' : ''}}">
+								<li class="submenu-item {{ (request()->is('attendance/manage')) ? 'active' : ''}}">
+									<a href="{{ route('attendance.log.manage') }}">Manage DTR</a>
 								</li>
+								{{-- <li class="submenu-item {{ (request()->is('attendance/log')) ? 'active' : ''}}">
+									<a href="{{ route('attendance.log.index') }}">Daily Time Record</a>
+								</li> --}}
 								{{-- <li class="submenu-item {{ (request()->is('attendance/log')) ? 'active' : ''}}"> --}}
 								{{-- <li class="submenu-item">
 									<a href="{{ route('attendance.sheet.index') }}">Attendance sheet</a>

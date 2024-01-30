@@ -14,8 +14,12 @@ class WorkingSitesEmployees extends Component
 
     public $searchString = '';
     public $siteId;
-    public $jobTitleColumnConstant = 'jobTitle';
-    public $employeeId = '', $siteIdEdit = '', $jobTitleColumn = '';
+    public $jobTitleColumnConstant = 'jobTitle',
+        $jobTitleRateColumnConstant = 'jobTitleRate';
+    public $employeeId = '', 
+        $siteIdEdit = '', 
+        $jobTitleColumn = '',
+        $jobTitleRateColumn = '';
     public $empFullName = '';
 
     public function confirmRemoveEmpoyeeFromSite($empId, $siteId)
@@ -44,12 +48,34 @@ class WorkingSitesEmployees extends Component
         $this->cancelEditing();
     }
 
+    public function editJobTitleRateBySite($empId, $siteId, $columnName)
+    {
+        $this->employeeId = $empId;
+        $this->siteIdEdit = $siteId;
+        $this->jobTitleRateColumn = $columnName;
+    }
+
+    public function saveJobTitleRate($value)
+    {
+        DB::table('employee_working_sites')
+        ->where('employee_information_id', $this->employeeId)
+            ->where('working_site_id', $this->siteIdEdit)
+            ->update([
+                'job_title_rate' => $value,
+                'updated_at' => Carbon::now()
+            ]);
+
+        $this->cancelEditing();
+    }
+
     public function cancelEditing()
     {
         $this->reset([
             'jobTitleColumn',
             'employeeId',
             'siteIdEdit',
+            'jobTitleRateColumnConstant',
+            'jobTitleRateColumn',
         ]);
     }
 
@@ -90,7 +116,8 @@ class WorkingSitesEmployees extends Component
                 'employee_working_sites.employee_information_id',
                 'employee_working_sites.working_site_id',
                 'working_sites.site_name',
-                'employee_working_sites.job_title'
+                'employee_working_sites.job_title',
+                'employee_working_sites.job_title_rate'
             )
             ->orderBy('employee_information.last_name');
         $employeesInWorkingSite->where('working_sites.id', '=', $this->siteId);

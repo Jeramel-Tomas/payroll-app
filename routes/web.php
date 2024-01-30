@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceLogController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmployeeAttendanceController;
 use App\Http\Controllers\EmployeePayrollInfo;
 use App\Http\Controllers\EmployeePayrollInfoController;
 use App\Http\Controllers\WorkingSitesController;
@@ -41,8 +42,9 @@ Route::prefix('employees')->group(function () {
 });
 
 Route::prefix('/attendance')->group(function () {
-    Route::get('/log', [AttendanceLogController::class, 'index'])->name('attendance.log.index');
-    Route::get('/attendance-sheet', [AttendanceLogController::class, 'attendanceSheetIndex'])->name('attendance.sheet.index');
+    Route::get('/manage', [EmployeeAttendanceController::class, 'index'])->name('attendance.log.manage');
+    // Route::get('/log', [AttendanceLogController::class, 'index'])->name('attendance.log.index');
+    // Route::get('/attendance-sheet', [AttendanceLogController::class, 'attendanceSheetIndex'])->name('attendance.sheet.index');
     /*  Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
     Route::get('/showlogs/{siteId}', [AttendanceLogController::class, 'showAttendanceLogPerSite'])->name('attendance.showlog.persite');
     Route::get('/save-attendance', [AttendanceLogController::class, 'saveAttendanceAjax'])->name('attendance.saveAttendanceAjax'); */
