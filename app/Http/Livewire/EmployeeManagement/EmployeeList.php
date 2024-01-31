@@ -146,7 +146,7 @@ class EmployeeList extends Component
         $getEmployee->orderBy('employee_information.last_name', 'asc');
         $uniqueAddresses = EmployeeInformation::distinct()->pluck('address');
         $uniqueJob = EmployeeInformation::distinct()->pluck('job_title');
-        $getEmployee = $getEmployee->paginate(4);
+        $getEmployee = $getEmployee->paginate(25);
 
         if ($getEmployee->isEmpty()) {
             $this->noResultsMessage = 'No employees found';
