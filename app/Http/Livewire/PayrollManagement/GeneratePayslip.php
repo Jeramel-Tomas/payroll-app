@@ -53,11 +53,12 @@ class GeneratePayslip extends Component
         $sites = WorkingSite::all();
 
         $getEmployeePayslip = DB::table('employee_information')
-            ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
+            /* ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
             ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
             ->select('employee_information.id AS employee_id', 'employee_information.*', 'employee_working_sites.*', 'working_sites.*')
             ->whereNull('employee_working_sites.employee_information_id')
-            ->orWhereNotNull('employee_working_sites.employee_information_id')
+            ->orWhereNotNull('employee_working_sites.employee_information_id') */
+            ->select('employee_information.id AS employee_id', 'employee_information.*')
             ->paginate(25);
             // dd($getEmployeePayslip);
         //cash advance

@@ -23,12 +23,12 @@
                             </div>
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <label for="">Date from</label>
-                                <input type="date" wire:model="dateFrom" id="">
+                                <input type="date" class="form-control" wire:model="dateFrom" id="">
                                 {{-- {{ $dateFrom }} --}}
                             </div>
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <label for="">Date to</label>
-                                <input type="date" wire:model="dateTo" id="">
+                                <input type="date" class="form-control" wire:model="dateTo" id="">
                                 {{-- {{ $dateTo }} --}}
                             </div>
                         </div>
@@ -62,56 +62,148 @@
                     </div>
                 </div>
                 {{-- Table start --}}
-                <table class="table bordered bg-white table-hover ">
+                <table class="table table-bordered bg-white table-hover ">
                     <thead class="align-text-center">
 
                         <tr>
                             <th class="border text-center">Name </th>
-                            <th class="border text-center">Job Title</th>
                             <th class="border text-center">Site Location</th>
+                            <th class="border text-center">Job Title</th>
+                            <th class="border text-center">Rate</th>
                             <th class="border text-center">Days</th>
                             <th class="border text-center">Total Overtime</th>
-                            <th class="border text-center">Rate</th>
                             <th class="border text-center"> Gross Total</th>
                             <th class="border text-center">Deductions</th>
                             <th class="border text-center"> Net Total</th>
                             <th class="border text-center">Action</th>
                         </tr>
                     </thead>
+                    <tbody>
                     @foreach($getEmployee as $employee)
+                    <tr>
                     {{-- @dd($employee->job_title) --}}
                     <td class="d-none"></td>
-                    <td class="col-2 border" wire:model="emp_name">{{ Str::ucfirst(Str::lower($employee->first_name)) }} {{ Str::ucfirst(Str::lower($employee->last_name)) }}</td>
+                    <td class="auto" wire:model="emp_name">{{ Str::ucfirst(Str::lower($employee->first_name)) }} {{ Str::ucfirst(Str::lower($employee->last_name)) }}</td>
                     {{-- <td class="col-1 border">{{ $employee->job_title }}</td> --}}
-                    <td class="col-1 border">{{ $employee->job_title === null || $employee->job_title === '' ? 'No Job Title' : $employee->job_title }}</td>                    
-                    <td class="col-2 border" wire:model="emp_site">{{ $employee->site_name }}</td>
-                    <td class="col-1 border" wire:model="emp_days">{{ array_key_exists($employee->employee_id, $totalDays) ?
-                        $totalDays[$employee->employee_id] : '0'}}</td>
-                    <td class="col-1 border" wire:model="emp_total_ot">{{ number_format(array_key_exists($employee->employee_id, $totalOvertime) ?
-                        $totalOvertime[$employee->employee_id] : '0',2)}}</td>
-                    {{-- <td class="col-1 border">{{ $employee->daily_rate }}</td> --}}
-                    <td class="col-1 border" wire:model="emp_rate">{{  $employee->job_title_rate === null || $employee->job_title_rate === '' ? 0 : $employee->job_title_rate }}</td>
-                    @php
-                    $OT = array_key_exists($employee->employee_id, $totalOvertime) ?
-                    $totalOvertime[$employee->employee_id] : 0;
-                    $totalOT = number_format(($employee->job_title_rate /8)* $OT,2);
-                    $totalGrossWithOT = array_key_exists($employee->employee_id, $totalDays) ?
-                    $totalDays[$employee->employee_id] * $employee->job_title_rate + $totalOT : '0';
-                    $deductions = number_format(array_key_exists($employee->employee_id, $totalCashAdvance) ?
-                    $totalCashAdvance[$employee->employee_id] : '0',2);
-                    $finalPay = number_format($totalGrossWithOT - $deductions,2);
-                    @endphp
-                    {{-- gross total --}}
-                    <td class="col-1 border" wire:model="emp_gross_total">{{ number_format(array_key_exists($employee->employee_id, $totalDays) ?
-                        $totalDays[$employee->employee_id] * $employee->job_title_rate + $totalOT : '0',2)}}</td>
-                    {{-- deductions --}}
-                    <td class="col-1 border" wire:model="emp_deductions">{{ number_format(array_key_exists($employee->employee_id,
-                        $totalCashAdvance) ? $totalCashAdvance[$employee->employee_id] : '0',2)}}</td>
-                    {{-- net total --}}
-                    <td class="col-1 border" wire:model="emp_final_pay">{{ $finalPay }}</td>
+                    <td class="auto" wire:model="emp_site">
+                        @php
+                            $siteName = DB::table('working_sites')
+                                ->join('employee_working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id')
+                                ->where('employee_working_sites.employee_information_id', $employee->employee_id)
+                                ->get();
+                        @endphp
+                        <ol class="">
+                        @foreach ($siteName as $item)
+                            <li class="">{{$item->site_name}}</li>
+                        @endforeach
+                        </ol>
+                    </td>
+                    <td class="auto">
+                        @php
+                            $jobTitle = DB::table('working_sites')
+                                ->join('employee_working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id')
+                                ->where('employee_working_sites.employee_information_id', $employee->employee_id)
+                                ->get();
+                        @endphp
+                        <ol class="">
+                            @foreach ($jobTitle as $item)
+                            <li class="">{{$item->job_title ?? 'Not set'}}</li>
+                            @endforeach
+                        </ol>
+                    </td>                    
+                    <td class="auto" wire:model="emp_rate">
+                        @php
+                            $rate = DB::table('working_sites')
+                                ->join('employee_working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id')
+                                ->where('employee_working_sites.employee_information_id', $employee->employee_id)
+                                ->get();
+                        @endphp
+                        <ol class="">
+                            @foreach ($rate as $item)
+                            <li class="">{{$item->job_title_rate ?? 0}}</li>
+                            @endforeach
+                        </ol>
+                    </td>
+                    <td class="auto" wire:model="emp_days">
+                        @php
+                        $attendance = DB::table('employee_time_records')
+                            ->where('employee_id', $employee->id)
+                            ->whereBetween(\DB::raw('DATE(attendance_from)'), [
+                            Carbon\Carbon::now()->startOfMonth(),
+                            Carbon\Carbon::now()->endOfMonth(),
+                           /*  $filterFrom ? $filterFrom : Carbon\Carbon::now()->startOfMonth(),
+                            $filterTo ? $filterTo : Carbon\Carbon::now()->endOfMonth(), */
+                            ])
+                            ->sum('days_present');
+                        @endphp
+                        {{$attendance}}
+                       
+                    </td>
+                    <td class="col-1 border" wire:model="emp_total_ot">
+                        @php
+                        $totalOt = DB::table('employee_time_records')
+                            ->where('employee_id', $employee->id)
+                            ->whereBetween(\DB::raw('DATE(attendance_from)'), [
+                                Carbon\Carbon::now()->startOfMonth(),
+                                Carbon\Carbon::now()->endOfMonth(),
+                            ])
+                        ->sum('total_ot');
+                        @endphp
+                        {{$totalOt}}
+                    </td>
+                    {{-- gross --}}
+                    <td class="auto" >
+                        @php
+                            $rate = DB::table('working_sites')
+                                ->join('employee_working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id')
+                                ->where('employee_working_sites.employee_information_id', $employee->employee_id)
+                                ->get();
+
+                            $computeOt = 0;
+                            $rateAttendanceTotal = 0;
+                        @endphp
+                        @foreach ($rate as $item)
+                           @php
+                                $computeOt += ($item->job_title_rate / 8) * $totalOt;
+                                $rateAttendanceTotal += $item->job_title_rate * $attendance;
+                           @endphp 
+                        @endforeach
+                        @php
+                            (double)$grossPay = $computeOt + $rateAttendanceTotal;
+                        @endphp
+                        {{number_format($grossPay, 2)}}
+                    </td>
+                    {{-- Deductions --}}
+                    <td class="auto">
+                        @php
+                            $totalCashAdvances = DB::table('employee_cash_advances')
+                                ->where('employee_information_id', $employee->employee_id)
+                                ->whereBetween(\DB::raw('DATE(cash_advanced_date)'), [
+                                    Carbon\Carbon::now()->startOfMonth(),
+                                    Carbon\Carbon::now()->endOfMonth(),
+                                ])
+                                ->sum('amount');
+                        @endphp
+                        {{number_format($totalCashAdvances, 2)}}
+                    </td>
+                    {{-- net pay --}}
+                    <td class="auto">
+                        @php
+                            $netTotal = $grossPay - $totalCashAdvances;
+                        @endphp
+                        {{number_format($netTotal, 2)}}
+                    </td>
                     <td class="col-1 border">
                         <div class="d-flex justify-content-center align-items-center " style="height: 100%">
                             {{-- {{route('dl.pdf', ['id' => $employeeId, 'ecaid' => $cashAdvance->id])}} --}}
+                            {{-- @php
+                                $empTotalOt = array_key_exists($employee->employee_id, $totalOvertime) 
+                                    ? (double)$totalOvertime[$employee->employee_id]
+                                    : 0;
+                                $empDeductions = array_key_exists($employee->employee_id, $totalCashAdvance) 
+                                    ? (double)$totalCashAdvance[$employee->employee_id] 
+                                    : 0;
+                            @endphp
                             <a href="{{route('single.download.payslip', [
                                 'id' => $employee->employee_id, 
                                 'dateFrom' => $dateFrom,
@@ -119,17 +211,17 @@
                                 'emp_name' => $employee->first_name . ' ' . $employee->last_name,
                                 'emp_job_title' => $employee->job_title,
                                 'emp_site' => $employee->site_name,
-                                'emp_days' => array_key_exists($employee->employee_id, $totalDays) ? $totalDays[$employee->employee_id] : '0',
-                                'emp_total_ot' => number_format(array_key_exists($employee->employee_id, $totalOvertime) ? $totalOvertime[$employee->employee_id] : '0',2),
+                                'emp_days' => array_key_exists($employee->employee_id, $totalDays) ? (double)$totalDays[$employee->employee_id] : 0,
+                                'emp_total_ot' => number_format($empTotalOt, 2),
                                 'emp_rate' => $employee->job_title_rate,
-                                'emp_gross_total' =>array_key_exists($employee->employee_id, $totalDays) ? $totalDays[$employee->employee_id] * $employee->daily_rate + $totalOT : '0',
-                                'emp_deductions' => number_format(array_key_exists($employee->employee_id, $totalCashAdvance) ? $totalCashAdvance[$employee->employee_id] : '0',2),
+                                'emp_gross_total' =>array_key_exists($employee->employee_id, $totalDays) ? (double)$totalDays[$employee->employee_id] * $employee->daily_rate + $totalOT : 0,
+                                'emp_deductions' => number_format($empDeductions, 2),
                                 'emp_final_pay' => $finalPay,
                                 
                                 ]) }}" >
                                 <span class="bi bi-download point" style="font-size: 2rem; margin-right: 0.5rem;"
                                     data-toggle="tooltip" title="Download Payslip"></span>
-                            </a>
+                            </a> --}}
                         </div>
                     </td>
                     </tr>
