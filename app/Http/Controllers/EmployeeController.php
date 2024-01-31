@@ -74,7 +74,7 @@ class EmployeeController extends Controller
             ->select('employee_information.id AS employee_id', 'employee_information.*', 'employee_working_sites.*', 'working_sites.*')
             ->whereNull('employee_working_sites.employee_information_id')
             ->orWhereNotNull('employee_working_sites.employee_information_id')
-            ->paginate(4);
+            ->paginate(25);
         return view('employee-management.employees', ['getEmployee' => $getEmployee, 'sites' => $sites, 'employees' => $employees]);
     }
     /**
