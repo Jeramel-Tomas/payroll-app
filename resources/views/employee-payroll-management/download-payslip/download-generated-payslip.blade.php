@@ -55,26 +55,26 @@
                                 <td class="d-none"></td>
                                 <td class="col-2 border">{{ $employee->first_name }} {{ $employee->last_name }}</td>
                                 {{-- <td class="col-1 border">{{ $employee->job_title }}</td> --}}
-                                <td class="col-1 border">-----</td>
+                                <td class="col-1 border">{{ $employee->job_title === null || $employee->job_title === '' ? 'No Job Title' : $employee->job_title }}</td> 
                                 <td class="col-2 border">{{ $employee->site_name }}</td>
                                 <td class="col-1 border">{{ array_key_exists($employee->employee_id, $totalDays) ?
                                     $totalDays[$employee->employee_id] : '0'}}</td>
                                 <td class="col-1 border">{{ number_format(array_key_exists($employee->employee_id, $totalOvertime) ?
                                     $totalOvertime[$employee->employee_id] : '0',2)}}</td>
-                                <td class="col-1 border">{{ $employee->daily_rate }}</td>
+                                <td class="col-1 border">{{ $employee->job_title_rate }}</td>
                                 @php
-                                $OT = array_key_exists($employee->employee_id, $totalOvertime) ?
-                                $totalOvertime[$employee->employee_id] : 0;
-                                $totalOT = number_format(($employee->daily_rate /8)* $OT,2);
-                                $totalGrossWithOT = array_key_exists($employee->employee_id, $totalDays) ?
-                                $totalDays[$employee->employee_id] * $employee->daily_rate + $totalOT : '0';
-                                $deductions = number_format(array_key_exists($employee->employee_id, $totalCashAdvance) ?
-                                $totalCashAdvance[$employee->employee_id] : '0',2);
-                                $finalPay = number_format($totalGrossWithOT - $deductions,2);
+                                    $OT = array_key_exists($employee->employee_id, $totalOvertime) ?
+                                    $totalOvertime[$employee->employee_id] : 0;
+                                    $totalOT = number_format(($employee->job_title_rate /8)* $OT,2);
+                                    $totalGrossWithOT = array_key_exists($employee->employee_id, $totalDays) ?
+                                    $totalDays[$employee->employee_id] * $employee->job_title_rate + $totalOT : '0';
+                                    $deductions = number_format(array_key_exists($employee->employee_id, $totalCashAdvance) ?
+                                    $totalCashAdvance[$employee->employee_id] : '0',2);
+                                    $finalPay = number_format($totalGrossWithOT - $deductions,2);
                                 @endphp
                                 {{-- gross total --}}
                                 <td class="col-1 border">{{ number_format(array_key_exists($employee->employee_id, $totalDays) ?
-                                    $totalDays[$employee->employee_id] * $employee->daily_rate + $totalOT : '0',2)}}</td>
+                                    $totalDays[$employee->employee_id] * $employee->job_title_rate + $totalOT : '0',2)}}</td>
                                 {{-- deductions --}}
                                 <td class="col-1 border">{{ number_format(array_key_exists($employee->employee_id,
                                     $totalCashAdvance) ? $totalCashAdvance[$employee->employee_id] : '0',2)}}</td>
