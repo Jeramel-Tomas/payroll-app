@@ -100,7 +100,7 @@ class EmployeePayrollInfoController extends Controller
             ->orWhereNotNull('employee_working_sites.employee_information_id')
             ->orderBy('employee_working_sites.working_site_id')
             ->get();
-        // dump($getAllPayslip);
+        // dd($getAllPayslip);
         foreach ($getAllPayslip as $value) {
             $empCashAdvance = DB::table('employee_cash_advances')
                 ->where('employee_information_id', $value->employee_id)

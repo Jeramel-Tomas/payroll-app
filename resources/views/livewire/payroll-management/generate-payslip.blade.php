@@ -79,31 +79,31 @@
                         </tr>
                     </thead>
                     @foreach($getEmployee as $employee)
-                    {{-- @dump($employee->employee_id) --}}
+                    {{-- @dd($employee->job_title) --}}
                     <td class="d-none"></td>
                     <td class="col-2 border" wire:model="emp_name">{{ Str::ucfirst(Str::lower($employee->first_name)) }} {{ Str::ucfirst(Str::lower($employee->last_name)) }}</td>
                     {{-- <td class="col-1 border">{{ $employee->job_title }}</td> --}}
-                    <td class="col-1 border" wire:model="emp_job_title">-----</td>
+                    <td class="col-1 border">{{ $employee->job_title === null || $employee->job_title === '' ? 'No Job Title' : $employee->job_title }}</td>                    
                     <td class="col-2 border" wire:model="emp_site">{{ $employee->site_name }}</td>
                     <td class="col-1 border" wire:model="emp_days">{{ array_key_exists($employee->employee_id, $totalDays) ?
                         $totalDays[$employee->employee_id] : '0'}}</td>
                     <td class="col-1 border" wire:model="emp_total_ot">{{ number_format(array_key_exists($employee->employee_id, $totalOvertime) ?
                         $totalOvertime[$employee->employee_id] : '0',2)}}</td>
                     {{-- <td class="col-1 border">{{ $employee->daily_rate }}</td> --}}
-                    <td class="col-1 border" wire:model="emp_rate">{{ 350 }}</td>
+                    <td class="col-1 border" wire:model="emp_rate">{{  $employee->job_title_rate === null || $employee->job_title_rate === '' ? 0 : $employee->job_title_rate }}</td>
                     @php
                     $OT = array_key_exists($employee->employee_id, $totalOvertime) ?
                     $totalOvertime[$employee->employee_id] : 0;
-                    $totalOT = number_format(($employee->daily_rate /8)* $OT,2);
+                    $totalOT = number_format(($employee->job_title_rate /8)* $OT,2);
                     $totalGrossWithOT = array_key_exists($employee->employee_id, $totalDays) ?
-                    $totalDays[$employee->employee_id] * $employee->daily_rate + $totalOT : '0';
+                    $totalDays[$employee->employee_id] * $employee->job_title_rate + $totalOT : '0';
                     $deductions = number_format(array_key_exists($employee->employee_id, $totalCashAdvance) ?
                     $totalCashAdvance[$employee->employee_id] : '0',2);
                     $finalPay = number_format($totalGrossWithOT - $deductions,2);
                     @endphp
                     {{-- gross total --}}
                     <td class="col-1 border" wire:model="emp_gross_total">{{ number_format(array_key_exists($employee->employee_id, $totalDays) ?
-                        $totalDays[$employee->employee_id] * $employee->daily_rate + $totalOT : '0',2)}}</td>
+                        $totalDays[$employee->employee_id] * $employee->job_title_rate + $totalOT : '0',2)}}</td>
                     {{-- deductions --}}
                     <td class="col-1 border" wire:model="emp_deductions">{{ number_format(array_key_exists($employee->employee_id,
                         $totalCashAdvance) ? $totalCashAdvance[$employee->employee_id] : '0',2)}}</td>
@@ -117,11 +117,11 @@
                                 'dateFrom' => $dateFrom,
                                 'dateTo' => $dateTo,
                                 'emp_name' => $employee->first_name . ' ' . $employee->last_name,
-                                'emp_job_title' => '-----',
+                                'emp_job_title' => $employee->job_title,
                                 'emp_site' => $employee->site_name,
                                 'emp_days' => array_key_exists($employee->employee_id, $totalDays) ? $totalDays[$employee->employee_id] : '0',
                                 'emp_total_ot' => number_format(array_key_exists($employee->employee_id, $totalOvertime) ? $totalOvertime[$employee->employee_id] : '0',2),
-                                'emp_rate' => '350',
+                                'emp_rate' => $employee->job_title_rate,
                                 'emp_gross_total' =>array_key_exists($employee->employee_id, $totalDays) ? $totalDays[$employee->employee_id] * $employee->daily_rate + $totalOT : '0',
                                 'emp_deductions' => number_format(array_key_exists($employee->employee_id, $totalCashAdvance) ? $totalCashAdvance[$employee->employee_id] : '0',2),
                                 'emp_final_pay' => $finalPay,
@@ -152,7 +152,7 @@
                 </button> --}}
 
                 <!--Generate Modal Start-->
-                <div class="modal fade text-left w-100" id="generateModal" tabindex="-1" role="dialog"
+                {{-- <div class="modal fade text-left w-100" id="generateModal" tabindex="-1" role="dialog"
                     aria-labelledby="salarySummary" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
                         <div class="modal-content">
@@ -160,11 +160,9 @@
                                 <h4 class="modal-title" id="salarySummary">Salary Summary</h4>
                                 <div class="col-lg-3 col-md-3 col-sm-3">
                                     <label for="">Date from</label>
-                                    {{-- <input type="date" wire:model="dateFromPayslip" id=""> --}}
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3">
                                     <label for="">Date to</label>
-                                    {{-- <input type="date" wire:model="dateToPayslip" id=""> --}}
                                 </div>
                             </div>
                             <div class="modal-body">
@@ -184,7 +182,7 @@
                                             @foreach($getEmployee as $employee)
                                             <td class="d-none"></td>
                                             <td class="col-2 border">{{ $employee->first_name }} {{ $employee->last_name }}</td>
-                                            {{-- <td class="col-1 border">{{ $employee->job_title }}</td> --}}
+                                            
                                             <td class="col-2 border">{{ $employee->site_name }}</td>
                                             <td class="col-1 border">{{ array_key_exists($employee->employee_id, $totalDays) ?
                                                 $totalDays[$employee->employee_id] : '0'}}</td>
@@ -201,13 +199,12 @@
                                             $totalCashAdvance[$employee->employee_id] : '0',2);
                                             $finalPay = number_format($totalGrossWithOT - $deductions,2);
                                             @endphp
-                                            {{-- gross total --}}
                                             <td class="col-1 border">{{ number_format(array_key_exists($employee->employee_id, $totalDays) ?
                                                 $totalDays[$employee->employee_id] * $employee->daily_rate + $totalOT : '0',2)}}</td>
-                                            {{-- deductions --}}
+                                          
                                             <td class="col-1 border">{{ number_format(array_key_exists($employee->employee_id,
                                                 $totalCashAdvance) ? $totalCashAdvance[$employee->employee_id] : '0',2)}}</td>
-                                            {{-- net total --}}
+                                          
                                             <td class="col-1 border">{{ $finalPay }}</td>
                                             </tr>
                                             @endforeach
@@ -216,10 +213,6 @@
                                 </table>
                             </div>
                             <div class="modal-footer">
-                                {{-- <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                    <i class="bx bx-x d-block d-sm-none"></i>
-                                    <span class="d-none d-sm-block">Close</span>
-                                </button> --}}
                                 <button type="button" class="btn btn-primary ml-1" >
                                     <i class="bx bx-check d-block d-sm-none"></i>
                                     <span class="d-none d-sm-block ">
@@ -230,10 +223,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <!--Generate Modal End-->
                 <!--Salary Summary Modal Start-->
-                <div class="modal fade text-left w-100" id="xlarge" tabindex="-1" role="dialog"
+                {{-- <div class="modal fade text-left w-100" id="xlarge" tabindex="-1" role="dialog"
                     aria-labelledby="salarySummary" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
                         <div class="modal-content">
@@ -280,7 +273,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <!--Salary Summary Modal End-->
             </div>
 

@@ -59,6 +59,7 @@ class GeneratePayslip extends Component
             ->whereNull('employee_working_sites.employee_information_id')
             ->orWhereNotNull('employee_working_sites.employee_information_id')
             ->paginate(5);
+            // dd($getEmployeePayslip);
         //cash advance
         foreach ($getEmployeePayslip as $value) {
             $empCashAdvance = DB::table('employee_cash_advances')
