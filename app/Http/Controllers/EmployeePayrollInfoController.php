@@ -50,6 +50,7 @@ class EmployeePayrollInfoController extends Controller
         $this->emp_gross_total = $request->query('emp_gross_total');
         $this->emp_deductions = $request->query('emp_deductions');
         $this->emp_final_pay = $request->query('emp_final_pay');
+        $this->emp_total_ot = $request->query('emp_total_ot');
 
         $pdf = PDF::loadView('employee-payroll-management.download-payslip.download-single-payslip',
             [

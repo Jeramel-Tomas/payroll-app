@@ -41,7 +41,7 @@ class WorkingSitesEmployees extends Component
             ->where('employee_information_id', $this->employeeId)
             ->where('working_site_id', $this->siteIdEdit)
             ->update([
-                'emp_job_title' => $value,
+                'job_title' => $value,
                 'updated_at' => Carbon::now()
             ]);
 

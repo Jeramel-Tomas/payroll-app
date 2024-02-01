@@ -32,6 +32,10 @@ class GeneratePayslip extends Component
     public $days = 0,
         $dailyRate = 0,
         $grossTotal = 0;
+    public $monthFilter = '',
+        $filterFrom = '',
+        $filterTo = '';
+
     public function updated()
     {
         $this->resetPage();
@@ -43,8 +47,9 @@ class GeneratePayslip extends Component
         $this->workingSiteName = "";
         $this->dateFrom = "";
         $this->dateTo = "";
-
-
+        $this->filterFrom = '';
+        $this->filterTo = '';
+        $this->monthFilter = '';
     }
     
     public function render()
@@ -62,6 +67,13 @@ class GeneratePayslip extends Component
             ->paginate(25);
             // dd($getEmployeePayslip);
         //cash advance
+
+        if ($this->monthFilter) {
+            $this->filterFrom = Carbon::create($this->monthFilter)->startOfMonth();
+            $this->filterTo = Carbon::create($this->monthFilter)->endOfMonth();
+        }
+
+
         foreach ($getEmployeePayslip as $value) {
             $empCashAdvance = DB::table('employee_cash_advances')
                 ->where('employee_information_id', $value->employee_id)

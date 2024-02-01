@@ -46,16 +46,16 @@
                             <td>{{ $emp_job_title }}</td>
                         </tr>
                         <tr>
+                            <td class="fw-bold">Rate:</td>
+                            <td>{{ $emp_rate }}</td>
+                        </tr>
+                        <tr>
                             <td class="fw-bold">Days:</td>
                             <td>{{ $emp_days }}</td>
                         </tr>
                         <tr>
                             <td class="fw-bold">Total Overtime:</td>
                             <td>{{ $emp_total_ot }}</td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold">Rate:</td>
-                            <td>{{ $emp_rate }}</td>
                         </tr>
                         <tr>
                             <td class="fw-bold">Gross Total:</td>

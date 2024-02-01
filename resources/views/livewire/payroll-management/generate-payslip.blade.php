@@ -1,7 +1,10 @@
 <div>
     <div class="card-content row flex-wrap">
         <div class="card-body d-flex justify-content-start align-items-center">
-            <div class=" card table-responsive col-12 font-bold p-3">
+            <div class="card"> 
+                <div class="card-header">
+                    <h6 class="text-end">{{\Carbon\Carbon::now()->toFormattedDateString()}}</h6>
+                </div>
                 <div class="d-flex mb-2 row">
                     {{-- <div class="mr-3" style="max-width: 10rem;"> --}}
                         <div class="row mb-3 align-items-center">
@@ -18,18 +21,14 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1">
+                                <label for="">Date</label>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <input type="month" class="form-control" wire:model="monthFilter" id="">
+                            </div>
                             <div class="col-lg-2 col-md-2 col-sm-2">
                                 <a href="#" wire:click.prevent="clearFilter()">Clear all</a>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3">
-                                <label for="">Date from</label>
-                                <input type="date" class="form-control" wire:model="dateFrom" id="">
-                                {{-- {{ $dateFrom }} --}}
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3">
-                                <label for="">Date to</label>
-                                <input type="date" class="form-control" wire:model="dateTo" id="">
-                                {{-- {{ $dateTo }} --}}
                             </div>
                         </div>
                         {{--
@@ -61,10 +60,10 @@
 
                     </div>
                 </div>
+            <div class="table-responsive col p-3">
                 {{-- Table start --}}
                 <table class="table table-bordered bg-white table-hover ">
-                    <thead class="align-text-center">
-
+                    <thead class="align-text-center" >
                         <tr>
                             <th class="border text-center">Name </th>
                             <th class="border text-center">Site Location</th>
@@ -78,7 +77,7 @@
                             <th class="border text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="font-size: 2vh;">
                     @foreach($getEmployee as $employee)
                     <tr>
                     {{-- @dd($employee->job_title) --}}
@@ -129,12 +128,11 @@
                         $attendance = DB::table('employee_time_records')
                             ->where('employee_id', $employee->id)
                             ->whereBetween(\DB::raw('DATE(attendance_from)'), [
-                            Carbon\Carbon::now()->startOfMonth(),
-                            Carbon\Carbon::now()->endOfMonth(),
-                           /*  $filterFrom ? $filterFrom : Carbon\Carbon::now()->startOfMonth(),
-                            $filterTo ? $filterTo : Carbon\Carbon::now()->endOfMonth(), */
+                                $filterFrom ? $filterFrom : Carbon\Carbon::now()->startOfMonth(),
+                                $filterTo ? $filterTo : Carbon\Carbon::now()->endOfMonth(),
                             ])
                             ->sum('days_present');
+                            (double)$attendance = $attendance;
                         @endphp
                         {{$attendance}}
                        
@@ -144,10 +142,11 @@
                         $totalOt = DB::table('employee_time_records')
                             ->where('employee_id', $employee->id)
                             ->whereBetween(\DB::raw('DATE(attendance_from)'), [
-                                Carbon\Carbon::now()->startOfMonth(),
-                                Carbon\Carbon::now()->endOfMonth(),
+                                $filterFrom ? $filterFrom : Carbon\Carbon::now()->startOfMonth(),
+                                $filterTo ? $filterTo : Carbon\Carbon::now()->endOfMonth(),
                             ])
                         ->sum('total_ot');
+                        (double)$totalOt = $totalOt;
                         @endphp
                         {{$totalOt}}
                     </td>
@@ -179,8 +178,8 @@
                             $totalCashAdvances = DB::table('employee_cash_advances')
                                 ->where('employee_information_id', $employee->employee_id)
                                 ->whereBetween(\DB::raw('DATE(cash_advanced_date)'), [
-                                    Carbon\Carbon::now()->startOfMonth(),
-                                    Carbon\Carbon::now()->endOfMonth(),
+                                    $filterFrom ? $filterFrom : Carbon\Carbon::now()->startOfMonth(),
+                                    $filterTo ? $filterTo : Carbon\Carbon::now()->endOfMonth(),
                                 ])
                                 ->sum('amount');
                         @endphp
@@ -196,38 +195,68 @@
                     <td class="col-1 border">
                         <div class="d-flex justify-content-center align-items-center " style="height: 100%">
                             {{-- {{route('dl.pdf', ['id' => $employeeId, 'ecaid' => $cashAdvance->id])}} --}}
-                            {{-- @php
-                                $empTotalOt = array_key_exists($employee->employee_id, $totalOvertime) 
-                                    ? (double)$totalOvertime[$employee->employee_id]
-                                    : 0;
-                                $empDeductions = array_key_exists($employee->employee_id, $totalCashAdvance) 
-                                    ? (double)$totalCashAdvance[$employee->employee_id] 
-                                    : 0;
+                            @php
+                                // get per employee attendace date from - to
+                                $attendanceFromTo = DB::table('employee_time_records')
+                                    ->where('employee_id', $employee->id)
+                                    ->whereBetween(\DB::raw('DATE(attendance_from)'), [
+                                        $filterFrom ? $filterFrom : Carbon\Carbon::now()->startOfMonth(),
+                                        $filterTo ? $filterTo : Carbon\Carbon::now()->endOfMonth(),
+                                    ])
+                                    ->select('attendance_from', 'attendance_to')
+                                    ->first();
+                                $dateFrom = $attendanceFromTo->attendance_from ?? '';
+                                $dateTo = $attendanceFromTo->attendance_to ?? '';
+                                // get all employee job title, site, and rate
+                                $jobInfos = DB::table('working_sites')
+                                    ->join('employee_working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id')
+                                    ->where('employee_working_sites.employee_information_id', $employee->employee_id)
+                                    ->orderBy('working_sites.site_name')
+                                    ->get();
+                                $jobTitle = "";
+                                $empSiteName = "";
+                                $empRate = "";
+                                foreach ($jobInfos as $key => $jobInfo) {
+                                    if ($jobInfo->job_title && $jobInfo->job_title_rate) {
+                                        # code...
+                                        $jobTitle .= $jobInfo->job_title . '-';
+                                        $empSiteName .= $jobInfo->site_name . '-';
+                                        $empRate .= $jobInfo->job_title_rate . '-';
+                                    }
+                                }
+                                $jobTitle = rtrim(str_replace('-', '|', $jobTitle), '|');
+                                $empSiteName = rtrim(str_replace('-', '|', $empSiteName), '|');
+                                $empRate = rtrim(str_replace('-', '|', $empRate), '|');
+                                
                             @endphp
+                            {{-- {{$jobTitle}} --}}
+                            {{-- {{$empSiteName}} --}}
+                            {{-- {{$empRate}} --}}
                             <a href="{{route('single.download.payslip', [
                                 'id' => $employee->employee_id, 
                                 'dateFrom' => $dateFrom,
                                 'dateTo' => $dateTo,
                                 'emp_name' => $employee->first_name . ' ' . $employee->last_name,
-                                'emp_job_title' => $employee->job_title,
-                                'emp_site' => $employee->site_name,
-                                'emp_days' => array_key_exists($employee->employee_id, $totalDays) ? (double)$totalDays[$employee->employee_id] : 0,
-                                'emp_total_ot' => number_format($empTotalOt, 2),
-                                'emp_rate' => $employee->job_title_rate,
-                                'emp_gross_total' =>array_key_exists($employee->employee_id, $totalDays) ? (double)$totalDays[$employee->employee_id] * $employee->daily_rate + $totalOT : 0,
-                                'emp_deductions' => number_format($empDeductions, 2),
-                                'emp_final_pay' => $finalPay,
+                                'emp_job_title' => $jobTitle,
+                                'emp_site' => $empSiteName,
+                                'emp_days' => number_format($attendance, 2),
+                                'emp_total_ot' => number_format($totalOt, 2),
+                                'emp_rate' => $empRate,
+                                'emp_gross_total' => number_format($grossPay, 2),
+                                'emp_deductions' => number_format($totalCashAdvances, 2),
+                                'emp_final_pay' => number_format($netTotal, 2),
                                 
                                 ]) }}" >
-                                <span class="bi bi-download point" style="font-size: 2rem; margin-right: 0.5rem;"
+                                <span class="bi bi-download point" style="font-size: 1rem; margin-right: 0.5rem;"
                                     data-toggle="tooltip" title="Download Payslip"></span>
-                            </a> --}}
+                            </a>
                         </div>
                     </td>
                     </tr>
                     @endforeach
                     </tbody>
                 </table>
+            </div>
                 <div class="row">
                     <div class="col d-flex justify-content-start align-items-center">
                         {{-- <strong>Total: </strong> <small>{{ $getEmployee->total() }}</small> --}}
@@ -367,8 +396,8 @@
                     </div>
                 </div> --}}
                 <!--Salary Summary Modal End-->
-            </div>
-
+            {{-- </div> --}}
+        </div>
         </div>
     </div>
 </div>
