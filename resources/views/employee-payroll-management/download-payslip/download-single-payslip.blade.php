@@ -50,24 +50,24 @@
                             <td>{{ $emp_rate }}</td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">Days:</td>
+                            <td class="fw-bold">Days number of days:</td>
                             <td>{{ $emp_days }}</td>
                         </tr>
                         <tr>
                             <td class="fw-bold">Total Overtime:</td>
-                            <td>{{ $emp_total_ot }}</td>
+                            <td>{{ $emp_total_ot }} hrs</td>
                         </tr>
                         <tr>
                             <td class="fw-bold">Gross Total:</td>
-                            <td>{{ $emp_gross_total }}</td>
+                            <td>{{ $emp_gross_total }} Php.</td>
                         </tr>
                         <tr>
                             <td class="fw-bold">Deductions:</td>
-                            <td>{{ $emp_deductions }}</td>
+                            <td>{{ $emp_deductions }} Php.</td>
                         </tr>
                         <tr>
                             <td class="fw-bold">Net Total:</td>
-                            <td>{{ $emp_final_pay }}</td>
+                            <td>{{ $emp_final_pay }} Php.</td>
                         </tr>
                     </table>
                     

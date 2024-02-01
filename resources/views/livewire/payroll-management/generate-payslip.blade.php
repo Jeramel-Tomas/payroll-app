@@ -47,18 +47,6 @@
                             </a>
                         @endif
                     </div>
-                    <div class="" style="max-width: 10rem; margin-left: 3rem;">
-                        {{-- @if(!$dateFrom && !$dateTo)
-                        <button class="btn btn-outline-success d-none" data-bs-toggle="modal" data-bs-target="#xlarge">
-                            Salaries Summary
-                        </button>
-                        @else
-                        <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#xlarge">
-                            Salaries Summary
-                        </button>
-                        @endif --}}
-
-                    </div>
                 </div>
             <div class="table-responsive col p-3">
                 {{-- Table start --}}
@@ -139,36 +127,49 @@
                     </td>
                     <td class="col-1 border" wire:model="emp_total_ot">
                         @php
-                        $totalOt = DB::table('employee_time_records')
+                        // get employee_working_sites
+                        $empWorkingSites = DB::table('employee_working_sites')
+                            ->where('employee_information_id', $employee->id)
+                            ->get();
+                        $computeOtPerJobRate = 0;
+                        $computeDaysPerJobRate = 0;
+                        foreach ($empWorkingSites as $key => $empWorkingSite) {
+                            # code...
+                            $getRatePerJob = DB::table('employee_time_records')
+                                ->where('employee_id', $employee->id)
+                                ->where('site_id', $empWorkingSite->working_site_id)
+                                ->whereBetween(\DB::raw('DATE(attendance_from)'), [
+                                    $filterFrom ? $filterFrom : Carbon\Carbon::now()->startOfMonth(),
+                                    $filterTo ? $filterTo : Carbon\Carbon::now()->endOfMonth(),
+                                ])
+                                ->first();
+                            $jobRate = !is_null($empWorkingSite->job_title_rate)
+                                ? $empWorkingSite->job_title_rate
+                                : 0;
+                            $totalOtPerJob = $getRatePerJob->total_ot ?? 0;
+                            $daysPresentTotal = $getRatePerJob->days_present ?? 0;
+
+                            $computeOtPerJobRate += ($jobRate / 8) * $totalOtPerJob;
+                            $computeDaysPerJobRate += $jobRate * $daysPresentTotal;
+                        }
+                        $otPerJob = DB::table('employee_time_records')
                             ->where('employee_id', $employee->id)
                             ->whereBetween(\DB::raw('DATE(attendance_from)'), [
                                 $filterFrom ? $filterFrom : Carbon\Carbon::now()->startOfMonth(),
                                 $filterTo ? $filterTo : Carbon\Carbon::now()->endOfMonth(),
                             ])
                         ->sum('total_ot');
-                        (double)$totalOt = $totalOt;
+                        
+                        (double)$otPerJob = $otPerJob;
                         @endphp
-                        {{$totalOt}}
+                        {{$otPerJob}} 
+                        {{-- | {{$computeOtPerJobRate}} --}}
                     </td>
                     {{-- gross --}}
                     <td class="auto" >
                         @php
-                            $rate = DB::table('working_sites')
-                                ->join('employee_working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id')
-                                ->where('employee_working_sites.employee_information_id', $employee->employee_id)
-                                ->get();
-
-                            $computeOt = 0;
-                            $rateAttendanceTotal = 0;
-                        @endphp
-                        @foreach ($rate as $item)
-                           @php
-                                $computeOt += ($item->job_title_rate / 8) * $totalOt;
-                                $rateAttendanceTotal += $item->job_title_rate * $attendance;
-                           @endphp 
-                        @endforeach
-                        @php
-                            (double)$grossPay = $computeOt + $rateAttendanceTotal;
+                            // (double)$grossPay = $computeOt + $rateAttendanceTotal;
+                            (double)$grossPay = $computeOtPerJobRate + $computeDaysPerJobRate;
                         @endphp
                         {{number_format($grossPay, 2)}}
                     </td>
@@ -240,7 +241,7 @@
                                 'emp_job_title' => $jobTitle,
                                 'emp_site' => $empSiteName,
                                 'emp_days' => number_format($attendance, 2),
-                                'emp_total_ot' => number_format($totalOt, 2),
+                                'emp_total_ot' => number_format($otPerJob, 2),
                                 'emp_rate' => $empRate,
                                 'emp_gross_total' => number_format($grossPay, 2),
                                 'emp_deductions' => number_format($totalCashAdvances, 2),

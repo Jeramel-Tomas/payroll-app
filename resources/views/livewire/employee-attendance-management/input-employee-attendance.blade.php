@@ -192,6 +192,7 @@
                                     (double)$totalOt = (double)$ot ?? 0;
                                     (double)$numOt = ((double)$rate / 8) * $totalOt ?? 0;
                                 @endphp
+                                {{$numOt}} |
                                 {{
                                     (double)(($numDays * $rate) + $numOt)
                                 }}
