@@ -259,10 +259,10 @@
             </div>
                 <div class="row">
                     <div class="col d-flex justify-content-start align-items-center">
-                        {{-- <strong>Total: </strong> <small>{{ $getEmployee->total() }}</small> --}}
+                        <strong>Total: </strong> <small>{{ $getEmployee->total() }}</small>
                     </div>
                     <div class="col d-flex justify-content-end">
-                        {{-- {{ $getEmployee->links() }} --}}
+                        {{ $getEmployee->links() }}
                     </div>
                 </div>
                 {{-- Table end --}}
