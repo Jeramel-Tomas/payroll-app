@@ -8,6 +8,7 @@ use App\Models\EmployeeInformation;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use App\Models\EmployeeCashAdvance;
+use App\Models\EmployeeWorkingSite;
 use Carbon\Carbon;
 
 class CashAdvancesIndex extends Component
@@ -25,7 +26,8 @@ class CashAdvancesIndex extends Component
     public $fullName = '', $empIdForModal = '';
     public $cashAdvanceAmount = '', 
         $cashAdvancedDate ='', 
-        $cashAdvancedPurpose ='';
+        $cashAdvancedPurpose ='',
+        $empJobTitleSite = '';
 
     public function cancelCreate()
     {
@@ -41,23 +43,10 @@ class CashAdvancesIndex extends Component
     {
         $this->fullName = $fname . ' ' . $lname;
         $this->empIdForModal = $empId;
-        /* dump($empId);
-        dump($fname);
-        dump($lname); */
     }
 
     public function saveCashAdvances()
     {
-        /* dump($this->cashAdvanceAmount * 1);
-        dump($this->cashAdvancedDate);
-        dump($this->cashAdvancedPurpose);
-        dump($this->empIdForModal); die; */
-       /*  if (empty($this->cashAdvanceAmount) && empty($this->cashAdvancedDate)) {
-        } */
-        // $validate = $this->validate();
-        
-        // dump($validate); die;
-
         $amount = $this->cashAdvanceAmount * 1;
         DB::table('employee_cash_advances')->insert([
             'employee_information_id' => $this->empIdForModal,
@@ -90,17 +79,14 @@ class CashAdvancesIndex extends Component
         }
 
         if (!empty($this->workingSite)) {
-            // dd($this->workingSite);
             $employees->join('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id');
             $employees->join('working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id');
             $employees->where('working_sites.id', '=', $this->workingSite);
-            // $employees->addSelect('working_sites.site_name');
             $this->workingSiteName = WorkingSite::select('site_name')->where('id', $this->workingSite)->first();
             $this->workingSiteName = $this->workingSiteName->site_name ?? '';
         }
 
         $employees = $employees->paginate(25);
-        // $employees = $employees->toSql();
         $sites = WorkingSite::all();
 
         return view('livewire.payroll-management.cash-advances-index', [

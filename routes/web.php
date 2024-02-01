@@ -56,6 +56,9 @@ Route::prefix('/payroll')->group(function () {
     Route::get('/cash-advanced', [EmployeePayrollInfoController::class, 'cashAdvancedIndex'])->name('cash.advanced.index');
     Route::get('/cash-advanced/{id}/view', [EmployeePayrollInfoController::class, 'cashAdvancedView'])->name('view.employee.cash.advances');
     Route::get('/cash-advanced/{id}/view/date-filter', [EmployeePayrollInfoController::class, 'cashAdvancedView'])->name('date.filter.cashadvance');
+    Route::get('/cash-advanced/edit/{eid}', [EmployeePayrollInfoController::class, 'edit'])->name('cash.advances.edit');
+    Route::post('/cash-advanced/save-cashadvance-edit', [EmployeePayrollInfoController::class, 'saveEditedData'])->name('save.cash.advance.edit');
+    // Route::get('/cash-advanced/{id}/view/date-filter/edit/{ecaid}', [EmployeePayrollInfoController::class, 'edit'])->name('cash.advances.edit');
     Route::get('/cash-advanced/{id}/view/{ecaid}', [EmployeePayrollInfoController::class, 'downLoadPdf'])->name('dl.pdf');
     Route::get('/download-all-payslip', [EmployeePayrollInfoController::class, 'generatePayslipDownload'])->name('download.payslip');
     Route::get('/download-single-payslip/{id}', [EmployeePayrollInfoController::class, 'generateSinglePayslipDownload'])->name('single.download.payslip');

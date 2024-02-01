@@ -256,25 +256,17 @@ class EmployeePayrollInfoController extends Controller
         // get all cash advances from employee_cash_advances table
         $cashAdvances = EmployeeCashAdvance::where('employee_information_id', $request->id)
             ->orderBy('created_at');
-            // ->paginate(25);
-        // ->simplePaginate(1);
+
         if ($request->dateFrom && $request->dateTo) {
             # code...
-            // dump($request->dateFrom);
-            // dump($request->dateTo);
-            // print_r(Carbon::parse($request->dateTo)->format('Y-m-d H:i:s'));
-            // $cashAdvances->where('created_at', '>=', Carbon::parse($request->dateFrom)->format('Y-m-d H:i:S'));
-            // $cashAdvances->where('created_at', '<=', Carbon::parse($request->dateTo)->format('Y-m-d H:i:S'));
             $cashAdvances->where([
-                ['created_at', '<=', Carbon::parse($request->dateTo)->format('Y-m-d H:i:s')],
                 ['created_at', '>=', Carbon::parse($request->dateFrom)->format('Y-m-d H:i:s')],
+                ['created_at', '<=', Carbon::parse($request->dateTo)->format('Y-m-d H:i:s')],
             ]);
         }
 
         $empCashAdvances = $cashAdvances->paginate(25);      
-        // $cashAdvances = EmployeeCashAdvance::find($request->id);
-        // dump($cashAdvances);
-        // dump($request->id);
+        
         return view('employee-payroll-management.employeeViewCashAdvances', [
             'fullName' => $fullName,
             'cashAdvances' => $empCashAdvances,
@@ -318,4 +310,36 @@ class EmployeePayrollInfoController extends Controller
         return $pdf->download($fileName);
     }
 
+    // ajax request edit
+    public function edit()
+    {
+        $cashAdvanceId = $_GET['caidEdit'];
+        $data = EmployeeCashAdvance::find($cashAdvanceId);
+        return response()->json([
+            'data' => $data
+        ]);
+        // return view('employee-payroll-management.cash-advances.edit-cash-advance');
+    }
+
+    // ajax request save edit
+    public function saveEditedData()
+    {
+        $cashAdvanceId = $_POST['caId'];
+        $amountVal = $_POST['amount'];
+        $cashAdvanceDate = $_POST['caDate'];
+        $purpose = $_POST['purpose'];
+
+        DB::table('employee_cash_advances')
+            ->where('id', $cashAdvanceId)
+            ->update([
+                'amount' => $amountVal,
+                'purpose' => $purpose,
+                'cash_advanced_date' => $cashAdvanceDate,
+                'updated_at' => Carbon::now()
+            ]);
+
+        return response()->json([
+            'message' => 'Successfully edited!'
+        ], 200);
+    }
 }
