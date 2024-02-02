@@ -10,7 +10,7 @@
 @endpush
 
 @section('page-content')
-    @livewire('employee-management.employee-list');
+    @livewire('employee-management.employee-list')
 @endsection
 
 

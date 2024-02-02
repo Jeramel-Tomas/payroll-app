@@ -15,12 +15,13 @@
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/fontawesome/all.min.css')}}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/dripicons/webfont.css')}}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/pages/dripicons.css')}}">
+	
 
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/toastify/toastify.css') }}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/perfect-scrollbar/perfect-scrollbar.css')}}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/vendors/bootstrap-icons/bootstrap-icons.css')}}">
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/app.css')}}">
-	
+		
 	{{-- Custom css put all your custom css here --}}
 	<link rel="stylesheet" href="{{ URL::asset('new-assets/assets/css/my-custom.css')}}">
 	{{--
@@ -37,9 +38,10 @@
 			<div class="sidebar-wrapper active">
 				<div class="sidebar-header">
 					<div class="d-flex justify-content-between">
-						<div class="logo">
-							MGS
-						</div>
+						{{-- <a class="" href="{{ route('dashboard') }}"  >
+							<img src="new-assets/assets/images/logo/logo.png" alt="MSG" style="width: 70%; height:55%;">
+						</a> --}}
+						MGS
 						<div class="toggler">
 							<a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
 						</div>

@@ -171,7 +171,7 @@ class EmployeePayrollInfo extends Component
             $this->workingSiteName = $this->workingSiteName->site_name ?? '';
         }
 
-        $employees = $employees->paginate(5);
+        $employees = $employees->paginate(25);
         // $employees = $employees->toSql();
         $sites = WorkingSite::all();
 

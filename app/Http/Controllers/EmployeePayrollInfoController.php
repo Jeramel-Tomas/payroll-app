@@ -15,10 +15,11 @@ use Illuminate\Support\Str;
 
 class EmployeePayrollInfoController extends Controller
 {
+    public $monthFilter = '',
+        $filterFrom = '',
+        $filterTo = '';
     public $dateFrom = '',
         $dateTo = '';
-    //masadutak ag aramid manen query,inkargak amin router haha
-    //dibale han makita ta dretso download XD
     public $emp_name='',
         $emp_job_title='',
         $emp_site ='',
@@ -32,7 +33,7 @@ class EmployeePayrollInfoController extends Controller
     {
         return view('employee-payroll-management.payrollManagementIndex');
     }
-
+    
     public function generatePayslip()
     {
         return view('employee-payroll-management.generatePayslipIndex');
@@ -51,7 +52,14 @@ class EmployeePayrollInfoController extends Controller
         $this->emp_deductions = $request->query('emp_deductions');
         $this->emp_final_pay = $request->query('emp_final_pay');
         $this->emp_total_ot = $request->query('emp_total_ot');
+        if($this->monthFilter = $request->query('monthFilter')){
+            $month = $this->monthFilter = $request->query('monthFilter');
+            list($year, $month) = explode('-', $month);
+            $date = Carbon::create($year, $month, 1);
+            $monthString = $date->format('F Y');
+        }
 
+        // dump($monthString);
         $pdf = PDF::loadView('employee-payroll-management.download-payslip.download-single-payslip',
             [
                 'dateFrom' => $this->dateFrom,
@@ -65,6 +73,7 @@ class EmployeePayrollInfoController extends Controller
                 'emp_gross_total' =>$this->emp_gross_total,
                 'emp_deductions' => $this->emp_deductions,
                 'emp_final_pay' => $this->emp_final_pay,
+                'monthFilter' => $monthString,
             ]
         );
         // return view(
@@ -81,28 +90,44 @@ class EmployeePayrollInfoController extends Controller
         //         'emp_gross_total' =>$this->emp_gross_total,
         //         'emp_deductions' => $this->emp_deductions,
         //         'emp_final_pay' => $this->emp_final_pay,
+        //         'monthFilter' => $monthString,
         //     ]
         // );
         
-        $fileName = Str::title($this->emp_name).'-'.Carbon::now()->toDateString().'.pdf';
+        $fileName = Str::title($this->emp_name).'-'.$monthString.'.pdf';
         return $pdf->download($fileName);
     }
     public function generatePayslipDownload(Request $request)
     {
-        $this->dateFrom = $request->query('dateFrom');
-        $this->dateTo = $request->query('dateTo');
+        $this->monthFilter = $request->query('monthFilter');
         $employees = EmployeeInformation::all();
         $sites = WorkingSite::all();
-        $getAllPayslip = DB::table('employee_information')
-            ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
+
+        $getEmployeePayslip = DB::table('employee_information')
+            // ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
+            /* ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
             ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
             ->select('employee_information.id AS employee_id', 'employee_information.*', 'employee_working_sites.*', 'working_sites.*')
             ->whereNull('employee_working_sites.employee_information_id')
-            ->orWhereNotNull('employee_working_sites.employee_information_id')
-            ->orderBy('employee_working_sites.working_site_id')
-            ->get();
-        // dd($getAllPayslip);
-        foreach ($getAllPayslip as $value) {
+            ->orWhereNotNull('employee_working_sites.employee_information_id') */
+            ->select(
+                'employee_information.id AS employee_id', 
+                'employee_information.*'
+                )
+            ->paginate(25);
+            // dump($this->monthFilter);
+            // dd($getEmployeePayslip);
+        //cash advance
+
+        if ($this->monthFilter) {
+            $this->filterFrom = Carbon::create($this->monthFilter)->startOfMonth();
+            $this->filterTo = Carbon::create($this->monthFilter)->endOfMonth();
+            $startDate = $this->filterFrom->format('F j, Y');
+            $endDate = $this->filterTo->format('F j, Y');
+        }
+
+
+        foreach ($getEmployeePayslip as $value) {
             $empCashAdvance = DB::table('employee_cash_advances')
                 ->where('employee_information_id', $value->employee_id)
                 ->where('cash_advanced_date', '<=', Carbon::now()->endOfMonth()->toDateString());
@@ -111,10 +136,9 @@ class EmployeePayrollInfoController extends Controller
                 $empCashAdvance->where('cash_advanced_date', '<=', $this->dateTo);
             }
             $getCashAdvance[] = $empCashAdvance->get();
-            // dump($getCashAdvance);
         }
-
-        foreach ($getAllPayslip as $value) {
+        //timelog
+        foreach ($getEmployeePayslip as $value) {
             // dump($value->employee_id);
             $empTimeLogs = DB::table('employee_time_logs')
                 ->where('employee_information_id', $value->employee_id)
@@ -127,14 +151,21 @@ class EmployeePayrollInfoController extends Controller
             // where(attendance_date >= from)
             // where(attendance_date <= to)
             $getTimeLogs[] = $empTimeLogs->get();
-            // dump($getTimeLogs);
         }
+        // dump($getTimeLogs);
+        // dump($getTimeLogs);
+        // 2024-1-12 (YY-MM-DD)
+        // 2024-1-31
+        // dump(Carbon::now()->endOfMonth()->toDateString());
+
         $empTotalDays = [];
         $empNumberOfDays = [];
         $overTimeWithKey = [];
         $empTotalOverTime = [];
         $empTotalCashAdvance = [];
+        // $empCashAdvance = [];
         $cashAdvanceWithKey = [];
+
         foreach ($getCashAdvance as $key => $value) {
             if (count($value) > 0) {
                 foreach ($value as $v2) {
@@ -202,22 +233,42 @@ class EmployeePayrollInfoController extends Controller
                 $empTotalDays[$key] = $value[0];
             }
         }
+
+
+        // return view(
+        //     'employee-payroll-management.download-payslip.download-generated-payslip',
+        //     [
+        //         'getEmployee' => $getEmployeePayslip,
+        //         'sites' => $sites,
+        //         'employees' => $employees,
+        //         'totalDays' => $empTotalDays,
+        //         'totalOvertime' => $empTotalOverTime,
+        //         'totalCashAdvance' => $empTotalCashAdvance,
+        //         'monthFilter' => $this->monthFilter,
+        //         'filterFrom' => $this->filterFrom,
+        //         'filterTo' => $this->filterTo,
+
+        //     ]
+        // );
         //employee-payroll-management.employeeViewCashAdvances
         $pdf = PDF::loadView('employee-payroll-management.download-payslip.download-generated-payslip', [
-            'getEmployee' => $getAllPayslip,
+            'getEmployee' => $getEmployeePayslip,
             'sites' => $sites,
             'employees' => $employees,
             'totalDays' => $empTotalDays,
             'totalOvertime' => $empTotalOverTime,
             'totalCashAdvance' => $empTotalCashAdvance,
-            'dateFrom' => $this->dateFrom,
-            'dateTo' => $this->dateTo,
-        ]);
+            'monthFilter' => $this->monthFilter,
+            'filterFrom' => $this->filterFrom,
+            'filterTo' => $this->filterTo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            ]);
         // dd($pdf);
-        // $fileName = $this->emp_name.Carbon::now().'.pdf';
-        if($this->dateFrom && $this->dateTo){
+        $fileName = $this->emp_name.Carbon::now().'.pdf';
+        if($this->filterFrom && $this->filterTo){
 
-            $fileName = 'Date-'.$this->dateFrom.'-'.$this->dateTo.'-'.Carbon::today()->toDateString().'.pdf';
+            $fileName = 'Payslip-'.$startDate.' - '.$endDate.'-'.'.pdf';
         }else{
             $fileName = 'No-set-date'.'-'.Carbon::today()->toDateString().'.pdf';
         }

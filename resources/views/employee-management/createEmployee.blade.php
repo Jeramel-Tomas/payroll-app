@@ -38,10 +38,11 @@
     <div class="row">
         <div class="col col-3"></div>
         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-            <div class="card">
+            <div class="card border shadow p-3 mb-5 bg-body-tertiary rounded">
                 <div class="card-header">
-                    <h4 class="card-title">Fill up Employee Information</h4>
+                    <h2 class="text-start mb-0">Fill up Employee Information</h2>
                 </div>
+                <hr>
                 <div class="card-content">
                     <div class="card-body">
                         <form class="form form-horizontal"

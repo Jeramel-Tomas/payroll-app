@@ -18,10 +18,11 @@
     <div class="row">
         <div class="col-3"></div>
         <div class="col-md-6 col-6">
-            <div class="card">
+            <div class="card border shadow p-3 mb-5 bg-body-tertiary rounded">
                 <div class="card-header">
-                    <h4 class="card-title">Edit {{ $employee->first_name. ' ' .$employee->last_name }} Information</h4>
+                    <h2 class="text-start">Edit {{ $employee->first_name. ' ' .$employee->last_name }} Information</h2>
                 </div>
+                <hr>
                 <div class="card-content">
                     <div class="card-body">
                         <form class="form form-horizontal"

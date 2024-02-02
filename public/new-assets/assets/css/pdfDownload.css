@@ -1,7 +1,7 @@
 body, div {
     background-color: #FFF;
     font-family: Tahoma, Verdana, sans-serif;
-    font-size: 1vw;
+    font-size: .01vw;
 }
 
 h1, h2, h3, h4, h5, p{
@@ -12,5 +12,20 @@ h1, h2, h3, h4, h5, p{
     /* font-size: 1.5vw; */
 }
 
+.watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.5; /* Adjust the opacity as needed */
+}
 
+/* Optionally, you can style the watermark text further */
+.watermark-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333; /* Adjust the text color */
+}
 
