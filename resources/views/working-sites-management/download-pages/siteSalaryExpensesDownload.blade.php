@@ -63,7 +63,7 @@
                         <tfoot>
                             <tr>
                                 <th scope="row">Sum of all sites salaries</th>
-                                <td>{{number_format($sumOfTotalSalaryPerSite, 2)}}</td>
+                                <td>{{$total_salaries ? number_format($total_salaries, 2) : '0.00'}}</td>
                             </tr>
                         </tfoot>
                     </table>

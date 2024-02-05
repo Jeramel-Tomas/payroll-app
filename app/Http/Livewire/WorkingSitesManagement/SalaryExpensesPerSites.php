@@ -29,29 +29,26 @@ class SalaryExpensesPerSites extends Component
     public function downLoadSummary()
     {
         $data = [];
-        $salarySum = 0;
+        $totalSalaries = 0;
+        
         foreach ($this->allSitesForDownload as $siteKey => $site) {
-            foreach ($this->getComputedSalaryPerSite() as $salaryKey => $salary) {
-                if ($salaryKey === $site->id) {
-                    $salarySum += $salary;
+            foreach ($this->getComputedSalaryPerSite() as $key => $value) {
+                if ($site->id === $key) {
+                    $totalSalaries += $value;
                     $data[$site->id] = [
                         'site_name' => $site->site_name,
-                        'salary_expenses' => $salarySum,
-                    ];
-                } else {
-                    $data[$site->id] = [
-                        'site_name' => $site->site_name,
-                        'salary_expenses' => 0,
+                        'salary_expenses' => $value,
                     ];
                 }
             }
         }
-        
+
         $str = 'sitesalaryexpenses';
         $fileName = $str.Carbon::now() . '.pdf';
         $pdfContent = PDF::loadView('working-sites-management.download-pages.siteSalaryExpensesDownload', [
             'data' => $data,
-            'date_filtered' => $this->filterByMonth
+            'date_filtered' => $this->filterByMonth,
+            'total_salaries' => $totalSalaries,
         ])->output();
         
         return response()->streamDownload(
