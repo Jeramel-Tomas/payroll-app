@@ -190,17 +190,11 @@ class WorkingSitesIndex extends Component
 
     public function render()
     {
-        
-        // dump($this->siteIdModalToAddEmp);
         if ($this->searchQueryString) {
             $empInfo = EmployeeInformation::where('first_name', 'like', '%' . $this->searchQueryString . '%')
                 ->orWhere('last_name', 'like', '%' . $this->searchQueryString . '%')
                 ->get();    
             $this->employees = $empInfo;
-            // $this->employees = $empInfo->count() > 0 ? $empInfo : '';
-            // ->toArray();
-            // dump($this->employees);
-            
         }
 
         $workingSites = WorkingSite::orderby('working_sites.site_name', 'asc')
@@ -220,7 +214,6 @@ class WorkingSitesIndex extends Component
         }
 
         $sites = $workingSites->paginate(25);
-        // dump($workingSites->get());
 
         return view('livewire.working-sites-management.working-sites-index', [
             'sites' => $sites,

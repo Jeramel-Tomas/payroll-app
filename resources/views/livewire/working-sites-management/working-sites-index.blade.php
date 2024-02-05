@@ -8,25 +8,6 @@
                             <h6 class="text-end">{{\Carbon\Carbon::now()->toFormattedDateString()}}</h6>
                         </div>
                         <div class="card-body">
-                            {{-- <div class="row mb-3 align-items-center">
-                                <div class="col-lg-1 col-md-1 col-sm-1 text-center">
-                                    <strong>Filter</strong>
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                    <div class="input-group">
-                                        <select class="choices form-select" wire:model="workingSite">
-                                            <option value="0">Filter by site...</option>
-                                            @foreach ($sites as $site)
-                                            <option value="{{$site->id}}">{{ $site->site_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-2 col-md-2 col-sm-2">
-                                    <a href="#" wire:click.prevent="clearFilter()">Clear all</a>
-                                </div>
-                            </div> --}}
-    
                             <div class="row mb-2">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-6 align-items-center">

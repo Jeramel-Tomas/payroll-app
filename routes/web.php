@@ -69,6 +69,7 @@ Route::prefix('/payroll')->group(function () {
 Route::prefix('/working-sites')->group(function () {
     Route::get('/working-sites-index', [WorkingSitesController::class, 'index'])->name('working.sites.index');
     Route::get('/show-employees/{siteId}', [WorkingSitesController::class, 'showEmployees'])->name('working.site.assigned.employees');
+    Route::get('/salary-expenses', [WorkingSitesController::class, 'salaryExpensesPersite'])->name('working.site.salary.expenses');
 });
 
 

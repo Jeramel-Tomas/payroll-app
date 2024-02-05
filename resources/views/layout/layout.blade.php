@@ -41,7 +41,7 @@
 						{{-- <a class="" href="{{ route('dashboard') }}"  >
 							<img src="new-assets/assets/images/logo/logo.png" alt="MSG" style="width: 70%; height:55%;">
 						</a> --}}
-						MGS
+						<img src="{{ URL::asset('new-assets/assets/images/logo/logo.png')}}" alt="MSG" style="width: 70%; height:55%;">
 						<div class="toggler">
 							<a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
 						</div>
@@ -76,7 +76,7 @@
 						<li class="sidebar-item has-sub {{ (request()->is('attendance/*')) ? 'active' : ''}}">
 							{{-- <a href="{{ route('attendance.log.index') }}" class='sidebar-link'> --}}
 							<a href="#" class='sidebar-link'>
-								<i class="bi bi-collection-fill"></i>
+								<i class="bi bi-calendar-fill"></i>
 								<span>Manage Time Record</span>
 							</a>
 							<ul class="submenu {{ (request()->is('attendance/manage')) ? 'active' : ''}}">
@@ -95,7 +95,7 @@
 
 						<li class="sidebar-item has-sub {{ (request()->is('payroll/*')) ? 'active' : ''}}">
 								<a href="#" class='sidebar-link'>
-									<i class="bi bi-collection-fill"></i>
+									<i class="bi bi-wallet-fill"></i>
 									<span>Manage Payroll</span>
 								</a>
 								<ul class="submenu {{ (request()->is('payroll/*')) ? 'active' : ''}}">
@@ -112,20 +112,25 @@
 						</li>
 						{{-- Working sites management --}}
 						<li class="sidebar-item has-sub {{ (request()->is('working-sites/*')) ? 'active' : ''}}">
-							{{-- <a href="{{ route('attendance.log.index') }}" class='sidebar-link'> --}}
 								<a href="#" class='sidebar-link'>
-									<i class="bi bi-collection-fill"></i>
+									<i class="bi bi-cone"></i>
 									<span>Manage Working Sites</span>
 								</a>
-								<ul class="submenu {{ (request()->is('working-sites/working-sites-index')) ? 'active' : ''}}">
-									<li class="submenu-item {{ (request()->is('working-sites/working-sites-index')) ? 'active' : ''}}">
+								<ul 
+									class="submenu {{ 
+										(request()->is('working-sites/working-sites-index') || 
+										request()->is('working-sites/show-employees/*') ||
+										request()->is('working-sites/salary-expenses')) 
+											? 'active' 
+											: ''}}">
+									
+									<li class="submenu-item {{ (request()->is('working-sites/working-sites-index') || request()->is('working-sites/show-employees/*')) ? 'active' : ''}}">
 										<a href="{{ route('working.sites.index') }}">Site List</a>
 									</li>
-									{{-- <li class="submenu-item {{ (request()->is('attendance/log')) ? 'active' : ''}}"> --}}
-										{{--
-									<li class="submenu-item">
-										<a href="{{ route('attendance.sheet.index') }}">Attendance sheet</a>
-									</li> --}}
+
+									<li class="submenu-item {{ (request()->is('working-sites/salary-expenses')) ? 'active' : ''}}">
+										<a href="{{ route('working.site.salary.expenses') }}">Sallary expenses</a>
+									</li>
 								</ul>
 						</li>
 

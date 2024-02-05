@@ -5,27 +5,14 @@
             <div class="col-12 col-xl-12">
                 <div class="card">
                     <div class="card-header">
-                        <h6 class="text-end">{{\Carbon\Carbon::now()->toFormattedDateString()}}</h6>
+                        <h6 class="">
+                            <a href="{{route('working.sites.index')}}" class="btn btn-primary">
+                                <i class="bi bi-arrow-return-left"></i> &nbsp; Back
+                            </a>
+                            <span class="float-end">{{\Carbon\Carbon::now()->toFormattedDateString()}}</span>
+                        </h6>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-6 align-items-center">
-                                <div class="input-group">
-                                    {{-- <input type="text" class="form-control" placeholder="Employee name..."
-                                        aria-describedby="button-addon2" wire:model.debounce.3000="searchString">
-                                    <span class="input-group-text" id="basic-addon1">
-                                        <i class="bi bi-search"></i>
-                                    </span> --}}
-                                </div>
-                            </div>
-                            <div class="col-md-2"></div>
-                            <div class="col-md-2 align-items-center">
-                                <div class="input-group">
-                                    Select Site
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="table-responsive" style="width: 80%; margin: auto;">
                             <table class="table table-hover table-bordered align-items-center">

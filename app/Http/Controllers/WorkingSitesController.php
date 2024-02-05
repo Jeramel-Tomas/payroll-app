@@ -34,4 +34,10 @@ class WorkingSitesController extends Controller
         return view('working-sites-management.workingSiteEmployees', ['workingSite' => $workingSiteName]);
     }
 
+    public function salaryExpensesPersite()
+    {
+        // dump('sallary expenses');
+        return view('working-sites-management.salaryExpensesPerSites');
+    }
+
 }

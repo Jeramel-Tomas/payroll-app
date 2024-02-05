@@ -189,6 +189,7 @@
                         @endphp
                         {{number_format($netTotal, 2)}}
                     </td>
+                    {{-- for download --}}
                     <td class="col-1 border">
                         <div class="d-flex justify-content-center align-items-center " style="height: 100%">
                             {{-- {{route('dl.pdf', ['id' => $employeeId, 'ecaid' => $cashAdvance->id])}} --}}

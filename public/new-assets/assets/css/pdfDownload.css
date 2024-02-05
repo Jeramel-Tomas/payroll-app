@@ -29,3 +29,7 @@ h1, h2, h3, h4, h5, p{
     color: #333; /* Adjust the text color */
 }
 
+.client-logo {
+    width: 15%;
+    height: 10%;
+}
