@@ -74,7 +74,15 @@
                                                             <i class="bi bi-trash"></i>
                                                         </span>
                                                     </a>
-
+                                                    &nbsp; | &nbsp;
+                                                    <a href="#" 
+                                                        wire:click.prevent="editSiteName({{$site->id}}, '{{$site->site_name}}')" 
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalToEdit">
+                                                        <span data-bs-toggle="tooltip" title="Edit site name">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                        </span>
+                                                    </a>
 
                                                 </div>
                                             </td>
@@ -315,6 +323,83 @@
                             Add
                         </button>
                     @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal to update site --}}
+    <div wire:ignore.self class="modal fade" id="modalToEdit" tabindex="-1" aria-labelledby="addEmployeeToSite"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content ">
+                <div class="modal-header alert alert-info">
+                    <h5 class="modal-title" id="addEmployeeToSite">
+                        Updating {{$siteNameToEdit}}
+                    </h5>
+                    <button 
+                        type="button" 
+                        wire:click.stop="resetProps()" 
+                        class="btn-close" 
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{-- <div class="text-center" wire:loading.delay.longest
+                        wire:target="saveEmployeesToSite({{$siteIdModalToAddEmp}})">
+                        <div class="spinner-border text-success" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div> --}}
+                    @if (session()->has('message'))
+                    <div class="row">
+                        <div class="alert alert-success d-flex  justify-content-between" role="alert">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div class="text-center">
+                                {{ session('message') }}
+                            </div>
+                            <i role="button" data-bs-dismiss="alert" class="bi bi-x"></i>
+                        </div>
+                    </div>
+                    @endif
+                    <div class="form-body mb-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>
+                                    Site name:
+                                    <span class="text-danger">*</span>
+                                </label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input 
+                                    type="text" 
+                                    wire:model.debounce.3000="siteNameToEdit"
+                                    value="{{$siteNameToEdit ?? ''}}"
+                                    class="form-control {{empty($siteNameToEdit) ? 'is-invalid' : ''}}" 
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top" 
+                                    title="Site name">
+                                @if (empty($siteNameToEdit))
+                                    <div class="invalid-feedback">
+                                        Site name is required!
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" wire:click.stop="resetProps()" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Cancel</button>
+                        @if (!empty($siteNameToEdit))    
+                        <button 
+                            type="button" 
+                            wire:click="saveToUpdateWorkingSite()"
+                            class="btn btn-primary">
+                            Save changes
+                        </button>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
