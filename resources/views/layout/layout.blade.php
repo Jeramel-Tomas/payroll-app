@@ -129,7 +129,7 @@
 									</li>
 
 									<li class="submenu-item {{ (request()->is('working-sites/salary-expenses')) ? 'active' : ''}}">
-										<a href="{{ route('working.site.salary.expenses') }}">Sallary expenses</a>
+										<a href="{{ route('working.site.salary.expenses') }}">Salary expenses</a>
 									</li>
 								</ul>
 						</li>
