@@ -2,13 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 //use App\Http\Controllers\MenuController;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\AttendanceLogController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\EmployeeAttendanceController;
 use App\Http\Controllers\EmployeePayrollInfo;
-use App\Http\Controllers\EmployeePayrollInfoController;
 use App\Http\Controllers\WorkingSitesController;
+use App\Http\Controllers\AttendanceLogController;
+use App\Http\Controllers\BackupDatabaseController;
+use App\Http\Controllers\EmployeeAttendanceController;
+use App\Http\Controllers\EmployeePayrollInfoController;
 
 //use App\Http\Controllers\ExcelCSVController;
 
@@ -73,9 +75,17 @@ Route::prefix('/working-sites')->group(function () {
 });
 
 
-/* Route::get('/pdfdl', function() {
-    return view('employee-payroll-management.download-cash-advances.cashAdvancedDl');
-}); */
+Route::prefix('/backup-db')->group(function () {
+    Route::get('/backup-index', [BackupDatabaseController::class, 'backupIndex'])->name('bakcupdb.index');
+    /* Route::get('/export', function () {
+        shell_exec("C:/xampp/mysql/bin/mysqldump -h localhost -u root test > C:/xampp/htdocs/projects/main.sql");
+    }); */
+    Route::get('test-backup', function () {
+        $exitCode = Artisan::call('backup:run');
+        dd($exitCode);
+    })->name('test.backup');
+    Route::get('/backup-index/dldb', [BackupDatabaseController::class, 'downLoadDb'])->name('download.db');
+});
 
 
 

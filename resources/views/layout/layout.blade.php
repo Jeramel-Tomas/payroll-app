@@ -72,7 +72,7 @@
 								</li>
 							</ul>
 						</li>
-
+						{{-- Attendance management --}}
 						<li class="sidebar-item has-sub {{ (request()->is('attendance/*')) ? 'active' : ''}}">
 							{{-- <a href="{{ route('attendance.log.index') }}" class='sidebar-link'> --}}
 							<a href="#" class='sidebar-link'>
@@ -93,6 +93,7 @@
 							</ul>
 						</li>
 
+						{{-- Payroll management --}}
 						<li class="sidebar-item has-sub {{ (request()->is('payroll/*')) ? 'active' : ''}}">
 								<a href="#" class='sidebar-link'>
 									<i class="bi bi-wallet-fill"></i>
@@ -134,6 +135,19 @@
 								</ul>
 						</li>
 
+						{{-- Backup DB --}}
+						<li class="sidebar-item has-sub {{ (request()->is('backup-db/*')) ? 'active' : ''}}">
+							<a href="#" class='sidebar-link'>
+								<i class="bi bi-archive-fill"></i>
+								<span>Backup</span>
+							</a>
+							<ul class="submenu {{ (request()->is('backup-db/backup-index')) ? 'active' : '' }}">
+								<li
+									class="submenu-item {{ (request()->is('backup-db/backup-index')) ? 'active' : ''}}">
+									<a href="{{ route('bakcupdb.index') }}">Backup Database</a>
+								</li>
+							</ul>
+						</li>
 					</ul>
 				</div>
 				<button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
