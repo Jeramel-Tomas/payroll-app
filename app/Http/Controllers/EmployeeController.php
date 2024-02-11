@@ -11,9 +11,9 @@ use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
 use App\Exports\UsersExport;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-
 
 
 class EmployeeController extends Controller
@@ -67,7 +67,6 @@ class EmployeeController extends Controller
     {
         $employees = EmployeeInformation::all();
         $sites = WorkingSite::all();
-
         $getEmployee = DB::table('employee_information')
             ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
             ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
@@ -98,12 +97,12 @@ class EmployeeController extends Controller
             'middleName' => 'nullable',
             'lastName' => 'required|min:2|max:24',
             'gender' => 'required',
-            'jobTitle' => 'required|min:2|max:100',
-            'dailyRate' => 'required|min:2|max:6',
+            // 'jobTitle' => 'required|min:2|max:100',
+            // 'dailyRate' => 'required|min:2|max:6',
             'address' => 'nullable',
             'contactNumber' => 'nullable|min:11|max:11',
             'DOE' => 'nullable',
-            'site_loc' => 'nullable'
+            // 'site_loc' => 'nullable'
         ]);
         $employee = new EmployeeInformation();
         $emp_working_site = new EmployeeWorkingSite();
@@ -113,26 +112,19 @@ class EmployeeController extends Controller
         $employee->middle_name = $validatedData['middleName'];
         $employee->last_name = $validatedData['lastName'];
         $employee->gender = $validatedData['gender'];
-        $employee->job_title = $validatedData['jobTitle'];
-        $employee->daily_rate = $validatedData['dailyRate'];
+        // $employee->job_title = $validatedData['jobTitle'];
+        // $employee->daily_rate = $validatedData['dailyRate'];
         $employee->address = $validatedData['address'];
         $employee->contact_number = $validatedData['contactNumber'];
         $employee->employment_date = $validatedData['DOE'];
 
-        //save data to employee_information table so that we can 
-        //generate the primary key to be inserted into the next table
         $employee->save();
 
-        $generatedId = $employee->id; //generated primary key
-        //saving the generated key to as a foreign key in the employee_working_sites table
-        $emp_working_site->employee_information_id = $generatedId;
-        $emp_working_site->working_site_id = $siteId;
-        $emp_working_site->save();
 
         return redirect()->back()->with(
             [
                 'success' => 'Employee added successfully!',
-                'success_expires_at' => now()->addSeconds(5)
+                'success_expires_at' => now()->addSeconds(3)
             ]
         );
     }
@@ -142,21 +134,16 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
+        $employees = EmployeeInformation::all();
         $sites = WorkingSite::all();
         $getEmployee = DB::table('employee_information')
-            ->leftJoin('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id')
-            ->leftJoin('working_sites', 'working_sites.id', '=', 'employee_working_sites.working_site_id')
-            ->where('employee_information.id', $id)
-            ->select('*', 'employee_information.id AS empID')
+            ->select(
+                'employee_information.id AS employee_id', 
+                'employee_information.*'
+                )
+            ->where('employee_information.id',$id)
             ->first();
-        if ($getEmployee->employee_information_id === null || empty($getEmployee)) {
-            return back()->with([
-                'danger' => 'You must add a site before VIEWING employee data',
-                'danger_expires_at' => now()->addSeconds(5)
-            ]);
-        } else {
             return view('employee-management.viewEmployee', compact('getEmployee', 'sites'));
-        }
     }
 
 
@@ -173,71 +160,71 @@ class EmployeeController extends Controller
             ->where('employee_working_sites.employee_information_id', $id)
             ->select('*', 'working_site_id AS wsID')
             ->first();
-        if (empty($checkSite->wsID) || is_null($checkSite->wsID)) {
-            return back()->with([
-                'danger' => 'You must add a site before EDITING employee data',
-                'danger_expires_at' => now()->addSeconds(5)
-            ]);
-        }
-        $findSiteID = WorkingSite::find($checkSite->id);
-        $findSite = WorkingSite::find($id);
+        // if (empty($checkSite->wsID) || is_null($checkSite->wsID)) {
+        //     return back()->with([
+        //         'danger' => 'You must add a site before EDITING employee data',
+        //         'danger_expires_at' => now()->addSeconds(5)
+        //     ]);
+        // }
+        // $findSiteID = WorkingSite::find($checkSite->id);
+        // $findSite = WorkingSite::find($id);
         //some parts of this block unnecesary , not gonna remove it for now
-        if (($checkSite === null || $checkSite->employee_information_id === null)) {
-            return back()->with([
-                'danger' => 'You must add a site before EDITING employee data',
-                'danger_expires_at' => now()->addSeconds(5)
-            ]);
-        } else {
-            return view('employee-management.editEmployeeInformation', compact('employee', 'sites', 'findSite', 'findSiteID'));
-        }
+        // if (($checkSite === null || $checkSite->employee_information_id === null)) {
+        //     return back()->with([
+        //         'danger' => 'You must add a site before EDITING employee data',
+        //         'danger_expires_at' => now()->addSeconds(5)
+        //     ]);
+        // } else {
+            return view('employee-management.editEmployeeInformation', compact('employee'));
+        // }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update($id, Request $request)
+    public function update($empid, Request $request)
     {
         $validatedData = $request->validate([
             'firstName' => 'required|min:2|max:24',
             'middleName' => 'nullable',
             'lastName' => 'required|min:2|max:24',
             'gender' => 'required',
-            'working_site' => 'nullable',
-            'jobTitle' => 'required|min:2|max:100',
-            'dailyRate' => 'required|numeric|min:2',
+            // 'working_site' => 'nullable',
+            // 'jobTitle' => 'required|min:2|max:100',
+            // 'dailyRate' => 'required|numeric|min:2',
             'address' => 'nullable',
             'contactNumber' => 'nullable|min:11|max:11',
             'editDOE' => 'nullable',
         ]);
         $upEmp = DB::table('employee_information')
-            ->where('id', $id) //$id = employee_information table primary key
+            ->where('id', $empid) //$id = employee_information table primary key
             ->update([
                 'first_name' => $validatedData['firstName'],
                 'middle_name' => $validatedData['middleName'],
                 'last_name' => $validatedData['lastName'],
                 'gender' => $validatedData['gender'],
-                'job_title' => $validatedData['jobTitle'],
-                'daily_rate' => $validatedData['dailyRate'],
+                // 'job_title' => $validatedData['jobTitle'],
+                // 'daily_rate' => $validatedData['dailyRate'],
                 'address' => $validatedData['address'],
                 'contact_number' => $validatedData['contactNumber'],
                 'employment_date' => $validatedData['editDOE']
             ]);
-
-        $upSite = DB::table('employee_working_sites')
-            ->where('employee_information_id', $id) //$id = employee_information table primary key
-            ->update(['working_site_id' => $validatedData['working_site']]);
-        if ($upSite > 0 || $upEmp > 0) { //check if there and runs the if-body if there are changes on the table rows
+            // dd($upEmp);
+        // $upSite = DB::table('employee_working_sites')
+        //     ->where('employee_information_id', $empid) //$id = employee_information table primary key
+        //     ->update(['working_site_id' => $validatedData['working_site']]);
+        if ( $upEmp > 0) { //check if there and runs the if-body if there are changes on the table rows
             return redirect()->route('employees.list')->with(
                 [
                     'success' => 'Employee information updated successfully!',
-                    'success_expires_at' => now()->addSeconds(5)
+                    'success_expires_at' => now()->addSeconds(3)
                 ]
             );
         } else { //runs this instead if there are no changes, just some messages for user
             return redirect()->route('employees.list')->with(
                 [
                     'danger' => 'There were no changes in the employee information',
-                    'danger_expires_at' => now()->addSeconds(5)
+                    'danger_expires_at' => now()->addSeconds(3)
                 ]
             );
         }

@@ -1,11 +1,11 @@
 <div>
     <section class="section">
         <div class="text-center">
-            <h1 class="text-center text-uppercase fs-3 text mb-0 fw-bolder">
+            <h1 class="text-center text-uppercase fs-3 text mb-1 fw-bolder">
                 @if ($workingSite === 0)
                 All Site Employees
                 @else
-                {{ $siteName }} {{ $gender }} {{ $jobTitle }} Employees
+                {{ $workingSiteName }} Employees
                 @endif
             </h1>
         </div>
@@ -35,45 +35,16 @@
                 {{-- Session Message handlers end --}}
                 
                 <div class="card-content row  p-0 flex-wrap">
-                        <div class="card-body col-lg-2 col-md-2 col-sm-2 p-2 d-flex justify-content-start align-items-center">
-                            
-                            <select class="p-2 choices form-select"  wire:model="sortOption" >
-                                <option value="site">Sort by Site</option>
-                                <option value="jobTitle">Sort by Job Title</option>
-                                <option value="gender">Sort by Gender</option>
-                                <option value="address">Sort by Address</option>
-                            </select>
-                        </div>
-                        <div class="card-body col-lg-2 col-md-2 col-sm-2 p-2 d-flex justify-content-start align-items-center" >
-                            @if ($sortOption === 'site')
-                            <select class="choices form-select" wire:model="workingSite" >
-                                <option value="">All Employees...</option>
+                    <div class="col-lg-4 col-md-4 col-sm-4 p-2">
+                        <div class="input-group">
+                            <select class="choices form-select" wire:model="workingSite">
+                                <option value="0">Filter by site...</option>
                                 @foreach ($sites as $site)
-                                <option value="{{$site->id}}"> {{ $site->site_name }}</option>
+                                <option value="{{$site->id}}">{{ $site->site_name }}</option>
                                 @endforeach
                             </select>
-                            @elseif ($sortOption === 'jobTitle')
-                            <select class="choices form-select" wire:model="jobTitle">
-                                <option value="">All Jobs...</option>
-                                @foreach ($uniqueJob as $uniqueJob)
-                                    <option value="{{ $uniqueJob }}">{{ $uniqueJob }}</option>
-                                @endforeach
-                            </select>
-                            @elseif ($sortOption === 'gender')
-                            <select class="choices form-select" wire:model="gender" >
-                                <option value="">All Gender...</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                            @elseif ($sortOption === 'address')
-                            <select class="choices form-select" wire:model="address">
-                                <option value="">All Address...</option>
-                                @foreach ($uniqueAddresses as $uniqueAddress)
-                                    <option value="{{ $uniqueAddress }}">{{ $uniqueAddress }}</option>
-                                @endforeach
-                            </select>
-                            @endif
                         </div>
+                    </div>
                     
                     <div class="col col-lg-6 col-md-6 col-sm-6 d-flex justify-content-start align-items-center p-2">
                         <div class="input-group">
@@ -109,7 +80,7 @@
                         <a href="{{ route('employees.create') }}" class="btn btn-primary">
                             Add Employee
                         </a>
-                        <button type="submit" class="btn btn-success ms-3" id="openForm">
+                        <button type="submit" class="btn btn-success ms-3" id="openForm" disabled>
                             Upload Employee Information
                         </button>
                     </div>
@@ -133,17 +104,17 @@
                 </div>
 
 
-                <div class=" table-responsive col-12 font-bold">
+                <div class=" table-responsive col-12  ">
                     {{-- Table start --}}
                     <table class="table bordered bg-white table-hover">
-                        <thead class="align-text-center">
+                        <thead class="align-text-center bg-secondary text-white ">
                             <tr>
                                 <th class="border text-center">Name </th>
                                 <th class="border text-center">Gender</th>
                                 <th class="border text-center">Job Title</th>
                                 <th class="border text-center">Daily Rate</th>
-                                <th class="border text-center">Address</th>
-                                <th class="border text-center">Contact Number</th>
+                                <th class="border text-center">Site Location</th>
+                                {{-- <th class="border text-center">Contact Number</th> --}}
                                 {{-- <th class="border text-center">Site Location</th> --}}
                                 {{-- <th class="border text-center">Employment Status</th> --}}
                                 <th class="border text-center">Action</th>
@@ -159,14 +130,60 @@
                                 @foreach($getEmployees as $key => $employee)
                                 <tr>
                                     <td class="d-none">{{ $employee->employee_id }}</td>
-                                    <td class="col-2 border ">{{ Str::ucfirst(Str::lower($employee->first_name)) }} {{
-                                        Str::ucfirst(Str::lower($employee->middle_name)) }} {{
-                                        Str::ucfirst(Str::lower($employee->last_name)) }}</td>
+                                    <td class="auto" wire:model="emp_name">{{ Str::ucfirst(Str::lower($employee->first_name)) }} {{ Str::ucfirst(Str::lower($employee->last_name)) }}</td>
                                     <td class="col-1 border">{{ Str::ucfirst(Str::lower($employee->gender)) }}</td>
-                                    <td class="col-2 border">{{ Str::ucfirst(Str::lower($employee->job_title)) }}</td>
-                                    <td class="col-1 border">{{ Str::ucfirst(Str::lower($employee->daily_rate)) }}</td>
-                                    <td class="col-2 border">{{ Str::ucfirst(Str::lower($employee->address)) }}</td>
-                                    <td class="col border">{{ $employee->contact_number }}</td>
+                                    <td class="auto border">
+                                        @php
+                                            $jobTitle = DB::table('working_sites')
+                                                ->join('employee_working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id')
+                                                ->where('employee_working_sites.employee_information_id', $employee->employee_id)
+                                                ->get();
+                                        @endphp
+                                        <ol class="">
+                                            @if($jobTitle->isEmpty())
+                                                <p class="text-warning dance-animation">No Job Title</p>
+                                            @else
+                                                @foreach ($jobTitle as $item)
+                                                <li class="{{$item->job_title ?? 'text-danger'}}">{{$item->job_title ?? 'Not set'}}</li>
+                                                @endforeach
+                                            @endif
+                                        </ol>
+                                    </td>
+                                    <td class="auto border" wire:model="emp_rate">
+                                        @php
+                                            $rate = DB::table('working_sites')
+                                                ->join('employee_working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id')
+                                                ->where('employee_working_sites.employee_information_id', $employee->employee_id)
+                                                ->get();
+                                        @endphp
+                                        <ol class="">
+                                            @if($rate->isEmpty())
+                                                <p class="text-warning dance-animation">No Daily Rate</p>
+                                            @else
+                                            @foreach ($rate as $item)
+                                                <li class="{{$item->job_title_rate ?? 'text-danger'}}">{{$item->job_title_rate ?? 'Not set'}}</li>
+                                                @endforeach
+                                            @endif
+                                        </ol>
+                                    </td>
+                                    <td class="auto border" wire:model="emp_site">
+                                        @php
+                                            $siteName = DB::table('working_sites')
+                                                ->join('employee_working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id')
+                                                ->where('employee_working_sites.employee_information_id', $employee->employee_id)
+                                                ->get();
+                                        @endphp
+                                        <ol class="">
+                                        @if($siteName->isEmpty())
+                                            <p class="text-warning dance-animation">No Site Assigned</p>
+                                        @else
+                                        @foreach ($rate as $item)
+                                            <li class="{{$item->site_name ?? 'text-danger'}}">{{$item->site_name ?? 'Not set'}}</li>
+                                            @endforeach
+                                        @endif
+                                        </ol>
+                                    </td>
+                                    {{-- <td class="col border">{{ $employee->contact_number }}</td> --}}
                                     {{-- @if(!empty($employee->site_name))
                                     <td class="col-1 border">{{ $employee->site_name }}</td>
                                     @else --}}

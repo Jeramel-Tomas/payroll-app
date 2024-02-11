@@ -26,3 +26,11 @@
     float: right;
     padding-right: 0 !important;
 }
+@keyframes dance {
+    0% { transform: rotate(-1deg); }
+    50% { transform: rotate(1deg); }
+    100% { transform: rotate(-1deg); }
+}
+.dance-animation {
+    animation: dance 1s infinite;
+}

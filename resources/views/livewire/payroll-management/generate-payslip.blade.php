@@ -13,7 +13,7 @@
                             </div>
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="input-group">
-                                    <select class="choices form-select">
+                                    <select class="choices form-select" wire:model="workingSite">
                                         <option value="0">Filter by site...</option>
                                         @foreach ($sites as $site)
                                         <option value="{{$site->id}}">{{ $site->site_name }}</option>
@@ -46,8 +46,8 @@
                 </div>
             <div class="table-responsive col p-3">
                 {{-- Table start --}}
-                <table class="table table-bordered bg-white table-hover ">
-                    <thead class="align-text-center" >
+                <table class="table table-bordered  bg-white table-hover ">
+                    <thead class="align-text-center bg-secondary text-white font-bold" >
                         <tr>
                             <th class="border text-center">Name </th>
                             <th class="border text-center">Site Location</th>
@@ -61,7 +61,7 @@
                             <th class="border text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody style="font-size: 2vh;">
+                    <tbody style="font-size: 2vh;" class="border">
                     @foreach($getEmployee as $employee)
                     <tr>
                     {{-- @dd($employee->job_title) --}}

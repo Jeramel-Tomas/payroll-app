@@ -36,10 +36,10 @@
 @endif
 <section class="section">
     <div class="row">
-        <div class="col col-3"></div>
-        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="col col-2"></div>
+        <div class="col-8 col-sm-8 col-md-8 col-lg-8">
             <div class="card border shadow p-3 mb-5 bg-body-tertiary rounded">
-                <div class="card-header">
+                <div class="card-header p-0">
                     <h2 class="text-start mb-0">Fill up Employee Information</h2>
                 </div>
                 <hr>
@@ -52,7 +52,7 @@
                             <div class="form-body ">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label>First Name</label>
+                                        <p class="text-end">First Name</p>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group has-icon-left ">
@@ -72,7 +72,7 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label>Middle Name</label>
+                                        <p class="text-end">Middle Name</p>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group has-icon-left">
@@ -91,7 +91,7 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label>Last Name</label>
+                                        <p class="text-end">Last Name</p>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group has-icon-left">
@@ -109,7 +109,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <label>Gender</label>
+                                        <p class="text-end">Gender</p>
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form-group has-icon-left">
@@ -124,8 +124,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label>Job Title</label>
+                                    {{-- <div class="col-md-4">
+                                        <p class="text-end">Job Title</p>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group has-icon-left">
@@ -141,9 +141,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Daily Rate</label>
+                                    </div> --}}
+                                    {{-- <div class="col-md-4">
+                                        <p class="text-end">Daily Rate</p>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group has-icon-left">
@@ -159,9 +159,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-4">
-                                        <label>Address</label>
+                                        <p class="text-end">Address</p>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group has-icon-left">
@@ -178,7 +178,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <label>Contact Number</label>
+                                        <p class="text-end">Contact Number</p>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group has-icon-left">
@@ -196,7 +196,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <label>Date of Employment</label>
+                                        <p class="text-end">Date of Employment</p>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group has-icon-left">
@@ -212,8 +212,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label>Site Location</label>
+                                    {{-- <div class="col-md-4">
+                                        <p class="text-end">Site Location</p>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group has-icon-left">
@@ -227,7 +227,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="col-12 d-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
@@ -238,27 +238,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3 col-sm-3 col-md-3 col-lg-3">
-            {{-- <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Upload Employee Information</h4>
-                </div>
-                <div class="card-content">
-                    <div class="card-body">
-                        <form class="form form-horizontal" action="{{ route('import') }}" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <input type="file" name="importedUsers"
-                                class="form-control @error('importedUsers') is-invalid @enderror"
-                                value="{{ old('importedUsers') }}" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="@error('importedUsers'){{ $message }}@enderror">
-                            <div class="col-12 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary mt-3">Upload</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div> --}}
+        <div class="col-2 col-sm-2 col-md-2 col-lg-2">
         </div>
     </div>
 

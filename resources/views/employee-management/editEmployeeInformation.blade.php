@@ -1,12 +1,6 @@
 @extends('../layout/layout')
 
 @push('sites-leftside-menu')
-@foreach ($sites as $site)
-<li class="submenu-item ">
-    {{-- <a href="{{ route('attendance.showlog.persite', ['siteId' => $site->id]) }}">{{
-        $site->site_name }}</a> --}}
-</li>
-@endforeach
 @endpush
 
 @section('page-heading')
@@ -16,11 +10,11 @@
 @section('page-content')
 <section class="section">
     <div class="row">
-        <div class="col-3"></div>
-        <div class="col-md-6 col-6">
+        <div class="col-2"></div>
+        <div class="col-md-8 col-8">
             <div class="card border shadow p-3 mb-5 bg-body-tertiary rounded">
-                <div class="card-header">
-                    <h2 class="text-start">Edit {{ $employee->first_name. ' ' .$employee->last_name }} Information</h2>
+                <div class="card-header p-0">
+                    <h4 class="text-start">{{ $employee->first_name. ' ' .$employee->last_name }}'s Employee Information</h4>
                 </div>
                 <hr>
                 <div class="card-content">
@@ -30,7 +24,7 @@
                             @csrf
                             <div class="form-body">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 text-end">
                                         <label>First Name</label>
                                     </div>
                                     <div class="col-md-8">
@@ -50,7 +44,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 text-end">
                                         <label>Middle Name</label>
                                     </div>
                                     <div class="col-md-8">
@@ -69,7 +63,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 text-end">
                                         <label>Last Name</label>
                                     </div>
                                     <div class="col-md-8">
@@ -87,10 +81,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    {{-- <div class="col-md-4">
                                         <label>Site Location </label>
-                                    </div>
-                                    <div class="col-md-8">
+                                    </div> --}}
+                                    {{-- <div class="col-md-8">
                                         <div class="form-group has-icon-left">
                                             <div class="position-relative">
                                                 <select class="form-control form-select" name="working_site">
@@ -105,24 +99,23 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
+                                    </div> --}}
+                                    <div class="col-md-4 text-end">
                                         <label>Gender</label>
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <div class="position-relative">
                                                 <fieldset class="form-group">
-                                                    <select class="form-select @error('gender') is-invalid @enderror"
-                                                        value="{{ Str::ucfirst(Str::lower($employee->gender)) }}" id="gender" name="gender">
-                                                        <option value='male'>Male</option>
-                                                        <option value='female'>Female</option>
+                                                    <select class="form-select @error('gender') is-invalid @enderror" id="gender" name="gender">
+                                                        <option value='male' {{ $employee->gender == 'male' ? 'selected' : '' }}>Male</option>
+                                                        <option value='female' {{ $employee->gender == 'female' ? 'selected' : '' }}>Female</option>
                                                     </select>
                                                 </fieldset>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    {{-- <div class="col-md-4">
                                         <label>Job Title</label>
                                     </div>
                                     <div class="col-md-8">
@@ -157,8 +150,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
+                                    </div> --}}
+                                    <div class="col-md-4 text-end">
                                         <label>Address</label>
                                     </div>
                                     <div class="col-md-8">
@@ -167,7 +160,7 @@
                                                 <input type="text"
                                                     class="form-control @error('address') is-invalid @enderror"
                                                     placeholder="Address" name="address"
-                                                    value="{{ Str::ucfirst(Str::lower($employee->address)) }}" data-bs-toggle="tooltip"
+                                                    value="{{ $employee->address?Str::ucfirst(Str::lower($employee->address)):'No Address' }}" data-bs-toggle="tooltip"
                                                     data-bs-placement="top"
                                                     title="@error('address'){{ $message }}@enderror">
                                                 <div class="form-control-icon">
@@ -176,7 +169,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 text-end">
                                         <label>Contact Number</label>
                                     </div>
                                     <div class="col-md-8">
@@ -194,7 +187,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 text-end">
                                         <label>Date of Employment</label>
                                     </div>
                                     <div class="col-md-8">
@@ -213,9 +206,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary me-1 mb-1">Update</button>
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{{ route('employees.list') }}" class="btn btn-primary">Back to View</a>
+                                        <button type="submit" class="btn btn-success">Update</button>
+                                    </div>
                                 </div>
+                                
+                                
                             </div>
                     </div>
                     </form>
