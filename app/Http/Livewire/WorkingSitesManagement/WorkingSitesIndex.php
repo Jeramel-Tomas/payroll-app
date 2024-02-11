@@ -30,19 +30,28 @@ class WorkingSitesIndex extends Component
         $existingEmployeesInWorkingSite = [];
     public $siteIdModalToAddEmp = '',
         $siteNameModalToAddEmp = '';
+    public $siteIdToEdit, $siteNameToEdit;
 
     public function resetProps()
     {
         $this->reset();
     }
 
-    /* public function updating()
+    public function editSiteName($siteId, $siteName)
     {
-        $existingEmp = $this->getExistingEmployeeInThisSite();
-        if ($existingEmp) {
-            $this->existingEmployeesInWorkingSite = $existingEmp;
+        $this->siteIdToEdit = $siteId;
+        $this->siteNameToEdit = $siteName;
+    }
+
+    public function saveToUpdateWorkingSite()
+    {
+        $save = DB::table('working_sites')
+            ->where('id', $this->siteIdToEdit)
+            ->update(['site_name' => $this->siteNameToEdit]);
+        if ($save) {
+            session()->flash('message', 'Working site successfully updated.');
         }
-    } */
+    }
 
     public function removeFromSelectedEmp($keyId)
     {
@@ -63,11 +72,6 @@ class WorkingSitesIndex extends Component
     public function saveEmployeesToSite($siteId)
     {
        
-        /* foreach ($this->selectedEmps as $key => $value) {
-            if ($this->checkEmpSameWorkingSite($key, $siteId)) {
-                $this->selectedEmpsSameWorkingSite[$key] = $value;
-            }
-        } */
         $success = false;
         if (count($this->selectedEmpsSameWorkingSite) > 0) {
             $notExistingEmpInThisSite = array_diff($this->selectedEmps, $this->selectedEmpsSameWorkingSite);
@@ -81,11 +85,10 @@ class WorkingSitesIndex extends Component
                         'created_at' => Carbon::now()
                     ];
                 }
-                // dump('data-to-insert', $data); die;
+
                 $success = DB::table('employee_working_sites')->insert($data);
             }
-            // $this->existingEmployeesInWorkingSite = $existingEmp ?? null;
-            // dump($this->existingEmployeesInWorkingSite);
+
         } else {
             foreach ($this->selectedEmps as $key => $value) {
                 $data[] = [
@@ -128,13 +131,12 @@ class WorkingSitesIndex extends Component
 
     public function selectEmployee($employeeId)
     {
-    //    dump($employeeId);
         $getEmp = EmployeeInformation::where('id', $employeeId)->first();
         // $this->searchQueryString = $getEmp->first_name . ' ' . $getEmp->last_name;
         $array = [
             $getEmp->id => $getEmp->first_name . ' ' . $getEmp->last_name
         ];
-        // dump($getEmp);
+
         $this->selectedEmps = $this->selectedEmps + $array;
 
         foreach ($this->selectedEmps as $key => $value) {
@@ -143,14 +145,6 @@ class WorkingSitesIndex extends Component
             }
         }
         $this->getExistingEmployeeInThisSite();
-       /*  $existingEmp = $this->getExistingEmployeeInThisSite();
-        if ($existingEmp) {
-            $this->existingEmployeesInWorkingSite = $existingEmp;
-        } */
-        /* $this->reset([
-            'searchQueryString',
-            'employees'
-        ]); */
     }
 
     private function getExistingEmployeeInThisSite()
@@ -164,7 +158,6 @@ class WorkingSitesIndex extends Component
         $this->siteName = $name;
 
         $findEmp = EmployeeWorkingSite::where('working_site_id', $siteId)->get();
-        // dump($findEmp);
         $this->employeeCount = $findEmp->count();
     }
 

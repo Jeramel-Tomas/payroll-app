@@ -24,7 +24,9 @@ class GeneratePayslip extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $workingSite;
-    public $workingSiteName = '', $searchString = '';
+    public $workingSiteName = '', 
+        $searchString = '',
+        $workingSiteFilter = '';
     public $dateFrom = '',
         $dateTo = '';
     public $dateFromPayslip = '',
@@ -54,38 +56,39 @@ class GeneratePayslip extends Component
     
     public function render()
     {
-        $employees = EmployeeInformation::all();
+        // $employees = EmployeeInformation::all();
         $sites = WorkingSite::all();
 
-        $getEmployeePayslip = DB::table('employee_information')
-            ->select('employee_information.id AS employee_id', 'employee_information.*')
-            ->orderBy('employee_information.first_name', 'asc');
-            // ->paginate(25);
+        $employees = DB::table('employee_information')
+            ->select('employee_information.id AS employee_id', 'employee_information.*');
 
         if ($this->monthFilter) {
             $this->filterFrom = Carbon::create($this->monthFilter)->startOfMonth();
             $this->filterTo = Carbon::create($this->monthFilter)->endOfMonth();
         }
-        if (!empty($this->workingSite)) {
-            $getEmployeePayslip->join('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id');
-            $getEmployeePayslip->join('working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id');
-            $getEmployeePayslip->where('working_sites.id', '=', $this->workingSite);
-            $this->workingSiteName = WorkingSite::select('site_name')->where('id', $this->workingSite)->first();
+
+        if (!empty($this->searchString)) {
+            $employees->orWhere('first_name', 'like', "%" . $this->searchString . "%");
+            $employees->orWhere('last_name', 'like', "%" . $this->searchString . "%");
+        }
+
+        if (!empty($this->workingSiteFilter)) {
+            $employees->join('employee_working_sites', 'employee_working_sites.employee_information_id', '=', 'employee_information.id');
+            $employees->join('working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id');
+            $employees->where('working_sites.id', '=', $this->workingSiteFilter);
+            $this->workingSiteName = WorkingSite::select('site_name')->where('id', $this->workingSiteFilter)->first();
             $this->workingSiteName = $this->workingSiteName->site_name ?? '';
         }
 
+        $getEmployeePayslip = $employees->paginate(25);
 
 
-        $getEmployeePayslip = $getEmployeePayslip->paginate(25);
+        // $getEmployeePayslip = $getEmployeePayslip->paginate(25);
         return view(
             'livewire.payroll-management.generate-payslip',
             [
                 'getEmployee' => $getEmployeePayslip,
                 'sites' => $sites,
-                'employees' => $employees,
-                // 'totalDays' => $empTotalDays,
-                // 'totalOvertime' => $empTotalOverTime,
-                // 'totalCashAdvance' => $empTotalCashAdvance,
             ]
         );
     }

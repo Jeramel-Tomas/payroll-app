@@ -36,7 +36,6 @@ class WorkingSitesController extends Controller
 
     public function salaryExpensesPersite()
     {
-        // dump('sallary expenses');
         return view('working-sites-management.salaryExpensesPerSites');
     }
 
