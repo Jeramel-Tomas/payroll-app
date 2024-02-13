@@ -67,13 +67,7 @@
                                                         <span data-bs-toggle="tooltip" title="Add employee">
                                                             <i class="bi bi-person-plus"></i>
                                                         </span>
-                                                    </a> &nbsp; | &nbsp; 
-                                                    <a href="#" wire:click.prevent="confirmSiteDelete({{$site->id}}, '{{$site->site_name}}')" data-bs-toggle="modal"
-                                                        data-bs-target="#confirmDelete">
-                                                        <span data-bs-toggle="tooltip" title="Delete">
-                                                            <i class="bi bi-trash"></i>
-                                                        </span>
-                                                    </a>
+                                                    </a>  
                                                     &nbsp; | &nbsp;
                                                     <a href="#" 
                                                         wire:click.prevent="editSiteName({{$site->id}}, '{{$site->site_name}}')" 
@@ -83,7 +77,17 @@
                                                             <i class="bi bi-pencil-square"></i>
                                                         </span>
                                                     </a>
-
+                                                    &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp;
+                                                    <a href="#" 
+                                                        class="float-end"
+                                                        wire:click.prevent="confirmSiteDelete({{$site->id}}, '{{$site->site_name}}')" 
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#confirmDelete"
+                                                        >
+                                                        <span data-bs-toggle="tooltip" title="Delete">
+                                                            <i class="bi bi-trash"></i>
+                                                        </span>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -165,12 +169,12 @@
                     <div class="">
                         @if ($employeeCount > 0)
                             <p>
-                                <strong>Sorry!</strong> 
-                                {{$siteName}} Working site 
+                                Sorry you cannot delete this site! &nbsp;
+                                <strong>{{$siteName}}</strong> working site 
                                 {{ $employeeCount > 1 
                                     ? ' have ' . $employeeCount .' Employees ' 
                                     : ' has ' . $employeeCount . ' Employee'}} 
-                                 assigned to it!
+                                 assigned to it! 
                             </p>
                         @else
                         <p>

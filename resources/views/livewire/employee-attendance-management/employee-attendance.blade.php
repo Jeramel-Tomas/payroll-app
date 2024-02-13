@@ -52,13 +52,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="row">
-                            <div class="col">
-                                {{\Carbon\Carbon::now()->startOfMonth()}} <br>
-                                {{\Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')}} <br>
-                                {{\Carbon\Carbon::now()->endOfMonth()->format('Y-m-d')}}
-                            </div>
-                        </div> --}}
                         @if ($workingSiteName)
                         <div class="row mb-2 my-3">
                             <div class="col">
@@ -74,9 +67,10 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Total attendance</th>
+                                        <th>Total days</th>
                                         <th>Total OT</th>
-                                        <th>From/To</th>
+                                        <th>From</th>
+                                        <th>To</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -114,7 +108,7 @@
                                                     ])
                                                 ->sum('total_ot');
                                             @endphp
-                                            {{$totalOt}}
+                                            {{number_format($totalOt, 2)}}
                                         </td>
                                         <td class="col-auto">
                                             <div>
@@ -122,22 +116,20 @@
                                                     $filterFrom 
                                                         ? Carbon\Carbon::create($filterFrom)->format('Y-m-d') 
                                                         : Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')
-                                                }}/
+                                                }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
                                                 {{
-                                                    $filterTo 
-                                                        ? Carbon\Carbon::create($filterTo)->format('Y-m-d') 
+                                                    $filterTo
+                                                        ? Carbon\Carbon::create($filterTo)->format('Y-m-d')
                                                         : Carbon\Carbon::now()->endOfMonth()->format('Y-m-d')
                                                 }}
                                             </div>
                                         </td>
                                         <td class="col-auto">
                                             <div class="d-flex align-items-center">
-                                                {{-- <a href="{{route('working.site.assigned.employees', ['siteId' => $site->id])}}">
-                                                    <span data-bs-toggle="tooltip" title="Show assigned employees">
-                                                        <i class="bi bi-person-lines-fill"></i>
-                                                    </span>
-                                                </a> &nbsp; | &nbsp; --}}
-                                            
                                                 <a href="#" 
                                                     wire:click.prevent="showInputEmployeeAttendance({{$employee->id}})"
                                                     data-bs-toggle="modal"

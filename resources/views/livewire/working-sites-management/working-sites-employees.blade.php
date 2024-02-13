@@ -14,6 +14,29 @@
                     </div>
                     <div class="card-body">
 
+                        
+                        <div class="row my-4">
+                            <div class="col-lg-2 col-md-2 col-sm-2"></div>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <div class="input-group">
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        placeholder="Employee last name..." 
+                                        aria-label="Recipient's username"
+                                        aria-describedby="button-addon2" 
+                                        data-bs-toggle="tooltip" 
+                                        data-bs-placement="top"
+                                        title="i.e. (Last name...)" 
+                                        wire:model.debounce.3000="searchString">
+                                    <span class="input-group-text" id="basic-addon1">
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2"></div>
+                        </div>
+
                         <div class="table-responsive" style="width: 80%; margin: auto;">
                             <table class="table table-hover table-bordered align-items-center">
                                 <thead>
@@ -31,7 +54,7 @@
                                         <td class="col-auto">
                                             <div class="d-flex align-items-center">
                                                 @php
-                                                    $fullName = strtolower($employee->firstname . ' ' . $employee->lastname);
+                                                    $fullName = strtolower($employee->lastname . ', ' . $employee->firstname);
                                                     $fullName = ucwords($fullName);
                                                 @endphp
                                                 {{$fullName}}

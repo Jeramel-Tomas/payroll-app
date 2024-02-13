@@ -87,7 +87,7 @@
                                         </tr>
                                         @endforeach
                                     </tbody>
-                                    <tfoot>
+                                    <tfoot class="table-success">
                                         <tr>
                                             <th scope="row">Sum of all sites salaries</th>
                                             <td>{{number_format($sumOfTotalSalaryPerSite, 2)}}</td>
@@ -100,9 +100,6 @@
                                 <div class="col d-flex justify-content-start align-items-center">
                                     <strong>Total: </strong> &nbsp; {{ $sites->count() }}
                                 </div>
-                                {{-- <div class="col d-flex justify-content-end">
-                                    {{ $sites->links() }}
-                                </div> --}}
                             </div>
                         </div>
                     </div>

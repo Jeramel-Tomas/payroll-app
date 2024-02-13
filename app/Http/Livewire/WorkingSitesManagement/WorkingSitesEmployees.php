@@ -121,12 +121,20 @@ class WorkingSitesEmployees extends Component
             )
             ->orderBy('employee_information.last_name');
         $employeesInWorkingSite->where('working_sites.id', '=', $this->siteId);
+
+        if (!empty($this->searchString)) {
+            $employeesInWorkingSite->where('employee_information.last_name', 'like', "%" . $this->searchString . "%");
+        }
+
         $employeesInWorkingSite->join(
             'employee_working_sites',
             'employee_information.id',
             '=',
             'employee_working_sites.employee_information_id'
         );
+
+        
+
         $employeesInWorkingSite->join('working_sites', 'employee_working_sites.working_site_id', '=', 'working_sites.id');
         $siteEmployees = $employeesInWorkingSite->paginate(50);
         

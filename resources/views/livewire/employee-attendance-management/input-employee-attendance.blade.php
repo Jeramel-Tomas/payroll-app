@@ -37,6 +37,18 @@
                         <span class="">{{\Carbon\Carbon::now()->toFormattedDateString()}}</span>
                     </div>
                 </div>
+                @if (session()->has('message'))
+                <div class="row my-2">
+                    <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>{{ session('message') }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                </div>
+                @endif
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
@@ -47,13 +59,68 @@
                             <th>Total OT</th>
                             <th>From</th>
                             <th>To</th>
-                            <th>Total</th>
+                            <th>
+                                <div>Gross</div>
+                                <span>OT</span> |
+                                <span>Days</span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                     @isset($employeesInfo)
                         @foreach ($employeesInfo as $key=>$employee)
-                        <tr wire:key="emp-field-{{ $item->id }}">
+                        @php
+                            $empDaysPresent = DB::table('employee_time_records')->select('days_present')
+                                ->where([
+                                    ['employee_id', $employeeId],
+                                    ['site_id', $employee->working_site_id]
+                                    ])
+                                    ->whereBetween(\DB::raw('DATE(attendance_from)'), [
+                                    $filterFromInputAttendance ? $filterFromInputAttendance : Carbon\Carbon::now()->startOfMonth(),
+                                    $filterToInputAttendance ? $filterToInputAttendance : Carbon\Carbon::now()->endOfMonth(),
+                                ])
+                                ->first()->days_present ?? null;
+
+                            $ot = DB::table('employee_time_records')->select('total_ot', 'attendance_from')
+                                ->where('employee_id', $employeeId)
+                                ->where('site_id', $employee->working_site_id)
+                                ->whereBetween(\DB::raw('DATE(attendance_from)'), [
+                                    $filterFromInputAttendance ? $filterFromInputAttendance : Carbon\Carbon::now()->startOfMonth(),
+                                    $filterToInputAttendance ? $filterToInputAttendance : Carbon\Carbon::now()->endOfMonth(),
+                                ])
+                                ->first()->total_ot ?? null;
+
+                            $dateFromModal = DB::table('employee_time_records')->select('attendance_from')
+                                ->where('employee_id', $employeeId)
+                                ->where('site_id', $employee->working_site_id)
+                                ->whereBetween(\DB::raw('DATE(attendance_from)'), [
+                                    $filterFromInputAttendance ? $filterFromInputAttendance : Carbon\Carbon::now()->startOfMonth(),
+                                    $filterToInputAttendance ? $filterToInputAttendance : Carbon\Carbon::now()->endOfMonth(),
+                                ])
+                                ->first()->attendance_from ?? null;
+                            $dateToModal = DB::table('employee_time_records')->select('attendance_to')
+                                ->where('employee_id', $employeeId)
+                                ->where('site_id', $employee->working_site_id)
+                                ->whereBetween(\DB::raw('DATE(attendance_from)'), [
+                                    $filterFromInputAttendance ? $filterFromInputAttendance : Carbon\Carbon::now()->startOfMonth(),
+                                    $filterToInputAttendance ? $filterToInputAttendance : Carbon\Carbon::now()->endOfMonth(),
+                                ])
+                                ->first()->attendance_to ?? null;
+                        @endphp
+
+
+                        <tr 
+                            wire:key="emp-field-{{ $item->id }}" 
+                            role="button" 
+                            wire:click.stop="setupInputAttendance(
+                                '{{$employee->working_site_id}}',
+                                '{{$empDaysPresent}}',
+                                '{{$ot}}',
+                                '{{$dateFromModal}}',
+                                '{{$dateToModal}}'
+                            )"
+                        >
+                            
                             <td class="col-auto">
                                 {{$employee->site_name}}
                             </td>
@@ -64,60 +131,33 @@
                                 {{$employee->job_title_rate}}
                             </td>
                             <td class="col-auto">
-                                @php
-                                    $daysPresent = DB::table('employee_time_records')->select('days_present')
-                                        ->where([
-                                            ['employee_id', $employeeId],
-                                            ['site_id', $employee->working_site_id]
-                                        ])
-                                        ->whereBetween(\DB::raw('DATE(attendance_from)'), [
-                                            $filterFromInputAttendance ? $filterFromInputAttendance : Carbon\Carbon::now()->startOfMonth(),
-                                            $filterToInputAttendance ? $filterToInputAttendance : Carbon\Carbon::now()->endOfMonth(),
-                                        ])
-                                        ->first()->days_present ?? null;
-                                @endphp
-                                <div 
-                                    wire:click.stop="setInputDaysPresent('{{$employee->working_site_id}}', 'daysPresent')"
-                                    role="button" class="d-flex align-items-center">
-                                    @if (
-                                        !empty($daysPresentColumn) && 
-                                        $daysPresentColumn === $daysPresentColumnConstant &&
-                                        $employee->working_site_id == $siteId
-                                        )
+                                <div>
+                                    
+                                    @if ($siteId && $employee->working_site_id == $siteId)
                                     <input 
-                                        type="text" 
-                                        wire:keydown.escape="cancelInput()" 
-                                        wire:keydown.enter="saveInputDaysPresent($event.target.value)"
-                                        value="{{$daysPresent ?? ''}}" 
-                                        class="form-control" />
+                                        type="number" 
+                                        wire:model.lazy="empDaysPresentInput"
+                                        value="{{$empDaysPresentInput ?? ''}}" 
+                                        class="form-control @error('empDaysPresentInput') is-invalid @enderror"
+                                        />
+                                        @error('empDaysPresentInput')
+                                            <small class="text-danger">
+                                                {{ $message }}
+                                            </small>
+                                        @enderror
                                     @else
-                                        {{$daysPresent ?? '-'}}
+                                        {{$empDaysPresent ?? '-'}}
                                     @endif
+
                                 </div>
                             </td>
                             <td class="col-auto">
-                                @php
-                                    $ot = DB::table('employee_time_records')->select('total_ot', 'attendance_from')
-                                        ->where('employee_id', $employeeId)
-                                        ->where('site_id', $employee->working_site_id)
-                                        ->whereBetween(\DB::raw('DATE(attendance_from)'), [
-                                            $filterFromInputAttendance ? $filterFromInputAttendance : Carbon\Carbon::now()->startOfMonth(),
-                                            $filterToInputAttendance ? $filterToInputAttendance : Carbon\Carbon::now()->endOfMonth(),
-                                        ])
-                                        ->first()->total_ot ?? null;
-                                @endphp
-                                <div wire:click.stop="setInputOtTotal({{$employee->working_site_id}}, 'totalOt')" role="button"
-                                    class="d-flex align-items-center">
-                                    @if (
-                                    !empty($totalOtColumn) &&
-                                    $totalOtColumn === $totalOtColumnConstant &&
-                                    $employee->working_site_id === $siteId
-                                    )
+                                <div >
+                                    @if ($siteId && $employee->working_site_id == $siteId)
                                     <input 
-                                        type="text" 
-                                        wire:keydown.escape="cancelInput()"
-                                        wire:keydown.enter="saveInputOtTotal($event.target.value)" 
-                                        value="{{$ot ?? ''}}"
+                                        type="number" 
+                                        wire:model="otInput"
+                                        value="{{$otInput ?? ''}}"
                                         class="form-control" />
                                     @else
                                         {{$ot ?? '-'}}
@@ -125,61 +165,37 @@
                                 </div>
                             </td>
                             <td class="col-auto">
-                                @php
-                                    $dateFromModal = DB::table('employee_time_records')->select('attendance_from')
-                                        ->where('employee_id', $employeeId)
-                                        ->where('site_id', $employee->working_site_id)
-                                        ->whereBetween(\DB::raw('DATE(attendance_from)'), [
-                                            $filterFromInputAttendance ? $filterFromInputAttendance : Carbon\Carbon::now()->startOfMonth(),
-                                            $filterToInputAttendance ? $filterToInputAttendance : Carbon\Carbon::now()->endOfMonth(),
-                                        ])
-                                        ->first()->attendance_from ?? null;
-                                @endphp
-                                <div 
-                                    wire:click.stop="setInputAttendanceFrom({{$employee->working_site_id}}, 'attendanceFrom')" 
-                                    role="button"
-                                    class="d-flex align-items-center">
-                                    @if (
-                                    !empty($attendanceFromColumn) &&
-                                    $attendanceFromColumn === $attendanceFromColumnConstant &&
-                                    $employee->working_site_id === $siteId
-                                    )
+                                <div>
+                                    @if ($siteId && $employee->working_site_id == $siteId)
                                     <input 
                                         type="date" 
-                                        wire:keydown.escape="cancelInput()" 
-                                        wire:keydown.enter="saveInputAttendanceFrom($event.target.value)"
-                                        value="{{$dateFromModal ?? ''}}" 
-                                        class="form-control" />
+                                        wire:model.lazy="dateFromModalInput"
+                                        value="{{$dateFromModalInput ?? ''}}" 
+                                        class="form-control @error('dateFromModalInput') is-invalid @enderror" />
+                                        @error('dateFromModalInput')
+                                            <small class="text-danger">
+                                                {{ $message }}
+                                            </small>
+                                        @enderror
                                     @else
                                     {{$dateFromModal ?? '-'}}
                                     @endif
+
                                 </div>
                             </td>
                             <td class="col-auto">
-                                @php
-                                    $dateToModal = DB::table('employee_time_records')->select('attendance_to')
-                                        ->where('employee_id', $employeeId)
-                                        ->where('site_id', $employee->working_site_id)
-                                        ->whereBetween(\DB::raw('DATE(attendance_from)'), [
-                                            $filterFromInputAttendance ? $filterFromInputAttendance : Carbon\Carbon::now()->startOfMonth(),
-                                            $filterToInputAttendance ? $filterToInputAttendance : Carbon\Carbon::now()->endOfMonth(),
-                                        ])
-                                        ->first()->attendance_to ?? null;
-                                @endphp
-                                <div 
-                                    wire:click.stop="setInputAttendanceTo({{$employee->working_site_id}}, 'attendanceTo')" role="button"
-                                    class="d-flex align-items-center">
-                                    @if (
-                                        !empty($attendanceToColumn) &&
-                                        $attendanceToColumn === $attendanceToColumnConstant &&
-                                        $employee->working_site_id === $siteId
-                                    )
+                                <div>
+                                    @if ($siteId && $employee->working_site_id == $siteId)
                                         <input 
                                             type="date" 
-                                            wire:keydown.escape="cancelInput()"
-                                            wire:keydown.enter="saveInputAttendanceTo($event.target.value)" 
-                                            value="{{$dateToModal ?? ''}}"
-                                            class="form-control" />
+                                            wire:model="dateToModalInput"
+                                            value="{{$dateToModalInput ?? ''}}"
+                                            class="form-control @error('dateToModalInput') is-invalid @enderror" />
+                                            @error('dateToModalInput')
+                                            <small class="text-danger">
+                                                {{ $message }}
+                                            </small>
+                                            @enderror
                                     @else
                                         {{$dateToModal ?? '-'}}
                                     @endif
@@ -188,7 +204,7 @@
                             <td class="col-auto">
                                 @php
                                     (double)$rate = (double)$employee->job_title_rate ?? 0;
-                                    (double)$numDays = (double)$daysPresent ?? 0;
+                                    (double)$numDays = (double)$empDaysPresent ?? 0;
                                     (double)$totalOt = (double)$ot ?? 0;
                                     (double)$numOt = ((double)$rate / 8) * $totalOt ?? 0;
                                 @endphp
@@ -197,6 +213,20 @@
                                     (double)(($numDays * $rate) + $numOt)
                                 }}
                             </td>
+                            @if ($employee->working_site_id == $siteId)
+                            <td>
+                                <button
+                                    class="btn btn-info" 
+                                    wire:click.stop="saveInputAttendance({{$employee->working_site_id}})">
+                                    Save
+                                </button>
+                                <button
+                                    class="btn btn-warning" 
+                                    wire:click.stop="cancelInputAttendance()">
+                                    Cancel
+                                </button>
+                            </td>
+                            @endif
                         </tr>
                         @endforeach
                     @endisset

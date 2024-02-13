@@ -26,9 +26,21 @@ class InputEmployeeAttendance extends Component
     public $totalOtColumn = '', 
         $attendanceFromColumn = '',
         $attendanceToColumn = '';
+
     public $monthFilterInputAttendance = '',
         $filterFromInputAttendance = '',
         $filterToInputAttendance = '';
+
+    public $empDaysPresentInput,
+        $otInput,
+        $dateFromModalInput,
+        $dateToModalInput;
+
+    protected $rules = [
+        'empDaysPresentInput' => 'required',
+        'dateFromModalInput' => 'required',
+        'dateToModalInput' => 'required',
+    ];
     
     public function clearFilterInputAttendance()
     {
@@ -45,52 +57,56 @@ class InputEmployeeAttendance extends Component
         $this->employeeId = $empId;
     }
 
-    public function setInputDaysPresent($siteId, $column)
-    {
+    public function setupInputAttendance($siteId, $empDaysPresent, $ot, $dateFromModal, $dateToModal)
+    {        
         $this->siteId = $siteId;
-        $this->daysPresentColumn = $column;
+        if ($empDaysPresent) {
+            $this->empDaysPresentInput = $empDaysPresent;
+        }
+
+        if ($ot) {
+            $this->otInput = $ot;
+        }
+
+        if ($dateFromModal) {
+            $this->dateFromModalInput = $dateFromModal;
+        }
+
+        if ($dateToModal) {
+            $this->dateToModalInput = $dateToModal;
+        }
     }
 
-    public function saveInputDaysPresent($value)
+    public function saveInputAttendance($siteId)
     {
-        $this->saveInputs($this->daysPresentColumn, $value);
-        $this->cancelInput();
+        $this->validate();
+
+        DB::table('employee_time_records')
+        ->updateOrInsert(
+            ['employee_id' => $this->employeeId, 'site_id' =>  $siteId],
+            [
+                'days_present' => $this->empDaysPresentInput,
+                'total_ot' => $this->otInput ?? null,
+                'attendance_from' => $this->dateFromModalInput,
+                'attendance_to' => $this->dateToModalInput,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        );
+       
+        $this->cancelInputAttendance();
+        session()->flash('message', 'Updated successfully.');
     }
 
-    public function setInputOtTotal($siteId, $column)
+    public function cancelInputAttendance()
     {
-        $this->siteId = $siteId;
-        $this->totalOtColumn = $column;
-    }
-
-    public function saveInputOtTotal($value)
-    {
-        $this->saveInputs($this->totalOtColumn, $value);
-        $this->cancelInput();
-    }
-
-    public function setInputAttendanceFrom($siteId, $column)
-    {
-        $this->siteId = $siteId;
-        $this->attendanceFromColumn = $column;
-    }
-    
-    public function saveInputAttendanceFrom($value)
-    {
-        $this->saveInputs($this->attendanceFromColumn, $value);
-        $this->cancelInput();
-    }
-
-    public function setInputAttendanceTo($siteId, $column)
-    {
-        $this->siteId = $siteId;
-        $this->attendanceToColumn = $column;
-    }
-
-    public function saveInputAttendanceTo($value)
-    {
-        $this->saveInputs($this->attendanceToColumn, $value);
-        $this->cancelInput();
+        $this->reset([
+            'siteId',
+            'empDaysPresentInput',
+            'otInput',
+            'dateFromModalInput',
+            'dateToModalInput',
+        ]);
     }
 
     public function cancelInput()
@@ -124,28 +140,11 @@ class InputEmployeeAttendance extends Component
         if ($this->monthFilterInputAttendance) {
             $this->filterFromInputAttendance = Carbon::create($this->monthFilterInputAttendance)->startOfMonth();
             $this->filterToInputAttendance = Carbon::create($this->monthFilterInputAttendance)->endOfMonth();
-
         }
 
         return view('livewire.employee-attendance-management.input-employee-attendance', [
             'employeesInfo' => $employees
         ]);
-    }
-
-    private function saveInputs($column, $value)
-    {
-        $col = Str::snake($column);
-        $value = $value ? $value : null;
-
-        DB::table('employee_time_records')
-        ->updateOrInsert(
-            ['employee_id' => $this->employeeId, 'site_id' =>  $this->siteId],
-            [
-                $col => $value,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ]
-        );
     }
 
 }
