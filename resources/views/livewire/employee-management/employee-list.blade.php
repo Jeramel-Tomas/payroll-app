@@ -19,7 +19,7 @@
                 </div>
                 @endif
                 @if(session('error') && session('error_expires_at'))
-                <div class="alert alert-error mt-2">
+                <div class="alert alert-danger mt-2">
                     {{ session('error') }}
                 </div>
                 @endif
@@ -80,7 +80,7 @@
                         <a href="{{ route('employees.create') }}" class="btn btn-primary">
                             Add Employee
                         </a>
-                        <button type="submit" class="btn btn-success ms-3" id="openForm" disabled>
+                        <button type="submit" class="btn btn-success ms-3" id="openForm" >
                             Upload Employee Information
                         </button>
                     </div>

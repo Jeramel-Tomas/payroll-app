@@ -36,6 +36,7 @@ class EmployeeController extends Controller
     }
     public function import(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             'importedUsers' => [
                 'required',
@@ -47,18 +48,36 @@ class EmployeeController extends Controller
             'importedUsers.mimetypes' => 'The uploaded file must be an Excel spreadsheet (XLSX).',
             'importedUsers.regex' => 'The uploaded file must be named "EmployeeUploadTemplate.xlsx".',
         ]);
-
+        // dd($request->all());
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
+        $import = new UsersImport;
+        Excel::import($import, $request->file('importedUsers'));
+        $insertedRowCount = $import->getInsertedRowCount();
+        $notInsertedRowCount = $import->getNotInsertedRowCount();
+        // $blankRowCount = $import->getBlankRowCount();
+        $blankRowCount = $import->getDuplicateEmployee();
 
-        Excel::import(new UsersImport, $request->file('importedUsers'));
+        // dump($insertedRowCount);
+        // dump($notInsertedRowCount);
+        // dd($blankRowCount);
+
+
+        $msgSucc = 'Total of '.$insertedRowCount.' employees imported';
+        $msgFail = 'Total of '.$notInsertedRowCount.' were skipped';
+        // $msgBlank = 'Total of '.$blankRowCount.' rows were blank';
+        $msgDuplicate = 'Total of '.$blankRowCount.' rows have duplicate content. Review your entries and try again';
 
         return redirect()->back()->with([
-            'success' => 'Import success!',
-            'success_expires_at' => now()->addSeconds(5)
+            'success' => $msgSucc,
+            'success_expires_at' => now()->addSeconds(30),
+            'error' => $msgFail,
+            'error_expires_at' => now()->addSeconds(30),
+            'danger' => $msgDuplicate,
+            'danger_expires_at' => now()->addSeconds(30)
         ]);
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Imports;
 
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -20,49 +21,90 @@ HeadingRowFormatter::default('none');
 class UsersImport implements ToModel, WithHeadingRow, WithChunkReading
 {
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
-    
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
 
+    public $insertedRowCount = 0;
+    public $notInsertedRowCount = 0;
+    public $blankRow = 0;
+    public $duplicateEmployee = 0;
+
+    public function getDuplicateEmployee(): int
+    {
+        return $this->duplicateEmployee;
+    }
+    public function getBlankRowCount(): int
+    {
+        return $this->blankRow;
+    }
+    public function getInsertedRowCount(): int
+    {
+        return $this->insertedRowCount;
+    }
+    public function getNotInsertedRowCount(): int
+    {
+        return $this->notInsertedRowCount;
+    }
     public function model(array $row)
     {
-        
-        $requiredColumns = ['First Name', 'Last Name', 'Gender', 'Job Title', 'Daily Rate', 'Address', 'Contact Number', 'Employment Date'];
-    
+        // Check if the row is empty
+        // if (empty(array_filter($row))) {
+        //     $this->blankRow++;
+        //     return null; 
+        // }
+
+        // Check if any of the required columns are missing
+        $requiredColumns = ['First Name', 'Last Name', 'Gender'];
+        $missingColumn = false;
         foreach ($requiredColumns as $column) {
             if (empty($row[$column])) {
-                return null; // Skip this row
+                $missingColumn = true;
             }
         }
+
+        if ($missingColumn) {
+            // If any of the required fields is empty, increment notInsertedRowCount
+            $this->notInsertedRowCount++;
+            return null; // Skip processing this row
+        }
+
+        // All required columns are present, process the row
         $excelDateValue = $row['Employment Date'];
-        
         $readableDate = Date::excelToDateTimeObject($excelDateValue)->format('Y-m-d');
+        // Check for duplicate entry
+        $duplicateEmployee = EmployeeInformation::where([
+            'first_name' => $row['First Name'],
+            'last_name' => $row['Last Name'],
+            'gender' => $row['Gender'],
+            // 'employment_date' => $readableDate,
+        ])->first();
+
+        if ($duplicateEmployee) {
+            $this->duplicateEmployee++;
+            $this->notInsertedRowCount++;
+            return null; // Skip processing this row
+        }
         $uuid = Str::uuid()->toString();
         $employee = new EmployeeInformation([
             'employee_uuid'     => $uuid,
-            'first_name'        => $row['First Name'],   // Use heading row key
+            'first_name'        => $row['First Name'],
             'middle_name'       => $row['Middle Name'],
             'last_name'         => $row['Last Name'],
             'gender'            => $row['Gender'],
-            'job_title'         => $row['Job Title'],
-            'daily_rate'        => $row['Daily Rate'],
             'address'           => $row['Address'],
             'contact_number'    => $row['Contact Number'],
             'employment_date'   => $readableDate,
-            ]);
-        dump($employee);
-        $employee->save(); 
-        $generatedId = $employee->id;
-        $ews = new EmployeeWorkingSite([
-            'employee_information_id' => $generatedId,
-            'working_site_id' => intval($row['PASTE']),  
         ]);
-        $ews->save();
 
+        $employee->save();
+        $this->insertedRowCount++; // Increment inserted row count
         return $employee;
     }
+
+
+
     public function headingRow(): int
     {
         return 10;
@@ -75,6 +117,4 @@ class UsersImport implements ToModel, WithHeadingRow, WithChunkReading
     {
         return 100;
     }
-    
-    
 }
