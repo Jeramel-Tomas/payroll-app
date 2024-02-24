@@ -46,7 +46,7 @@
                 <div class="card-content">
                     <div class="card-body">
                         <form class="form form-horizontal"
-                            action="{{ route('employees.store', ['siteId' => $site->id]) }}" method="POST"
+                            action="{{ route('employees.store') }}" method="POST"
                             id="employeeForm">
                             @csrf
                             <div class="form-body ">

@@ -108,7 +108,7 @@ class EmployeeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $siteId)
+    public function store(Request $request)
     {
         $uuid = Str::uuid()->toString(); //generate uuid
         $validatedData = $request->validate([
