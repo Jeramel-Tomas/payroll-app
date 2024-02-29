@@ -95,7 +95,7 @@
                     @foreach($getEmployee as $employee)
                         <tr>
                             <td class="auto" wire:model="emp_name">
-                                {{ Str::ucfirst(Str::lower($employee->first_name)) }} {{ Str::ucfirst(Str::lower($employee->last_name)) }}
+                                {{ Str::ucfirst(Str::lower($employee->last_name)) }}, {{ Str::ucfirst(Str::lower($employee->first_name)) }} 
                             </td>
                             <td class="auto" wire:model="emp_site">
                                 @php
@@ -173,9 +173,13 @@
                                             ? $empWorkingSite->job_title_rate
                                             : 0;
 
-                                        $totalOtPerJob = $getRatePerJob->total_ot ?? 0;
-                                        $daysPresentTotal = $getRatePerJob->days_present ?? 0;
-
+                                        $totalOtPerJob = $getRatePerJob && $getRatePerJob->total_ot 
+                                            ? $getRatePerJob->total_ot 
+                                            : 0;
+                                        $daysPresentTotal = $getRatePerJob && $getRatePerJob->days_present 
+                                            ? $getRatePerJob->days_present 
+                                            : 0;
+                                    
                                         $computeOtPerJobRate += ($jobRate / 8) * $totalOtPerJob;
                                         $computeDaysPerJobRate += $jobRate * $daysPresentTotal;
                                     }

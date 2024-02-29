@@ -61,6 +61,8 @@ class GeneratePayslip extends Component
 
         $employees = DB::table('employee_information')
             ->select('employee_information.id AS employee_id', 'employee_information.*');
+        
+        $employees->orderBy('last_name', 'asc');
 
         if ($this->monthFilter) {
             $this->filterFrom = Carbon::create($this->monthFilter)->startOfMonth();
