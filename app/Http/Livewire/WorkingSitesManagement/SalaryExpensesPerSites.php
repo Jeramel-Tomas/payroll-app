@@ -96,11 +96,11 @@ class SalaryExpensesPerSites extends Component
         $daysAttendance = 0;
         foreach ($allSites as $key => $allSite) {
             $empTimeRecAndRate = $this->getEmployeeTimeRecords($allSite->employee_information_id, $allSite->working_site_id);
-            $jobRate = $allSite->job_title_rate ?? 0;
-            $daysAttendance = $empTimeRecAndRate->days_present ?? 0;
+            $jobRate = (float)($allSite->job_title_rate ?? 0);
+            $daysAttendance = (float)($empTimeRecAndRate->days_present ?? 0);
             $ot = $empTimeRecAndRate->total_ot ?? 0;
 
-            (float)$otComputed = ($jobRate / 8) * $ot;
+            (float)$otComputed = (float)($jobRate / 8) * (float)($ot);
             (float)$daysRateComputed = $jobRate * $daysAttendance;
             (float)$grossIncome = $daysRateComputed + $otComputed;
 

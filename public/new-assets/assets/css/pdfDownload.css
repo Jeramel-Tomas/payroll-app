@@ -2,6 +2,7 @@ body, div {
     background-color: #FFF;
     font-family: Tahoma, Verdana, sans-serif;
     font-size: .01vw;
+    /* font-size: 10px; */
 }
 
 h1, h2, h3, h4, h5, p{
@@ -32,4 +33,17 @@ h1, h2, h3, h4, h5, p{
 .client-logo {
     width: 15%;
     height: 10%;
+}
+
+.payslip-print-data {
+    font-size: 11px;
+}
+
+.copy-divider {
+    border: 1px dashed #333;
+    /* border-style: dashed; */
+}
+
+@page {
+    size: 8.5in 11in;
 }

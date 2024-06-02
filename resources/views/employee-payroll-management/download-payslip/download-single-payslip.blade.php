@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="{{ public_path('new-assets/assets/css/pdfDownload.css')}}">
 </head>
 <body style="margin: auto;">
-    <div class="container-fluid">
+    <div class="container-fluid printing-page">
         <div class="row" style="margin: auto;">
-            <div class="col border border-1">
+            <div class="col">
                 <h5 class="border-bottom text-center ">MGSAMIDAN CONSTRUCTION AND DEVELOPMENT CORPORATION</h5>
                 <p class="text-center fw-bold">
                     EMPLOYEE PAYSLIP for {{ $monthFilter }}  
@@ -35,15 +35,15 @@
                         </span>
                     </p> --}}
                 </div>
-                <div class=" container-fluid m-0 p-0 col col-12 w-100">
-                    <table class="table table-bordered col col-12 w-100">
+                <div class="container-fluid m-0 p-0 col col-12 w-100">
+                    <table class="table table-bordered col col-12 w-100 payslip-print-data">
                         <tr class="border border-dark">
                             <td class="fw-bold">Employee Name:</td>
                             <td class="border border-dark">{{ Str::title($emp_name) }}</td>
                         </tr>
                         <tr class="border border-dark">
                             <td class="fw-bold">Site Location:</td>
-                            <td class="border border-dark">{{ $emp_site }}</td>
+                            <td class="border border-dark">{{ $emp_site }} | test one | test two | test three</td>
                         </tr>
                         <tr class="border border-dark">
                             <td class="fw-bold">Job Title:</td>
@@ -76,32 +76,30 @@
                     </table>
                     
                 </div>
-                
+                <div>
                     {{-- Table start --}}
-                    <table class="table bordered bg-white">
+                    <table class="table">
                         <tbody>
                             <tr>
-                                <td colspan="5">
-                                    <p class="text-start  px-3">Approved by:</p>
-                                <td colspan="2">
-                                    <p class=" text-center pr-0 ">Received by:</p>
-                                    <p class="text-end">Signature over printed name</p>
+                                <td colspan="">
+                                    <p class="px-3">Approved by:</p>
+                                <td colspan="">
+                                    <p class="text-center pe-5">Received by:</p>
+                                    <p class="text-end pe-3">Signature over printed name</p>
                                 </td>
                             </tr>
                             
                         </tbody>
                     </table>
-    
-                    
-                {{-- </div> --}}
+                </div>
             </div>
         </div>
 
     </div>
-    <hr class="border-dashed">
+    <hr class="copy-divider">
     <div class="container-fluid">
         <div class="row" style="margin: auto;">
-            <div class="col border border-1">
+            <div class="col">
                 <h5 class="border-bottom text-center ">MGSAMIDAN CONSTRUCTION AND DEVELOPMENT CORPORATION</h5>
                 <p class="text-center fw-bold">
                     EMPLOYEE PAYSLIP for {{ $monthFilter }}  
@@ -127,7 +125,7 @@
                     </p> --}}
                 </div>
                 <div class=" container-fluid m-0 p-0 col col-12 w-100">
-                    <table class="table table-bordered col col-12 w-100">
+                    <table class="table table-bordered col col-12 w-100 payslip-print-data">
                         <tr class="border border-dark">
                             <td class="fw-bold">Employee Name:</td>
                             <td class="border border-dark">{{ $emp_name }}</td>
@@ -169,14 +167,14 @@
                 </div>
                 
                     {{-- Table start --}}
-                    <table class="table bordered bg-white">
+                    <table class="table">
                         <tbody>
                             <tr>
-                                <td colspan="5">
-                                    <p class="text-start  px-3">Approved by:</p>
-                                <td colspan="2">
-                                    <p class=" text-center pr-0 ">Received by:</p>
-                                    <p class="text-end">Signature over printed name</p>
+                                <td colspan="">
+                                    <p class="px-3">Approved by:</p>
+                                <td colspan="">
+                                    <p class="text-center pe-5">Received by:</p>
+                                    <p class="text-end pe-3">Signature over printed name</p>
                                 </td>
                             </tr>
                             
