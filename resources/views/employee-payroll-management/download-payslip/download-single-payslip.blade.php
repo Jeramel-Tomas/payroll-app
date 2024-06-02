@@ -43,7 +43,7 @@
                         </tr>
                         <tr class="border border-dark">
                             <td class="fw-bold">Site Location:</td>
-                            <td class="border border-dark">{{ $emp_site }} | test one | test two | test three</td>
+                            <td class="border border-dark">{{ $emp_site }}</td>
                         </tr>
                         <tr class="border border-dark">
                             <td class="fw-bold">Job Title:</td>
