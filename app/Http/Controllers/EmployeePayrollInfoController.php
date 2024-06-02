@@ -29,10 +29,6 @@ class EmployeePayrollInfoController extends Controller
         $emp_gross_total = 0,
         $emp_deductions = 0,
         $emp_final_pay=0;
-    public function index()
-    {
-        return view('employee-payroll-management.payrollManagementIndex');
-    }
     
     public function generatePayslip()
     {

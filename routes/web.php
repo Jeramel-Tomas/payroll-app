@@ -53,7 +53,6 @@ Route::prefix('/attendance')->group(function () {
 });
 
 Route::prefix('/payroll')->group(function () {
-    Route::get('/employees', [EmployeePayrollInfoController::class, 'index'])->name('manage.payroll.index');
     Route::get('/generate', [EmployeePayrollInfoController::class, 'generatePayslip'])->name('generate.payslip');
     Route::get('/cash-advanced', [EmployeePayrollInfoController::class, 'cashAdvancedIndex'])->name('cash.advanced.index');
     Route::get('/cash-advanced/{id}/view', [EmployeePayrollInfoController::class, 'cashAdvancedView'])->name('view.employee.cash.advances');

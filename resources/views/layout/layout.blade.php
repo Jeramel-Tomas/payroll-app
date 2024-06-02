@@ -100,9 +100,6 @@
 									<span>Manage Payroll</span>
 								</a>
 								<ul class="submenu {{ (request()->is('payroll/*')) ? 'active' : ''}}">
-									<li class="submenu-item {{ (request()->is('payroll/employees')) ? 'active' : ''}}">
-										<a href="{{ route('manage.payroll.index') }}">Payroll Settings</a>
-									</li>
 									<li class="submenu-item {{ (request()->is('payroll/cash-advanced/*')) ? 'active' : ''}}">
 										<a href="{{ route('cash.advanced.index')}}">Cash advances</a>
 									</li>
